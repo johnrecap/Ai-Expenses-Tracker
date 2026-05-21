@@ -19,12 +19,13 @@ class ExchangeRateRefreshService {
 
   Future<UserSettings> refreshIfNeeded(UserSettings settings) {
     final now = _now();
-    if (_isFreshForToday(settings.exchangeRatesUpdatedAt, now)) {
+    final baseCurrency = _normalize(settings.baseCurrency);
+    final targets = _targetCurrencies(settings, baseCurrency);
+    if (_isFreshForToday(settings.exchangeRatesUpdatedAt, now) &&
+        _hasValidTargetCoverage(settings.conversionRates, targets)) {
       return Future.value(settings);
     }
 
-    final baseCurrency = _normalize(settings.baseCurrency);
-    final targets = _targetCurrencies(settings, baseCurrency);
     final refreshKey = [
       settings.userId,
       _localDateKey(now),
@@ -115,6 +116,19 @@ class ExchangeRateRefreshService {
     return refreshedAt.year == now.year &&
         refreshedAt.month == now.month &&
         refreshedAt.day == now.day;
+  }
+
+  bool _hasValidTargetCoverage(
+    Map<String, num> conversionRates,
+    List<String> targets,
+  ) {
+    for (final target in targets) {
+      final rate = conversionRates[target]?.toDouble();
+      if (rate == null || rate <= 0 || !rate.isFinite) {
+        return false;
+      }
+    }
+    return true;
   }
 
   String _localDateKey(DateTime value) {

@@ -11,22 +11,18 @@ unfinished, and what improvements or new features are worth considering next.
 This is not an implementation plan. Any future implementation plan should be
 created as a Spec Kit artifact under `specs/<number>-<feature>/`.
 
-## ملخص عربي سريع
+## Arabic Summary Status
 
-التطبيق حاليا عبارة عن Expense Tracker متقدم مبني بـ Flutter و Firebase، وفيه
-تسجيل دخول Google و email/password، بيانات منفصلة لكل مستخدم، مصروفات، تصنيفات،
-ميزانية شهرية، تقارير، تصدير، مصروفات متكررة، أهداف ادخار، إعدادات حساب، قفل
-محلي، إشعارات، دعم عربي/إنجليزي، ذكاء اصطناعي لإضافة المصروفات وتحليل الفواتير
-والنصائح، وبنية مبدئية للبريميوم والإعلانات.
+The previous Arabic quick summary in this file was corrupted by mojibake. It has been replaced with this UTF-8-safe English summary so future reviewers are not misled by unreadable text.
 
-أهم ما يحتاج تركيز حاليا:
+Current focus:
 
-1. توحيد حساب العملات في كل الشاشات وليس Home و Reports فقط.
-2. إنهاء localization/RTL بالكامل وتجربة الشاشات على موبايل صغير.
-3. اختبار Firebase الحقيقي: rules/indexes/login/settings/delete account.
-4. التأكد أن نسخة الإنتاج فيها `AI_GATEWAY_URL` الحقيقي وليس fallback/mock.
-5. تجهيز Premium/Ads بشكل إنتاجي قبل أي نشر عام.
-6. تطوير الـ AI ليجاوب على أسئلة المستخدم عن مصاريفه، وليس مجرد ملء فورم.
+1. Keep currency calculations consistent across all finance surfaces, not only Home and Reports.
+2. Finish localization and RTL QA on small mobile screens.
+3. Validate real Firebase rules, indexes, login, settings, and account deletion flows.
+4. Confirm production builds use the real `AI_GATEWAY_URL`, not fallback or mock behavior.
+5. Complete Premium and Ads production readiness before public release.
+6. Expand AI from form fill into answers about the user's own spending history.
 
 ## Quick Summary
 

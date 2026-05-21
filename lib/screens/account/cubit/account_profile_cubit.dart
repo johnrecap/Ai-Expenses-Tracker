@@ -143,12 +143,48 @@ class AccountProfileCubit extends Cubit<AccountProfileState> {
     }
   }
 
-  Future<void> deleteAccount({required bool warningConfirmed}) async {
+  Future<void> deleteAccount({
+    required bool warningConfirmed,
+    bool recentAuthConfirmed = false,
+  }) async {
+    if (!warningConfirmed) {
+      emit(
+        state.copyWith(
+          status: AccountProfileStatus.ready,
+          messageKey: AccountProfileMessageKey.deleteConfirmationRequired,
+        ),
+      );
+      return;
+    }
+    if (!recentAuthConfirmed) {
+      final reauthRequest =
+          _reauthRequestFor(AccountSensitiveAction.deleteAccount);
+      if (!reauthRequest.requiresPassword && !reauthRequest.usesGoogle) {
+        emit(
+          state.copyWith(
+            status: AccountProfileStatus.ready,
+            messageKey: AccountProfileMessageKey.reauthUnavailable,
+            clearReauthRequest: true,
+          ),
+        );
+        return;
+      }
+      emit(
+        state.copyWith(
+          status: AccountProfileStatus.ready,
+          messageKey: AccountProfileMessageKey.reauthRequired,
+          reauthRequest: reauthRequest,
+        ),
+      );
+      return;
+    }
+
     emit(state.copyWith(status: AccountProfileStatus.deletingAccount));
     try {
       await _accountDeletionService.deleteAccount(
         user: state.user,
         warningConfirmed: warningConfirmed,
+        recentAuthConfirmed: recentAuthConfirmed,
       );
       emit(
         state.copyWith(
@@ -310,7 +346,10 @@ class AccountProfileCubit extends Cubit<AccountProfileState> {
         await updateEmail(newEmail);
         return;
       case AccountSensitiveAction.deleteAccount:
-        await deleteAccount(warningConfirmed: true);
+        await deleteAccount(
+          warningConfirmed: true,
+          recentAuthConfirmed: true,
+        );
         return;
     }
   }

@@ -35,6 +35,7 @@ void main() {
     final now = DateTime(2026, 5, 19, 12);
     final settings = _settings(
       userId: 'user-fresh',
+      supportedCurrencies: const ['EGP', 'USD'],
       conversionRates: const {'USD': 51},
       exchangeRatesUpdatedAt: DateTime(2026, 5, 19, 7),
     );
@@ -51,6 +52,53 @@ void main() {
     expect(provider.calls, 0);
     expect(refreshed.conversionRates, {'USD': 51});
     expect(repository.settings.conversionRates, {'USD': 51});
+  });
+
+  test('refreshes same-day rates when a supported target is missing', () async {
+    final now = DateTime(2026, 5, 19, 12);
+    final settings = _settings(
+      userId: 'user-missing-target',
+      supportedCurrencies: const ['EGP', 'USD', 'EUR'],
+      conversionRates: const {'USD': 51},
+      exchangeRatesUpdatedAt: DateTime(2026, 5, 19, 7),
+    );
+    final repository = FakeSettingsRepository(settings);
+    final provider = _FakeExchangeRateService({'USD': 52, 'EUR': 56});
+    final service = ExchangeRateRefreshService(
+      settingsRepository: repository,
+      exchangeRateService: provider,
+      now: () => now,
+    );
+
+    final refreshed = await service.refreshIfNeeded(settings);
+
+    expect(provider.calls, 1);
+    expect(provider.requestedQuotes.single, ['EUR', 'USD']);
+    expect(refreshed.conversionRates, {'USD': 52, 'EUR': 56});
+    expect(refreshed.exchangeRatesUpdatedAt, now);
+  });
+
+  test('refreshes same-day rates when a supported target rate is invalid',
+      () async {
+    final now = DateTime(2026, 5, 19, 12);
+    final settings = _settings(
+      userId: 'user-invalid-target',
+      supportedCurrencies: const ['EGP', 'USD', 'EUR'],
+      conversionRates: const {'USD': 51, 'EUR': -1},
+      exchangeRatesUpdatedAt: DateTime(2026, 5, 19, 7),
+    );
+    final repository = FakeSettingsRepository(settings);
+    final provider = _FakeExchangeRateService({'USD': 52, 'EUR': 56});
+    final service = ExchangeRateRefreshService(
+      settingsRepository: repository,
+      exchangeRateService: provider,
+      now: () => now,
+    );
+
+    final refreshed = await service.refreshIfNeeded(settings);
+
+    expect(provider.calls, 1);
+    expect(refreshed.conversionRates, {'USD': 52, 'EUR': 56});
   });
 
   test('keeps stale saved rates when provider fails', () async {
@@ -87,6 +135,29 @@ void main() {
 
     expect(refreshed.conversionRates, isEmpty);
     expect(refreshed.exchangeRatesUpdatedAt, isNull);
+  });
+
+  test('keeps cleared rates missing when provider fails after base change',
+      () async {
+    final settings = _settings(
+      userId: 'user-base-changed-offline',
+      baseCurrency: 'USD',
+      supportedCurrencies: const ['USD', 'EGP'],
+      conversionRates: const {},
+      exchangeRatesUpdatedAt: null,
+    );
+    final repository = FakeSettingsRepository(settings);
+    final service = ExchangeRateRefreshService(
+      settingsRepository: repository,
+      exchangeRateService: const _ThrowingExchangeRateService(),
+      now: () => DateTime(2026, 5, 19, 9),
+    );
+
+    final refreshed = await service.refreshIfNeeded(settings);
+
+    expect(refreshed.conversionRates, isEmpty);
+    expect(refreshed.exchangeRatesUpdatedAt, isNull);
+    expect(repository.settings.conversionRates, isEmpty);
   });
 
   test('requests only supported non-base currencies', () async {

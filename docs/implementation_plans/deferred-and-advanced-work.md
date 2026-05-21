@@ -25,6 +25,9 @@ this file and mention the relevant items briefly so they are not forgotten.
   user-scoped Firestore data removal before public release.
 - Add a trusted backend recursive deletion path if future user data gains nested
   Firestore subcollections beyond the current client deletion plan.
+- Consider a backend-owned account deletion orchestration before public scale if
+  client-side data deletion plus Auth deletion needs stronger atomicity or
+  support recovery.
 - Run end-to-end Firestore writes for expenses, categories, budgets, recurring
   rules, saving goals, settings, and AI action logs.
 - Add App Check when the app is ready for public release.
@@ -128,8 +131,9 @@ this file and mention the relevant items briefly so they are not forgotten.
 - Evaluate exact minor-unit money storage and currency-specific decimal
   precision later if the app needs stricter accounting than decimal-compatible
   display and Firestore numeric storage.
-- Add exchange-rate provider selection, refresh cadence controls, historical
-  rates, and offline freshness indicators after the live-rate MVP is stable.
+- Add exchange-rate provider selection, refresh cadence controls, transaction-
+  date historical rates, and offline freshness indicators after the live-rate
+  MVP is stable.
 - Complete wallet and transfer UI surfaces before treating Plan 075 as a
   user-facing feature: wallets list, Add/Edit Expense wallet selector, transfer
   form, Expenses wallet filter, and Reports transfer exclusion fixtures.

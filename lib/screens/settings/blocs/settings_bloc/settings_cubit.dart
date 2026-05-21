@@ -30,10 +30,8 @@ class SettingsCubit extends Cubit<SettingsState> {
         current.settings.supportedCurrencies,
         normalizedCurrency,
       ),
-      conversionRates: _withoutBaseRate(
-        current.settings.conversionRates,
-        normalizedCurrency,
-      ),
+      conversionRates: const {},
+      clearExchangeRatesUpdatedAt: true,
       updatedAt: DateTime.now(),
     );
     emit(SettingsSaving(updated));
@@ -187,16 +185,6 @@ class SettingsCubit extends Cubit<SettingsState> {
       normalized.add(value);
     }
     return normalized;
-  }
-
-  Map<String, num> _withoutBaseRate(
-    Map<String, num> conversionRates,
-    String baseCurrency,
-  ) {
-    final normalizedBase = baseCurrency.trim().toUpperCase();
-    return Map<String, num>.from(conversionRates)
-      ..removeWhere(
-          (currency, _) => currency.trim().toUpperCase() == normalizedBase);
   }
 
   Map<String, num> _filterRatesToSupported(

@@ -110,6 +110,30 @@ void main() {
     await cubit.close();
   });
 
+  test('base currency change clears old rates and rate timestamp', () async {
+    final repository = FakeSettingsRepository(
+      _settings().copyWith(
+        baseCurrency: 'EGP',
+        supportedCurrencies: const ['EGP', 'USD', 'EUR'],
+        conversionRates: const {'USD': 50, 'EUR': 55},
+        exchangeRatesUpdatedAt: DateTime(2026, 5, 21, 9),
+      ),
+    );
+    final cubit = SettingsCubit(repository);
+
+    await cubit.loadSettings();
+    await cubit.saveBaseCurrency('usd');
+
+    final state = cubit.state as SettingsSuccess;
+    expect(state.settings.baseCurrency, 'USD');
+    expect(state.settings.supportedCurrencies, contains('USD'));
+    expect(state.settings.conversionRates, isEmpty);
+    expect(state.settings.exchangeRatesUpdatedAt, isNull);
+    expect(repository.settings.conversionRates, isEmpty);
+    expect(repository.settings.exchangeRatesUpdatedAt, isNull);
+    await cubit.close();
+  });
+
   test('saves language preference without changing currency settings',
       () async {
     final repository = FakeSettingsRepository(

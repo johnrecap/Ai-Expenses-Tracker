@@ -1,11 +1,8 @@
 <!--
 Sync Impact Report
-Version change: 1.24.0 -> 1.25.0
-Modified principles: Rule 2 updated with Plans 044-063 architecture, Rule 3
-updated with current product scope, Rule 5 clarified flexible AI drafts, Rule 7
-updated with latest verification baseline, Project Conventions expanded for
-account/profile, exchange rates, report conversion, settings refresh, and
-verification tooling.
+Version change: 1.25.0 -> 1.26.0
+Modified principles: Project Conventions clarified account deletion recent-auth
+ordering and exchange-rate base-currency invalidation/target coverage.
 Added sections: None.
 Removed sections: None.
 Templates/guidance reviewed: .specify/templates/plan-template.md (reviewed, no
@@ -340,12 +337,12 @@ When a setup step fails because a tool, package, or skill cannot be found locall
 - Category UI must not build `assets/{category.icon}.png` paths directly. New category pickers must use `CategoryIconRegistry` for icon choices and `CategoryColorPresets` for curated color swatches, with `flutter_colorpicker` available only for custom colors.
 - User settings must be accessed through `SettingsRepository`; widgets must not read or write `users/{userId}/settings/profile` directly. Settings profile writes must satisfy `firestore.rules` `validSettings`, including display name, language, currencies, conversion rates, notifications, onboarding, guided tour, and exchange-rate timestamp fields.
 - Account/profile UI must use `AccountProfileCubit` and account/profile services. App-local display name must remain independent from Firebase Auth/Google display name after user edits, and no profile-photo/avatar upload scope may be introduced without a new Spec Kit plan.
-- Account deletion must require explicit warning/confirmation, route sensitive auth work through repository/services, avoid orphaning user-scoped Firestore data, and be validated against both Google and email/password providers before public release.
+- Account deletion must require explicit warning/confirmation, route sensitive auth work through repository/services, require provider-appropriate recent authentication before user-scoped data deletion, avoid orphaning user-scoped Firestore data, and be validated against both Google and email/password providers before public release.
 - First-run setup must route authenticated users through `FirstRunOnboardingGate` when `UserSettings.requiresOnboarding` is true. Completing setup must save explicit language, base currency, supported currencies, default payment method, `onboardingCompleted`, and `onboardingVersion` through `SettingsRepository`.
 - Guided tour state must persist through `UserSettings.guidedTourCompletedVersion`, `guidedTourSkippedVersion`, and `guidedTourLastStepId`. Tour targets must be registered with `SpotlightTarget`; feature widgets must not embed overlay logic or call AI, ads, purchases, permission, camera, speech, or notification services from tour steps.
 - App language must use `UserSettings.languagePreference` (`system`, `en`, or `ar`) and must not be inferred from currency. Currency must not be inferred from language.
 - Home financial totals must be calculated through `HomeSummaryCalculator`; widgets must not reintroduce hardcoded user names, fake income, fake balances, or hardcoded exchange rates.
-- Exchange rates must refresh through `ExchangeRateRefreshService` at most once per local day for the user's supported non-base currencies, persist successful rates and `exchangeRatesUpdatedAt` through `SettingsRepository`, and keep using the last saved rates when the provider or network is unavailable. Finance code must not hardcode exchange rates.
+- Exchange rates must refresh through `ExchangeRateRefreshService` at most once per local day for the user's supported non-base currencies when valid target coverage exists, persist successful rates and `exchangeRatesUpdatedAt` through `SettingsRepository`, and keep using the last saved rates when the provider or network is unavailable. Changing the base currency must clear saved conversion rates and `exchangeRatesUpdatedAt` because rates are keyed only by source currency into the current base. Finance code must not hardcode exchange rates.
 - `MoneyConversionService` is the shared conversion boundary for source-currency expenses into the user's base currency. Reports, Home, AI summaries/advice, and weekly digest must use the same saved-rate conversion semantics when they aggregate mixed currencies.
 - Add Expense and AI preview defaults must come from `UserSettings.baseCurrency`, `supportedCurrencies`, and `defaultPaymentMethod`, while explicit user or AI parsed values keep priority.
 - Add Expense and AI Assistant save paths must not silently use fallback currency or payment settings after settings load failure; users must retry settings or make explicit choices first.
@@ -399,4 +396,4 @@ When a setup step fails because a tool, package, or skill cannot be found locall
   be created as Spec Kit artifacts, not as standalone implementation-plan files.
 - Every `tasks.md` must be detailed enough for a new worker: purpose, files, concrete steps, verification, and done criteria for each task.
 
-**Version**: 1.25.0 | **Ratified**: 2026-05-15 | **Last Updated**: 2026-05-20
+**Version**: 1.26.0 | **Ratified**: 2026-05-15 | **Last Updated**: 2026-05-21

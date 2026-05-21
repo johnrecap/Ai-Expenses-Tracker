@@ -68,14 +68,20 @@ void main() {
     expect(find.text('Display name updated.'), findsOneWidget);
   });
 
-  testWidgets('requires explicit confirmation before delete call',
+  testWidgets('requires confirmation and reauth before delete call',
       (tester) async {
-    final service = _WidgetAccountProfileService();
+    final service = _WidgetAccountProfileService(
+      capabilities: const AccountProfileCapabilities(
+        providerType: AccountProviderType.google,
+      ),
+    );
 
     await tester.pumpWidget(_app(service: service));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
+    await tester.ensureVisible(find.text('Delete account'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Delete account'));
     await tester.pump();
 
@@ -98,6 +104,14 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
+    expect(service.deletionCalls, isEmpty);
+    expect(find.text('Sign in again'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Continue with Google'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(service.googleReauthCalls, 1);
     expect(service.deletionCalls, ['data:google-user', 'auth:google-user']);
   });
 

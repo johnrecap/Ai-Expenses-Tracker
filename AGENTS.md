@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
-Current Spec Kit plan: specs/063-reports-currency-conversion/plan.md
+Current Spec Kit plan: specs/081-trust-release-hardening/plan.md
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan above.

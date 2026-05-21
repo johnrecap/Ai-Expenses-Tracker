@@ -63,7 +63,7 @@ void main() {
     await cubit.close();
   });
 
-  test('requests user data deletion before auth account deletion', () async {
+  test('delete account requires reauth before deleting user data', () async {
     final service = _FakeAccountProfileService();
     final cubit = AccountProfileCubit(
       user: user,
@@ -73,8 +73,18 @@ void main() {
       ),
     );
 
+    await cubit.load();
     await cubit.deleteAccount(warningConfirmed: true);
 
+    expect(service.deletionCalls, isEmpty);
+    expect(cubit.state.status, AccountProfileStatus.ready);
+    expect(cubit.state.messageKey, AccountProfileMessageKey.reauthRequired);
+    expect(cubit.state.reauthRequest?.action,
+        AccountSensitiveAction.deleteAccount);
+
+    await cubit.completeReauthentication(password: 'secret');
+
+    expect(service.reauthenticatedPasswords, ['secret']);
     expect(service.deletionCalls, ['data:user-1', 'auth:user-1']);
     expect(cubit.state.status, AccountProfileStatus.deleted);
   });
@@ -201,18 +211,14 @@ void main() {
     await cubit.completeReauthentication();
 
     expect(service.googleReauthCalls, 1);
-    expect(service.deletionCalls, [
-      'data:user-1',
-      'auth:user-1',
-      'data:user-1',
-      'auth:user-1',
-    ]);
+    expect(service.deletionCalls, ['data:user-1', 'auth:user-1']);
     expect(cubit.state.status, AccountProfileStatus.deleted);
 
     await cubit.close();
   });
 
-  test('Google reauth handles cancel, provider unavailable, and network failure',
+  test(
+      'Google reauth handles cancel, provider unavailable, and network failure',
       () async {
     final googleUser = user.copyWith(
       providers: const [AuthProviderMetadata(providerId: 'google.com')],
@@ -259,6 +265,29 @@ void main() {
     );
     await cubit.completeReauthentication();
     expect(cubit.state.messageKey, AccountProfileMessageKey.reauthFailed);
+
+    await cubit.close();
+  });
+
+  test('unknown provider cannot start destructive deletion', () async {
+    final service = _FakeAccountProfileService(
+      capabilities: const AccountProfileCapabilities(
+        providerType: AccountProviderType.unknown,
+      ),
+    );
+    final cubit = AccountProfileCubit(
+      user: user,
+      accountProfileService: service,
+      accountDeletionService: AccountDeletionService(
+        accountProfileService: service,
+      ),
+    );
+
+    await cubit.load();
+    await cubit.deleteAccount(warningConfirmed: true);
+
+    expect(cubit.state.messageKey, AccountProfileMessageKey.reauthUnavailable);
+    expect(service.deletionCalls, isEmpty);
 
     await cubit.close();
   });

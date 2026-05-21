@@ -26,11 +26,18 @@ class AccountDeletionService {
   Future<void> deleteAccount({
     required AppUser user,
     required bool warningConfirmed,
+    required bool recentAuthConfirmed,
   }) async {
     if (!warningConfirmed) {
       throw const AccountDeletionException(
         'confirmation-required',
         'Account deletion requires explicit confirmation.',
+      );
+    }
+    if (!recentAuthConfirmed) {
+      throw const AccountDeletionException(
+        'requires-recent-login',
+        'Sign in again before deleting this account.',
       );
     }
     try {

@@ -13,6 +13,9 @@ conversion-aware.
   refreshed.
 - Rendering financial totals must not make a network request. Screens use the
   saved rates already available in settings.
+- When the user changes the base currency, saved conversion rates and the rate
+  timestamp are cleared because the app cannot prove that rates fetched for the
+  old base still apply to the new base.
 
 ## Conversion Rules
 
@@ -28,6 +31,11 @@ conversion-aware.
 If the device is offline, the app keeps using the last saved valid rates. The
 rate timestamp is retained in calculation metadata so UI or export surfaces can
 explain that the total is based on cached rates.
+
+Same-day freshness is valid only when every supported non-base currency has a
+positive finite saved rate. If a user adds a currency after today's refresh, or
+if a target rate is missing/invalid, the app should refresh again or keep that
+currency visible as unconverted.
 
 ## Historical Reports
 

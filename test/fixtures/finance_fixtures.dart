@@ -11,14 +11,34 @@ class FinanceFixture {
 
   static UserSettings settings({
     String baseCurrency = FinanceFixture.baseCurrency,
+    List<String>? supportedCurrencies,
     Map<String, num>? conversionRates,
     DateTime? exchangeRatesUpdatedAt,
   }) {
     return UserSettings.defaults(userId: userId).copyWith(
       baseCurrency: baseCurrency,
-      supportedCurrencies: const ['EGP', 'USD', 'EUR', 'SAR'],
+      supportedCurrencies:
+          supportedCurrencies ?? const ['EGP', 'USD', 'EUR', 'SAR'],
       conversionRates: conversionRates ?? const {'USD': 50, 'SAR': 13.3},
       exchangeRatesUpdatedAt: exchangeRatesUpdatedAt ?? staleRateDate,
+    );
+  }
+
+  static UserSettings settingsWithOldEgpBaseRatesToday() {
+    return settings(
+      baseCurrency: 'EGP',
+      supportedCurrencies: const ['EGP', 'USD', 'EUR'],
+      conversionRates: const {'USD': 50, 'EUR': 55},
+      exchangeRatesUpdatedAt: now,
+    );
+  }
+
+  static UserSettings settingsWithUsdBaseMissingEurToday() {
+    return settings(
+      baseCurrency: 'USD',
+      supportedCurrencies: const ['USD', 'EGP', 'EUR'],
+      conversionRates: const {'EGP': 0.02},
+      exchangeRatesUpdatedAt: now,
     );
   }
 

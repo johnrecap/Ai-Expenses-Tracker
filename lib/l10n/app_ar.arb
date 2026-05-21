@@ -1,0 +1,1307 @@
+{
+  "@@locale": "ar",
+  "appTitle": "متتبع المصروفات",
+  "save": "حفظ",
+  "cancel": "إلغاء",
+  "delete": "حذف",
+  "edit": "تعديل",
+  "confirm": "تأكيد",
+  "retry": "إعادة المحاولة",
+  "reset": "إعادة ضبط",
+  "settings": "الإعدادات",
+  "expenses": "المصروفات",
+  "filters": "الفلاتر",
+  "searchExpenses": "ابحث في المصروفات",
+  "clearSearch": "مسح البحث",
+  "resultsCount": "{count, plural, =0{لا توجد نتائج} =1{نتيجة واحدة} =2{نتيجتان} few{{count} نتائج} many{{count} نتيجة} other{{count} نتيجة}}",
+  "expenseResultsLimitedToLoadedHistory": "النتائج محدودة بالسجل الحديث المحمل. حمل المزيد أو اختر نطاق تاريخ لتوسيعها.",
+  "expenseResultsLimitedToDateRange": "النتائج محدودة بالصفحة المحملة لنطاق التاريخ هذا.",
+  "loadMoreExpenses": "تحميل المزيد",
+  "loadingMoreExpenses": "جاري تحميل المزيد",
+  "allLoadedExpensesShown": "يتم عرض كل المصروفات المحملة",
+  "noExpensesMatchFilters": "لا توجد مصروفات تطابق الفلاتر",
+  "expenseDetailsSeparator": "•",
+  "expenseActions": "إجراءات المصروف",
+  "editExpense": "تعديل المصروف",
+  "expenseUpdated": "تم تحديث المصروف",
+  "failedToUpdateExpense": "تعذر تحديث المصروف. حاول مرة أخرى.",
+  "deleteExpenseTitle": "حذف المصروف؟",
+  "deleteExpenseMessage": "هل تريد حذف مصروف {category} بقيمة {amount} بتاريخ {date}؟",
+  "@deleteExpenseMessage": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "expenseDeleted": "تم حذف المصروف",
+  "failedToDeleteExpense": "تعذر حذف المصروف. حاول مرة أخرى.",
+  "categories": "الفئات",
+  "amount": "المبلغ",
+  "min": "الحد الأدنى",
+  "max": "الحد الأقصى",
+  "paymentMethod": "طريقة الدفع",
+  "currency": "العملة",
+  "applyFilters": "تطبيق الفلاتر",
+  "dateRange": "نطاق التاريخ",
+  "anyDate": "أي تاريخ",
+  "clearDates": "مسح التواريخ",
+  "pickDates": "اختيار التواريخ",
+  "welcome": "مرحبًا",
+  "thisMonthSpending": "مصروفات هذا الشهر",
+  "budgetLeft": "المتبقي من الميزانية",
+  "budget": "الميزانية",
+  "setMonthlyBudget": "حدد ميزانية شهرية",
+  "topCategory": "أعلى فئة",
+  "noSpendingYet": "لا توجد مصروفات بعد",
+  "transactions": "المعاملات",
+  "viewAll": "عرض الكل",
+  "noExpensesYet": "لا توجد مصروفات بعد",
+  "home": "الرئيسية",
+  "stats": "الإحصائيات",
+  "aiAssistant": "المساعد الذكي",
+  "recurringExpenses": "المصروفات المتكررة",
+  "savingGoals": "أهداف الادخار",
+  "exportData": "تصدير البيانات",
+  "logout": "تسجيل الخروج",
+  "addExpense": "إضافة مصروف",
+  "quickCaptureQuick": "سريع",
+  "quickCaptureNatural": "نص",
+  "quickCaptureReceipt": "إيصال",
+  "quickCaptureMoreDetails": "مزيد من التفاصيل",
+  "quickCaptureLessDetails": "تفاصيل أقل",
+  "quickCaptureDraftReady": "تم ملء المسودة. راجع الحقول ثم احفظ.",
+  "quickCaptureReceiptTitle": "مسح إيصال",
+  "quickCaptureReceiptHelper": "تفاصيل الإيصال تملأ نفس النموذج القابل للتعديل. الحفظ لا يتم إلا بزر الحفظ.",
+  "quickCaptureReceiptApplied": "تم ملء مسودة الإيصال. راجع الحقول ثم احفظ.",
+  "quickCaptureReceiptReview": "راجع حقول الإيصال قبل الحفظ.",
+  "quickCaptureMissingFields": "أكمل الحقول الناقصة: {fields}.",
+  "@quickCaptureMissingFields": {
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "addCategory": "إضافة فئة",
+  "category": "الفئة",
+  "description": "الوصف",
+  "merchant": "التاجر",
+  "tags": "الوسوم",
+  "tagsHelper": "افصل الوسوم بفواصل",
+  "possibleDuplicateExpense": "مصروف مكرر محتمل",
+  "possibleDuplicateExpenseMessage": "يوجد مصروف مشابه: {amount} {currency}، {category}، {date}. الأسباب: {reasons}. هل تريد الحفظ على أي حال؟",
+  "@possibleDuplicateExpenseMessage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      },
+      "reasons": {
+        "type": "String"
+      }
+    }
+  },
+  "saveAnyway": "الحفظ على أي حال",
+  "duplicateReasonSameDay": "نفس اليوم",
+  "duplicateReasonSameAmount": "نفس المبلغ",
+  "duplicateReasonSameCategory": "نفس الفئة",
+  "duplicateReasonSameMerchant": "نفس التاجر",
+  "date": "التاريخ",
+  "noActiveCategoriesYet": "لا توجد فئات نشطة بعد",
+  "enterValidExpenseAmount": "أدخل مبلغ مصروف صحيح",
+  "selectCategoryBeforeSaving": "اختر فئة قبل الحفظ",
+  "failedToSaveExpense": "تعذر حفظ المصروف. حاول مرة أخرى.",
+  "failedToSaveCategory": "تعذر حفظ الفئة. حاول مرة أخرى.",
+  "failedToLoadCategories": "تعذر تحميل الفئات",
+  "categoryBudgets": "ميزانيات الفئات",
+  "subscriptionCenter": "مركز الاشتراكات",
+  "confirmLogoutTitle": "تسجيل الخروج؟",
+  "confirmLogoutMessage": "ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى مصروفاتك.",
+  "failedToLoadExpenses": "تعذر تحميل المصروفات",
+  "checkConnectionTryAgain": "تحقق من الاتصال ثم حاول مرة أخرى.",
+  "cash": "نقدًا",
+  "visa": "فيزا",
+  "wallet": "محفظة",
+  "bankTransfer": "تحويل بنكي",
+  "profile": "الملف الشخصي",
+  "authenticatedAccount": "الحساب المسجل",
+  "profileSettingsDescription": "إدارة الملف المحلي وتفاصيل تسجيل الدخول وإجراءات الحساب.",
+  "profileFallbackUser": "المستخدم",
+  "profileName": "اسم الملف الشخصي",
+  "editProfileName": "تعديل اسم الملف الشخصي",
+  "displayNameLabel": "الاسم المعروض",
+  "displayNameHint": "أدخل الاسم الذي يظهر داخل التطبيق",
+  "displayNameRequired": "أدخل اسما للعرض.",
+  "displayNameTooLong": "يجب ألا يزيد الاسم عن 60 حرفا.",
+  "displayNameUpdated": "تم تحديث الاسم المعروض.",
+  "displayNameUpdateFailed": "تعذر تحديث الاسم. حاول مرة أخرى.",
+  "accountId": "معرف الحساب",
+  "copyAccountId": "نسخ معرف الحساب",
+  "accountIdCopied": "تم نسخ معرف الحساب.",
+  "accountProfileTitle": "الحساب/الملف",
+  "accountProfileLoadFailed": "تعذر تحميل ملف الحساب.",
+  "accountEmail": "البريد الإلكتروني",
+  "accountEmailMissing": "لا يوجد بريد إلكتروني لهذا الحساب",
+  "accountProvider": "مزود تسجيل الدخول",
+  "accountProviderEmailPassword": "البريد وكلمة المرور",
+  "accountProviderGoogle": "Google",
+  "accountProviderUnknown": "المزود غير متاح",
+  "accountActionUnavailableForProvider": "هذا الإجراء غير متاح لمزود تسجيل الدخول الحالي.",
+  "accountPasswordReset": "إعادة تعيين كلمة المرور",
+  "accountPasswordResetDescription": "إرسال رسالة إعادة تعيين كلمة المرور إلى هذا الحساب.",
+  "accountPasswordResetSent": "تم إرسال رسالة إعادة تعيين كلمة المرور.",
+  "accountPasswordResetFailed": "تعذر إرسال رسالة إعادة تعيين كلمة المرور.",
+  "accountUpdateEmail": "تحديث البريد",
+  "accountUpdateEmailDescription": "تغيير البريد المستخدم لهذا الحساب.",
+  "accountNewEmail": "البريد الجديد",
+  "accountEmailInvalid": "أدخل بريدا إلكترونيا صحيحا.",
+  "accountEmailUpdated": "تم تحديث البريد.",
+  "accountEmailUpdateFailed": "تعذر تحديث البريد.",
+  "accountReauthRequired": "سجل الدخول مرة أخرى قبل تغيير هذا الإعداد الحساس.",
+  "accountReauthTitle": "تسجيل الدخول مرة أخرى",
+  "accountReauthPasswordDescription": "أدخل كلمة المرور الحالية، ثم سيعيد التطبيق محاولة إجراء الحساب.",
+  "accountReauthGoogleDescription": "تابع باستخدام Google، ثم سيعيد التطبيق محاولة إجراء الحساب.",
+  "accountReauthPasswordLabel": "كلمة المرور الحالية",
+  "accountReauthGoogleButton": "متابعة باستخدام Google",
+  "accountReauthSucceeded": "تم تأكيد تسجيل الدخول. جار إعادة محاولة إجراء الحساب.",
+  "accountReauthFailed": "تعذر تأكيد تسجيل الدخول.",
+  "accountReauthCanceled": "تم إلغاء تأكيد تسجيل الدخول.",
+  "accountReauthUnavailable": "تأكيد تسجيل الدخول غير متاح لهذا المزود.",
+  "accountDeleteTitle": "حذف الحساب",
+  "accountDeleteShortDescription": "حذف حسابك وبيانات التطبيق المملوكة لك.",
+  "accountDeleteWarning": "يطلب هذا حذف حسابك ومصروفاتك وفئاتك وميزانياتك والمصروفات المتكررة وأهداف الادخار والإعدادات وسجل إجراءات الذكاء الاصطناعي نهائيا. لا يمكن التراجع عن ذلك.",
+  "accountDeleteConfirmCheckbox": "أفهم أن هذا الحذف لا يمكن التراجع عنه.",
+  "accountDeleteButton": "حذف الحساب",
+  "accountDeleteConfirmationRequired": "أكد التحذير قبل حذف حسابك.",
+  "accountDataDeleteFailed": "تعذر حذف بيانات حسابك. لم يتم حذف حساب تسجيل الدخول.",
+  "accountAuthDeleteFailed": "تم طلب حذف بيانات التطبيق، لكن تعذر حذف حساب تسجيل الدخول.",
+  "accountDeleted": "تم حذف الحساب.",
+  "accountDeleteFailed": "تعذر إكمال حذف الحساب.",
+  "appLanguage": "لغة التطبيق",
+  "appLanguageDescription": "تتحكم اللغة في نصوص التطبيق والتواريخ ولغة الذكاء الاصطناعي والإملاء الصوتي، ولا تغير العملة.",
+  "languageSystem": "النظام",
+  "languageSystemDescription": "اتبع لغة الجهاز عندما تكون العربية أو الإنجليزية.",
+  "languageArabic": "العربية",
+  "languageArabicDescription": "استخدم النص العربي واتجاه العرض من اليمين إلى اليسار.",
+  "languageEnglish": "الإنجليزية",
+  "languageEnglishDescription": "استخدم النص الإنجليزي واتجاه العرض من اليسار إلى اليمين.",
+  "failedToLoadSettings": "تعذر تحميل الإعدادات.",
+  "baseCurrency": "العملة الأساسية",
+  "supportedCurrencies": "العملات المدعومة",
+  "currencySettingsDescription": "اللغة والعملة مستقلتان. تستخدم العملة الأساسية كافتراضي للإدخال اليدوي والذكاء الاصطناعي. أسعار الصرف تحول إجماليات لوحة التحكم فقط.",
+  "exchangeRates": "أسعار الصرف",
+  "exchangeRatesDescription": "أدخل قيمة وحدة واحدة من كل عملة بعملتك الأساسية.",
+  "exchangeRateInputLabel": "1 {currency} =",
+  "@exchangeRateInputLabel": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "exchangeRateInvalid": "أدخل سعر صرف أكبر من صفر.",
+  "exchangeRateSaved": "تم حفظ سعر الصرف.",
+  "convertedCurrenciesStatus": "تم التحويل: {currencies}",
+  "@convertedCurrenciesStatus": {
+    "placeholders": {
+      "currencies": {
+        "type": "String"
+      }
+    }
+  },
+  "unconvertedCurrenciesStatus": "{count, plural, =1{لا يوجد سعر صرف لـ {currencies}؛ لم يتم احتساب مصروف واحد} other{لا توجد أسعار صرف لـ {currencies}؛ لم يتم احتساب {count} مصروفات}}",
+  "@unconvertedCurrenciesStatus": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "currencies": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUnavailableTitle": "تحتاج الإعدادات إلى مراجعة",
+  "settingsUnavailableMessage": "أعد تحميل الإعدادات أو اختر العملة وطريقة الدفع قبل الحفظ.",
+  "chooseCurrencyAndPaymentBeforeSaving": "اختر العملة وطريقة الدفع قبل الحفظ.",
+  "settingsLoadRequiredForAi": "تعذر تحميل الإعدادات. أعد المحاولة قبل استخدام الذكاء الاصطناعي حتى لا يتم تخمين العملة وطريقة الدفع.",
+  "aiQuotaUnavailable": "حد استخدام الذكاء الاصطناعي غير متاح حاليًا.",
+  "aiQuotaExhausted": "استخدمت حد الذكاء الاصطناعي لهذا اليوم.",
+  "aiCouldNotUnderstand": "لم أتمكن من فهم الطلب. جرّب إضافة المبلغ والفئة والتاريخ.",
+  "aiProviderUnavailable": "خدمة الذكاء الاصطناعي غير متاحة. حاول لاحقًا.",
+  "aiFormFillTitle": "املأ بالذكاء الاصطناعي",
+  "aiFormFillHint": "مثال: صرفت 100 دولار على أكل امبارح",
+  "aiFormFillHelper": "الذكاء الاصطناعي يملأ النموذج فقط. راجع واضغط حفظ بنفسك.",
+  "aiFormFillAction": "ملء",
+  "aiFormFillApplied": "تم ملء النموذج بالذكاء الاصطناعي. راجع قبل الحفظ.",
+  "aiFormFillFailed": "تعذر ملء النموذج بالذكاء الاصطناعي. يمكنك إدخاله يدويًا.",
+  "aiFormFillNeedsReview": "يحتاج الذكاء الاصطناعي لمراجعة إضافية. أكمل النموذج يدويًا.",
+  "onboardingTitle": "إعداد أول تشغيل",
+  "onboardingLoading": "جار تحميل الإعداد",
+  "onboardingLoadFailed": "تعذر تحميل إعداداتك. تحقق من الاتصال ثم حاول مرة أخرى.",
+  "onboardingSaveFailed": "تعذر حفظ اختياراتك. أبقها محددة ثم حاول مرة أخرى.",
+  "onboardingSelectRequired": "اختر اللغة والعملة الأساسية وطريقة الدفع الافتراضية للمتابعة.",
+  "onboardingContinue": "متابعة",
+  "onboardingBack": "رجوع",
+  "onboardingFinish": "إنهاء الإعداد",
+  "onboardingComplete": "اكتمل الإعداد",
+  "onboardingSkipReminders": "تخطي التذكيرات",
+  "onboardingEssentialsTitle": "اختر الأساسيات",
+  "onboardingEssentialsSubtitle": "تتحكم هذه الاختيارات في لغة التطبيق والافتراضيات المستخدمة قبل حفظ أي مصروف.",
+  "onboardingLanguageLabel": "اللغة",
+  "onboardingLanguageEnglish": "الإنجليزية",
+  "onboardingLanguageArabic": "العربية",
+  "onboardingCurrencyLabel": "العملة الأساسية",
+  "onboardingPaymentLabel": "طريقة الدفع الافتراضية",
+  "onboardingAiTitle": "الذكاء الاصطناعي تحت تحكمك",
+  "onboardingAiSubtitle": "يمكن للذكاء الاصطناعي مساعدتك في تجهيز المصروفات، لكن الإعداد لا يتصل بالمزود ولا يستهلك الحصة.",
+  "onboardingAiPreviewTitle": "المعاينة أولاً",
+  "onboardingAiPreviewBody": "تظهر اقتراحات الذكاء الاصطناعي للمراجعة، ولا يتم حفظ أي شيء حتى تؤكد.",
+  "onboardingAiLimitTitle": "حدود يومية مجانية",
+  "onboardingAiLimitBody": "للذكاء الاصطناعي حدود يومية مجانية وقد لا يكون متاحاً، لذلك لا يعتمد التطبيق عليه للتتبع اليدوي.",
+  "onboardingAiManualTitle": "الإدخال اليدوي يعمل دائماً",
+  "onboardingAiManualBody": "يمكنك إضافة المصروفات بنفسك حتى عند انتهاء حصة الذكاء الاصطناعي أو توقف البوابة.",
+  "onboardingAiSample": "مثال فقط: \"غداء 12 USD بالمحفظة\". لا يتم إرسال هذا المثال إلى الذكاء الاصطناعي.",
+  "onboardingAiSampleSemantics": "نص مثال للذكاء الاصطناعي لا يتم إرساله",
+  "onboardingReminderTitle": "تذكيرات اختيارية",
+  "onboardingReminderSubtitle": "يمكن أن تساعدك التذكيرات على الاستمرار في التتبع، لكنها اختيارية ويمكن تغييرها لاحقاً.",
+  "onboardingDailyReminder": "تذكير يومي بالمصروفات",
+  "onboardingDailyReminderDescription": "اطلب مراجعة سريعة للمصروفات مساءً إذا لم تسجل مصروفات اليوم.",
+  "onboardingWeeklyDigest": "ملخص إنفاق أسبوعي",
+  "onboardingWeeklyDigestDescription": "اعرض تذكير ملخص يوم الاثنين للملخص الأسبوعي ودرجة صحة الإنفاق.",
+  "onboardingReminderLater": "إذا رُفض الإذن، يكتمل الإعداد وتبقى التذكيرات متوقفة.",
+  "onboardingReminderPermissionDenied": "لم يتم تفعيل التذكيرات لأن إذن الإشعارات أو الجدولة غير متاح.",
+  "guidedTourNext": "التالي",
+  "guidedTourBack": "رجوع",
+  "guidedTourSkip": "تخطي",
+  "guidedTourDone": "تم",
+  "guidedTourReplayTour": "إعادة الجولة",
+  "guidedTourStepCount": "الخطوة {current} من {total}",
+  "@guidedTourStepCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "guidedTourAiTitle": "تعرف على المساعد الذكي",
+  "guidedTourAiBody": "اكتب المصروف أو أمليه هنا. يعرض الذكاء الاصطناعي معاينة دائما قبل الحفظ.",
+  "guidedTourManualExpenseTitle": "أضف المصروفات يدويا",
+  "guidedTourManualExpenseBody": "استخدم زر الإضافة لفتح نموذج المصروف العادي. يمكن للذكاء الاصطناعي ملؤه من الأعلى، ويظل الحفظ خطوتك الأخيرة.",
+  "guidedTourAiPreviewTitle": "راجع قبل الحفظ",
+  "guidedTourAiPreviewBody": "اقتراحات الذكاء الاصطناعي لا تحفظ مباشرة. تحقق من المبلغ والفئة والتاريخ وطريقة الدفع قبل التأكيد.",
+  "guidedTourBudgetTitle": "تابع ميزانيتك",
+  "guidedTourBudgetBody": "الميزانيات الشهرية تشغل عرض المتبقي والتنبيهات والنصائح المبنية على مصروفاتك الحقيقية.",
+  "guidedTourReportsTitle": "اقرأ تقارير حقيقية",
+  "guidedTourReportsBody": "تلخص التقارير إنفاقك الفعلي حسب الأسبوع والشهر والفئة.",
+  "guidedTourCategoriesTitle": "نظم الفئات",
+  "guidedTourCategoriesBody": "افتح القائمة للفئات. يمكنك تعديل الأسماء والأيقونات والألوان وأرشفة الخيارات بأمان.",
+  "guidedTourSettingsTitle": "اضبط الإعدادات",
+  "guidedTourSettingsBody": "تجمع الإعدادات العملة والدفع والتنبيهات والحماية واستخدام الذكاء الاصطناعي والاشتراك والخصوصية.",
+  "guidedTourFreePremiumTitle": "المجاني والمميز",
+  "guidedTourFreePremiumBody": "الخطة المجانية تبقي التتبع اليدوي متاحا. خيارات المميز والإعلانات والحدود موجودة في الإعدادات دون مقاطعة إدخال المصروفات.",
+  "guidedTourSettingsSectionTitle": "الإرشاد",
+  "guidedTourSettingsSectionDescription": "أعد تشغيل الجولة الإرشادية لإصدار التطبيق الحالي.",
+  "guidedTourReplayTourDescription": "اعرض جولة الصفحة الرئيسية مرة أخرى.",
+  "no": "لا",
+  "notificationsSettingsTitle": "الإشعارات",
+  "budgetAlerts": "تنبيهات الميزانية",
+  "budgetAlertsDescription": "نبهني عند اقتراب المصروفات من الميزانية أو تجاوزها.",
+  "dailyCheckIn": "مراجعة يومية",
+  "dailyCheckInDescription": "راجع مصروفات اليوم وحافظ على الاستمرارية.",
+  "checkInTime": "وقت المراجعة",
+  "weeklyDigest": "ملخص أسبوعي",
+  "weeklyDigestDescription": "ذكرني بمراجعة ملخص الإنفاق الأسبوعي.",
+  "weeklyDigestEmpty": "لا يوجد إنفاق مسجل لهذا الأسبوع بعد.",
+  "weeklyDigestThisWeek": "هذا الأسبوع",
+  "weeklyDigestPreviousWeek": "الأسبوع السابق",
+  "weeklyDigestChange": "التغير",
+  "weeklyDigestLocalInsight": "رؤية محلية",
+  "weeklyDigestIgnoredCurrencyExpenses": "{count, plural, =1{تم تجاهل مصروف بعملة أخرى لعدم توفر سعر صرف محفوظ.} =2{تم تجاهل مصروفين بعملات أخرى لعدم توفر أسعار صرف محفوظة.} few{تم تجاهل {count} مصروفات بعملات أخرى لعدم توفر أسعار صرف محفوظة.} many{تم تجاهل {count} مصروفا بعملات أخرى لعدم توفر أسعار صرف محفوظة.} other{تم تجاهل {count} مصروف بعملات أخرى لعدم توفر أسعار صرف محفوظة.}}",
+  "@weeklyDigestIgnoredCurrencyExpenses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyDigestHealthScore": "{label} ({score}/100)",
+  "@weeklyDigestHealthScore": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyInsightStartLogging": "ابدأ بتسجيل مصروف واحد هذا الأسبوع.",
+  "weeklyInsightTopCategory": "{category} هي أكبر فئة هذا الأسبوع.",
+  "@weeklyInsightTopCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "weeklyInsightFirstTrackedWeek": "هذا أول أسبوع مسجل في هذه المقارنة.",
+  "weeklyInsightHigherThanLastWeek": "الإنفاق أعلى من الأسبوع السابق.",
+  "weeklyInsightLowerThanLastWeek": "الإنفاق أقل من الأسبوع السابق.",
+  "weeklyInsightUnchanged": "الإنفاق لم يتغير عن الأسبوع السابق.",
+  "spendingHealthAddFewExpenses": "أضف بعض المصروفات",
+  "spendingHealthOnTrack": "ضمن المسار",
+  "spendingHealthWorthWatching": "يستحق المتابعة",
+  "spendingHealthNeedsReview": "يحتاج مراجعة",
+  "spendingHealthReasonLogExpensesOrBudget": "سجل مصروفات أو حدد ميزانية شهرية لعرض النتيجة.",
+  "spendingHealthReasonBudgetExceeded": "تم تجاوز الميزانية الشهرية.",
+  "spendingHealthReasonBudgetNearLimit": "الميزانية الشهرية قريبة من الحد.",
+  "spendingHealthReasonBudgetOnTrack": "الميزانية الشهرية ضمن المسار.",
+  "spendingHealthReasonNoBudget": "لا توجد ميزانية شهرية محددة.",
+  "spendingHealthReasonOneCategoryHigh": "فئة واحدة تتجاوز 60% من إنفاق هذا الشهر.",
+  "spendingHealthReasonSpreadAcrossCategories": "الإنفاق موزع على عدة فئات.",
+  "spendingHealthReasonTrackedToday": "يوجد مصروف واحد على الأقل مسجل اليوم.",
+  "spendingHealthReasonRecentTracking": "نشاط التتبع الأخير مستمر.",
+  "spendingHealthReasonNoRecentStreak": "لا توجد سلسلة تتبع حديثة بعد.",
+  "digestTime": "وقت الملخص",
+  "monday": "الاثنين",
+  "appProtection": "حماية التطبيق",
+  "pinLock": "قفل PIN",
+  "pinLockDescription": "اطلب PIN محلي عند فتح التطبيق أو الرجوع إليه.",
+  "changePin": "تغيير PIN",
+  "createPin": "إنشاء PIN",
+  "createPinIntro": "احم بيانات مصروفاتك برمز PIN محلي.",
+  "changePinIntro": "اختر PIN جديدا للتطبيق.",
+  "pinLabel": "PIN",
+  "confirmPinLabel": "تأكيد PIN",
+  "saveNewPin": "حفظ PIN الجديد",
+  "enableAppLock": "تفعيل قفل التطبيق",
+  "pinDigitsValidation": "يجب أن يتكون PIN من 4 إلى 8 أرقام.",
+  "pinConfirmationMismatch": "تأكيد PIN غير مطابق.",
+  "expenseTrackerLocked": "Expense Tracker مقفل",
+  "enterPinToContinue": "أدخل PIN للمتابعة.",
+  "unlock": "فتح",
+  "useBiometrics": "استخدام البصمة",
+  "biometricUnlock": "فتح بالبصمة",
+  "biometricUnlockAvailableDescription": "استخدم البصمة أو Face ID عند توفره.",
+  "biometricUnlockUnavailableDescription": "غير متاح على هذا الجهاز.",
+  "aiUsageSettingsTitle": "استخدام الذكاء الاصطناعي",
+  "aiUsageSettingsDescription": "حدود يومية مجانية للذكاء الاصطناعي. الإدخال اليدوي والتقارير المحلية يستمران عند عدم توفره.",
+  "aiUsageTextParsing": "تحليل النص",
+  "aiUsageReceiptExtraction": "استخراج الإيصال",
+  "aiUsageFinancialAdvice": "نصائح مالية",
+  "aiUsageUsed": "{used}/{limit} مستخدم",
+  "@aiUsageUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "aiUsageResetsAround": "يتجدد تقريبًا عند {time}",
+  "@aiUsageResetsAround": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "aiUsageWaitingForLiveUsage": "في انتظار الاستخدام المباشر من Worker",
+  "aiUsageRemaining": "متبقي {count}",
+  "@aiUsageRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freePlan": "الخطة المجانية",
+  "premiumPlan": "الخطة المميزة",
+  "unknownPlan": "خطة غير معروفة",
+  "pendingPlan": "خطة قيد التحقق",
+  "loadingLivePlanState": "جار تحميل حالة الخطة المباشرة...",
+  "adsDisabled": "الإعلانات معطلة",
+  "viewLimitsAdsAndPremium": "عرض الحدود والإعلانات والمميز",
+  "removeAds": "إزالة الإعلانات",
+  "removeAdsDescription": "قادمة مع إعداد شراء الخطة المميزة.",
+  "usingFreeSafePlanState": "استخدام حالة مجانية آمنة",
+  "refreshPlanState": "تحديث حالة الخطة",
+  "privacyAndAdChoices": "اختيارات الخصوصية والإعلانات",
+  "privacy": "الخصوصية",
+  "privacySettingsDescription": "مصروفاتك تبقى مرتبطة بحسابك في Firebase. إجراءات الذكاء الاصطناعي تحتاج معاينة وتأكيد قبل أي كتابة.",
+  "dataOwnership": "ملكية البيانات",
+  "dataOwnershipDescription": "حسابك المسجل فقط يمكنه الوصول إلى بياناتك.",
+  "support": "الدعم",
+  "supportSettingsDescription": "أرسل ملاحظات بدون إرفاق بيانات المصروفات.",
+  "sendFeedback": "إرسال ملاحظات",
+  "sendFeedbackDescription": "يتضمن إصدار التطبيق فقط إذا وافقت.",
+  "feedbackDiagnosticsPrompt": "لن يتم تضمين أوصاف المصروفات أو الإيصالات أو رموز الحساب أو PIN أو تفاصيل مزود الذكاء الاصطناعي. هل تريد إضافة إصدار التطبيق 1.0.0+1؟",
+  "includeVersion": "تضمين الإصدار",
+  "appVersion": "إصدار التطبيق",
+  "feedbackShareTemplate": "ملاحظات Expense Tracker\n\nماذا حدث؟\n\nماذا كنت تتوقع؟",
+  "feedbackSubject": "ملاحظات Expense Tracker",
+  "paymentSettingsTitle": "الدفع",
+  "paymentSettingsDescription": "تستخدم كطريقة افتراضية عندما لا يحدد المصروف اليدوي أو الذكاء الاصطناعي طريقة الدفع.",
+  "defaultPaymentMethod": "طريقة الدفع الافتراضية",
+  "archive": "أرشفة",
+  "clear": "مسح",
+  "close": "إغلاق",
+  "parse": "تحليل",
+  "add": "إضافة",
+  "week": "أسبوع",
+  "month": "شهر",
+  "required": "مطلوب",
+  "export": "تصدير",
+  "shareFile": "مشاركة الملف",
+  "allCurrencies": "كل العملات",
+  "pickRange": "اختيار النطاق",
+  "selectDateRangeBeforeExporting": "اختر نطاق تاريخ قبل التصدير.",
+  "exportReady": "التصدير جاهز: {fileName}",
+  "@exportReady": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "reports": "التقارير",
+  "activeReportDrilldownFilter": "فلتر تفصيل التقرير نشط",
+  "monthlyStoryTitle": "قصة الشهر",
+  "monthlyStoryEmpty": "لم يتم تسجيل إنفاق في هذا الشهر أو الشهر السابق.",
+  "monthlyStoryNewSpending": "إنفاق هذا الشهر هو {current}، ولا يوجد إنفاق في الشهر السابق للمقارنة بعد.",
+  "@monthlyStoryNewSpending": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyStoryIncrease": "ارتفع الإنفاق إلى {current} من {previous}، بزيادة {percent}%.",
+  "@monthlyStoryIncrease": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "previous": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyStoryDecrease": "تحسن الإنفاق إلى {current} من {previous}، بانخفاض {percent}%.",
+  "@monthlyStoryDecrease": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "previous": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyStoryFlat": "ظل الإنفاق قريبًا من الشهر السابق: {current} الآن مقابل {previous} سابقًا.",
+  "@monthlyStoryFlat": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "previous": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyStoryDriversHeading": "أهم المحركات",
+  "monthlyStoryDriver": "{category}: {amount}، حوالي {percent}% من هذا الشهر.",
+  "@monthlyStoryDriver": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyStoryOutliersHeading": "مصروفات كبيرة",
+  "monthlyStoryOutlier": "{expense}: {amount}",
+  "@monthlyStoryOutlier": {
+    "placeholders": {
+      "expense": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyStoryMissingRateCaveat": "{count, plural, =1{تستبعد هذه القصة مصروفًا واحدًا بسبب سعر صرف مفقود لـ {currencies}.} other{تستبعد هذه القصة {count} مصروفات بسبب أسعار صرف مفقودة لـ {currencies}.}}",
+  "@monthlyStoryMissingRateCaveat": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "currencies": {
+        "type": "String"
+      }
+    }
+  },
+  "noSpendingInThisPeriod": "لا يوجد إنفاق في هذه الفترة.",
+  "noCategorySpendingYet": "لا يوجد إنفاق حسب الفئات بعد.",
+  "none": "لا شيء",
+  "topCategoryLabel": "أعلى فئة: {category}",
+  "@topCategoryLabel": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "ignoredOtherCurrencyExpenses": "{count, plural, =1{تم تجاهل مصروف واحد بعملة أخرى.} other{تم تجاهل {count} مصروفات بعملات أخرى.}}",
+  "@ignoredOtherCurrencyExpenses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "periodComparison": "مقارنة الفترة",
+  "currentAmountLabel": "الحالي: {amount}",
+  "@currentAmountLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "previousAmountLabel": "السابق: {amount}",
+  "@previousAmountLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "daily": "يومي",
+  "weekly": "أسبوعي",
+  "monthly": "شهري",
+  "frequency": "التكرار",
+  "newRecurring": "تكرار جديد",
+  "editRecurringExpense": "تعديل مصروف متكرر",
+  "archiveRecurringExpense": "أرشفة مصروف متكرر",
+  "archiveRecurringExpenseMessage": "هل تريد أرشفة {name}؟",
+  "@archiveRecurringExpenseMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "createActiveCategoryBeforeRecurring": "أنشئ فئة نشطة قبل إضافة مصروفات متكررة.",
+  "noActiveRecurringExpensesYet": "لا توجد مصروفات متكررة نشطة بعد",
+  "nextDateLabel": "التالي {date}",
+  "@nextDateLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "enterRecurringAmountAndCategory": "أدخل المبلغ والفئة.",
+  "startDate": "تاريخ البدء",
+  "endDate": "تاريخ الانتهاء",
+  "noEndDate": "بدون تاريخ انتهاء",
+  "clearEndDate": "مسح تاريخ الانتهاء",
+  "savingGoalsTitle": "أهداف الادخار",
+  "newSavingGoal": "هدف ادخار جديد",
+  "editSavingGoal": "تعديل هدف الادخار",
+  "goalName": "اسم الهدف",
+  "targetAmount": "المبلغ المستهدف",
+  "currentAmount": "المبلغ الحالي",
+  "deadline": "الموعد النهائي",
+  "noDeadline": "بدون موعد نهائي",
+  "clearDeadline": "مسح الموعد النهائي",
+  "addContribution": "إضافة مساهمة",
+  "contributionAmount": "مبلغ المساهمة",
+  "addContributionToGoal": "إضافة إلى {goal}",
+  "@addContributionToGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSavingGoal": "أرشفة هدف الادخار",
+  "archiveSavingGoalMessage": "هل تريد أرشفة {goal}؟",
+  "@archiveSavingGoalMessage": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "noActiveSavingGoalsYet": "لا توجد أهداف ادخار نشطة بعد",
+  "enterSavingGoalNameAndTarget": "أدخل اسمًا ومبلغًا مستهدفًا موجبًا.",
+  "currentAmountCannotBeNegative": "لا يمكن أن يكون المبلغ الحالي سالبًا.",
+  "goalReached": "تم الوصول إلى الهدف",
+  "remainingAmountLabel": "متبقي {amount}",
+  "@remainingAmountLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savedPercentLabel": "تم ادخار {percent}%",
+  "@savedPercentLabel": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "deadlineDateLabel": "الموعد النهائي {date}",
+  "@deadlineDateLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "freePremiumTitle": "المجاني / المميز",
+  "planRefreshFailedFreeSafe": "تعذر تحديث الخطة، لذلك تظهر حدود الخطة المجانية الآمنة. يظل تتبع المصروفات اليدوي متاحًا. {message}",
+  "@planRefreshFailedFreeSafe": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "premiumStillWorks": "الخطة المميزة تزيل الإعلانات وترفع الحدود. يظل التتبع اليدوي هو التجربة الأساسية.",
+  "freeStillWorks": "الخطة المجانية تُبقي المصروفات اليدوية والفئات والميزانيات والتقارير الأساسية والتصدير والمزامنة دون اتصال عاملة حتى عند انتهاء حصة الذكاء الاصطناعي.",
+  "adsOnFree": "إعلانات في المجاني",
+  "premiumAdsDisabledBody": "يجب ألا يبدأ التطبيق الإعلانات أو يطلبها أثناء تفعيل الخطة المميزة.",
+  "freeAdsBody": "الإعلانات مخصصة لمواضع لافتات هادئة أو لحظات إكمال طبيعية. لا تقاطع إضافة المصروف أو معاينة الذكاء الاصطناعي أو تسجيل الدخول أو قفل التطبيق أو الشراء.",
+  "consentStatusLabel": "الموافقة: {status}",
+  "@consentStatusLabel": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "todayAiUsage": "استخدام الذكاء الاصطناعي اليوم",
+  "textParse": "تحليل النص",
+  "receipts": "الإيصالات",
+  "advice": "النصائح",
+  "leftByDefault": "متبقي {count} افتراضيًا",
+  "@leftByDefault": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "leftCount": "متبقي {count}",
+  "@leftCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "showingPolicyDefaultsUntilWorker": "تظهر افتراضات السياسة حتى يعيد Worker الاستخدام المباشر.",
+  "resetsAroundWithPeriod": "يتجدد تقريبًا عند {time}.",
+  "@resetsAroundWithPeriod": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "free": "مجاني",
+  "premium": "مميز",
+  "included": "مشمول",
+  "manualTracking": "التتبع اليدوي",
+  "aiTextParse": "تحليل النص بالذكاء الاصطناعي",
+  "higherFiniteLimit": "حد أعلى ومحدد",
+  "moreReceipts": "إيصالات أكثر",
+  "moreAdvice": "نصائح أكثر",
+  "ads": "الإعلانات",
+  "politeAds": "إعلانات هادئة",
+  "noAds": "بدون إعلانات",
+  "reportsExport": "التقارير/التصدير",
+  "basic": "أساسي",
+  "advancedLater": "تقارير متقدمة وقوالب تصدير وميزانيات ذكية",
+  "premiumIsActive": "الخطة المميزة نشطة",
+  "premiumActiveBody": "تم تعطيل الإعلانات وتفعيل صلاحيات الخطة المميزة.",
+  "premiumComingSoon": "الخطة المميزة قادمة قريبًا",
+  "premiumPurchasesDisabledBody": "المشتريات غير مفعلة بعد لأن تحقق الخادم غير منشور. لن يزيف التطبيق اشتراكًا أو يخصم منك من هذه الشاشة.",
+  "checkAvailability": "التحقق من الإتاحة",
+  "restorePurchases": "استعادة المشتريات",
+  "readinessComingSoonLabel": "قريبًا",
+  "readinessDisabledLabel": "غير متاح الآن",
+  "premiumRestoreDisabledBody": "استعادة المشتريات متوقفة حتى يتم توفير تحقق موثوق من الاستحقاقات على الخادم.",
+  "premiumBackendVerificationUnavailable": "الاشتراكات المدفوعة غير مفعلة لأن التحقق الخلفي غير مهيأ بعد.",
+  "walletsReadinessBody": "إدارة المحافظ ستبقى غير مفعلة حتى تكتمل قائمة المحافظ، الإنشاء، التعديل، الأرشفة، وربط المصروفات.",
+  "transfersReadinessBody": "التحويلات ستبقى غير مفعلة حتى يكتمل نموذج التحويل وسياسة العملات، وستظل منفصلة عن المصروفات.",
+  "backupExportTitle": "نسخ احتياطي",
+  "backupExportReadinessBody": "تصدير النسخ الاحتياطي غير متاح من الواجهة حتى يكتمل تجميع البيانات بأمان.",
+  "restorePreviewTitle": "معاينة الاستعادة",
+  "restorePreviewReadinessBody": "الاستعادة تحتاج معاينة للتغييرات وتأكيدًا صريحًا قبل أي تعديل في البيانات.",
+  "restoreExecutionTitle": "تنفيذ الاستعادة",
+  "restoreExecutionReadinessBody": "تنفيذ الاستعادة متوقف عمدًا حتى توجد سياسة تعارضات واختبارات كتابة للمستودعات.",
+  "aiInputExampleHint": "مثال: صرفت 250 جنيه على أكل أمس بالكاش",
+  "receipt": "إيصال",
+  "camera": "الكاميرا",
+  "gallery": "المعرض",
+  "receiptImageReadFailed": "تعذر قراءة صورة الإيصال. أضف المصروف يدويًا.",
+  "thisWeek": "هذا الأسبوع",
+  "thisMonth": "هذا الشهر",
+  "reviewBeforeSaving": "راجع قبل الحفظ",
+  "newCategoryName": "اسم الفئة الجديدة",
+  "confirmingCreatesCategoryFirst": "سيتم إنشاء هذه الفئة أولًا عند التأكيد.",
+  "suggestedNewCategory": "فئة جديدة مقترحة: {category}",
+  "@suggestedNewCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "matchedCategory": "فئة مطابقة: {category}",
+  "@matchedCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "sourceLabel": "المصدر: {source}",
+  "@sourceLabel": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "confidenceLabel": "الثقة: {percent}%",
+  "@confidenceLabel": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "aiCategoryId": "معرّف فئة الذكاء الاصطناعي",
+  "aiCategoryName": "اسم فئة الذكاء الاصطناعي",
+  "categoryAlias": "اسم بديل للفئة",
+  "recentHistory": "السجل الحديث",
+  "newCategorySuggestion": "اقتراح فئة جديدة",
+  "manualSelection": "اختيار يدوي",
+  "noMatch": "لا يوجد تطابق",
+  "failedToCreateAiSuggestedCategory": "تعذر إنشاء الفئة المقترحة بالذكاء الاصطناعي.",
+  "createCategoryBeforeSavingRecurrence": "أنشئ فئة قبل حفظ التكرار.",
+  "recurringExpenseSuggestionSaved": "تم حفظ اقتراح المصروف المتكرر.",
+  "failedToSaveAiExpense": "تعذر حفظ مصروف الذكاء الاصطناعي. حاول مرة أخرى.",
+  "pleaseAddMoreDetails": "أضف مزيدًا من التفاصيل.",
+  "couldNotParseExpense": "تعذر تحليل هذا المصروف.",
+  "searchReady": "البحث جاهز",
+  "readyToOpenFilteredExpenses": "جاهز لفتح المصروفات المفلترة.",
+  "openResults": "فتح النتائج",
+  "historyAnswer": "السجل",
+  "historySourceLocal": "المصدر: سجل محلي محسوب",
+  "historyNoMatchingExpenses": "لا توجد مصروفات محملة تطابق سؤال السجل هذا.",
+  "historyMatchingExpenses": "{count, plural, =1{مصروف واحد مطابق.} =2{مصروفان مطابقان.} few{{count} مصروفات مطابقة.} many{{count} مصروفًا مطابقًا.} other{{count} مصروف مطابق.}}",
+  "@historyMatchingExpenses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyMutationReadOnly": "إجابات السجل للقراءة فقط. استخدم مسار المعاينة والتأكيد الحالي لإجراء التغييرات.",
+  "summary": "الملخص",
+  "totalAmountLabel": "الإجمالي: {amount}",
+  "@totalAmountLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "topCategoryWithAmount": "أعلى فئة: {category} ({amount})",
+  "@topCategoryWithAmount": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "ignoredOtherCurrencyExpensesBecause": "{count, plural, =1{تم تجاهل مصروف واحد لأنه يستخدم عملة أخرى.} other{تم تجاهل {count} مصروفات لأنها تستخدم عملة أخرى.}}",
+  "@ignoredOtherCurrencyExpensesBecause": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "financialAdvice": "نصيحة مالية",
+  "localAdviceFallback": "بديل النصائح المحلي",
+  "aiFinancialAdvice": "نصيحة مالية بالذكاء الاصطناعي",
+  "aiAdviceEvidenceTotal": "الإجمالي: {amount} {currency}",
+  "@aiAdviceEvidenceTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceEvidenceTopCategory": "أعلى فئة: {category} ({amount} {currency})",
+  "@aiAdviceEvidenceTopCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceEvidenceBudgetUsed": "المستخدم من الميزانية: {percent}%",
+  "@aiAdviceEvidenceBudgetUsed": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceEvidenceConvertedCurrencies": "عملات تم تحويلها: {currencies}",
+  "@aiAdviceEvidenceConvertedCurrencies": {
+    "placeholders": {
+      "currencies": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceEvidenceMissingRates": "أسعار صرف غير متوفرة لـ {currencies}؛ {count, plural, =1{لم يتم تضمين مصروف واحد} =2{لم يتم تضمين مصروفين} few{لم يتم تضمين {count} مصروفات} many{لم يتم تضمين {count} مصروفا} other{لم يتم تضمين {count} مصروف}}",
+  "@aiAdviceEvidenceMissingRates": {
+    "placeholders": {
+      "currencies": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "aiAdviceNoSpending": "لا يوجد إنفاق في هذه الفترة. استمر في تسجيل المصروفات لتصبح النصائح أدق.",
+  "aiAdviceOverBudget": "تجاوزت الميزانية. راجع {category} أولا وأوقف الإنفاق غير الضروري حتى الفترة التالية.",
+  "@aiAdviceOverBudget": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceOverBudgetFallback": "تجاوزت الميزانية. راجع أكبر فئة أولا وأوقف الإنفاق غير الضروري حتى الفترة التالية.",
+  "aiAdviceNearLimit": "أنت قريب من حد الميزانية. اجعل المشتريات القادمة صغيرة وراقب {category}.",
+  "@aiAdviceNearLimit": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceNearLimitFallback": "أنت قريب من حد الميزانية. اجعل المشتريات القادمة صغيرة وراقب أعلى فئة.",
+  "aiAdviceFocusCategory": "بالنسبة إلى {category}، قارن كل عملية شراء بخطتك قبل الإنفاق مرة أخرى هذه الفترة.",
+  "@aiAdviceFocusCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceTopCategory": "أعلى إنفاق لديك في {category}. حدد لها سقفا أصغر وانقل المشتريات المتكررة إلى أيام مخططة.",
+  "@aiAdviceTopCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceStable": "إنفاقك مستقر في هذه الفترة. واصل مراجعة الإجماليات قبل إضافة مصروفات غير ضرورية.",
+  "aiAdviceRequestsLeftToday": "متبقي {count} طلب نصيحة ذكاء اصطناعي اليوم.",
+  "@aiAdviceRequestsLeftToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "aiNeedsReview": "الذكاء الاصطناعي يحتاج مراجعة",
+  "aiUnavailable": "الذكاء الاصطناعي غير متاح",
+  "providerAiUnavailableManualStillWorks": "الذكاء الاصطناعي عبر المزود غير متاح. يظل الإدخال اليدوي والرؤى المحلية تعمل.",
+  "localSpendingPrediction": "توقع إنفاق محلي",
+  "expectedThisMonth": "المتوقع هذا الشهر: {amount}",
+  "@expectedThisMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatedExpenseFound": "تم العثور على مصروف متكرر",
+  "repeatedExpenseLooksFrequency": "{description} يبدو {frequency}.",
+  "@repeatedExpenseLooksFrequency": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      },
+      "frequency": {
+        "type": "String"
+      }
+    }
+  },
+  "matchingExpensesAverage": "{count} مصروفات مطابقة، بمتوسط {amount}.",
+  "@matchingExpensesAverage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRecurring": "مراجعة التكرار",
+  "confirmDelete": "تأكيد الحذف",
+  "confirmUpdate": "تأكيد التعديل",
+  "chooseExactExpenseFirst": "اختر المصروف المحدد أولًا.",
+  "update": "تحديث",
+  "target": "الهدف",
+  "after": "بعد التعديل",
+  "preparingVoiceInput": "جارٍ تجهيز الإدخال الصوتي...",
+  "listeningVoiceInput": "يتم الاستماع. دعم التوقف المؤقت يعتمد على جهازك.",
+  "createCategory": "إنشاء فئة",
+  "editCategory": "تعديل الفئة",
+  "archiveCategory": "أرشفة الفئة",
+  "archiveCategoryMessage": "أرشفة {category}؟ ستظل المصروفات القديمة تعرضها.",
+  "@archiveCategoryMessage": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryCreated": "تم إنشاء الفئة.",
+  "categoryUpdated": "تم تحديث الفئة.",
+  "categoryArchived": "تمت أرشفة الفئة.",
+  "failedToCreateCategory": "تعذر إنشاء الفئة.",
+  "failedToUpdateCategory": "تعذر تحديث الفئة.",
+  "failedToArchiveCategory": "تعذر أرشفة الفئة.",
+  "selectCategoryToArchive": "اختر فئة لأرشفتها.",
+  "enterCategoryNameIconColor": "أدخل اسم الفئة والأيقونة واللون.",
+  "categoryName": "الاسم",
+  "categoryIcon": "الأيقونة",
+  "selectedCategoryIcon": "أيقونة الفئة المحددة",
+  "categoryColor": "اللون",
+  "customColor": "لون مخصص",
+  "saveColor": "حفظ اللون",
+  "searchIcons": "البحث في الأيقونات",
+  "categoryIconSemantics": "أيقونة {label}",
+  "@categoryIconSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryColorSemantics": "لون {label}",
+  "@categoryColorSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryExpenseCount": "{count, plural, =0{لا توجد مصروفات} =1{مصروف واحد} =2{مصروفان} few{{count} مصروفات} many{{count} مصروفًا} other{{count} مصروف}}",
+  "@categoryExpenseCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyBudgetTitle": "الميزانية الشهرية",
+  "budgetSetAction": "تحديد",
+  "budgetNoBudgetSet": "لا توجد ميزانية لهذا الشهر.",
+  "budgetSpentLabel": "المصروف",
+  "budgetRemainingLabel": "المتبقي",
+  "budgetPercentOfLimit": "{percent}% من {amount}",
+  "@budgetPercentOfLimit": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetExceededWarning": "تم تجاوز الميزانية.",
+  "budgetNearLimitWarning": "أنت قريب من حد الميزانية.",
+  "budgetIgnoredCurrencyExpenses": "{count, plural, =1{تم استبعاد مصروف بعملة أخرى لعدم توفر سعر صرف محفوظ.} =2{تم استبعاد مصروفين بعملات أخرى لعدم توفر أسعار صرف محفوظة.} few{تم استبعاد {count} مصروفات بعملات أخرى لعدم توفر أسعار صرف محفوظة.} many{تم استبعاد {count} مصروفا بعملات أخرى لعدم توفر أسعار صرف محفوظة.} other{تم استبعاد {count} مصروف بعملات أخرى لعدم توفر أسعار صرف محفوظة.}}",
+  "@budgetIgnoredCurrencyExpenses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "categoryBudgetsCreateCategoryFirst": "أنشئ فئة نشطة قبل ميزانيات الفئات.",
+  "categoryBudgetsLoadFailed": "تعذر تحميل ميزانيات الفئات.",
+  "categoryBudgetSaved": "تم حفظ ميزانية الفئة.",
+  "categoryBudgetSaveFailed": "تعذر حفظ ميزانية الفئة.",
+  "categoryBudgetArchived": "تمت أرشفة ميزانية الفئة.",
+  "categoryBudgetArchiveFailed": "تعذر أرشفة ميزانية الفئة.",
+  "selectCategoryBudgetToArchive": "اختر ميزانية فئة لأرشفتها.",
+  "archiveCategoryBudget": "أرشفة ميزانية الفئة",
+  "archiveCategoryBudgetMessage": "أرشفة ميزانية {category}؟",
+  "@archiveCategoryBudgetMessage": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "previousMonth": "الشهر السابق",
+  "nextMonth": "الشهر التالي",
+  "noCategoryBudgetsYet": "لا توجد ميزانيات فئات بعد",
+  "addCategoryBudget": "إضافة ميزانية فئة",
+  "editCategoryBudget": "تعديل ميزانية الفئة",
+  "limitAmount": "حد الميزانية",
+  "warningThresholdPercent": "نسبة التنبيه",
+  "budgetRecommendationTitle": "ميزانية شهرية مقترحة",
+  "budgetRecommendationMeta": "ثقة {confidence} - {period}",
+  "@budgetRecommendationMeta": {
+    "placeholders": {
+      "confidence": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetRecommendationMonthlyExplanation": "استنادا إلى الإنفاق الشهري الحديث واتجاهه.",
+  "budgetRecommendationCategoryExplanation": "استنادا إلى إنفاق {category} الحديث واتجاهه.",
+  "@budgetRecommendationCategoryExplanation": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "useEditableRecommendation": "استخدام الاقتراح القابل للتعديل",
+  "categoryBudgetRecommendationsTitle": "ميزانيات فئات مقترحة",
+  "categoryBudgetRecommendationSubtitle": "{amount} - ثقة {confidence}",
+  "@categoryBudgetRecommendationSubtitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "confidence": {
+        "type": "String"
+      }
+    }
+  },
+  "recommendationConfidenceHigh": "مرتفعة",
+  "recommendationConfidenceMedium": "متوسطة",
+  "recommendationConfidenceLow": "منخفضة",
+  "recommendationCaveatSparseHistory": "السجل المحدود يجعل هذا تقديرا حذرا.",
+  "recommendationCaveatOutlierMonth": "تم تخفيف تأثير شهر غير معتاد في التقدير.",
+  "recommendationCaveatMissingRates": "تم استبعاد مصروفات تنقصها أسعار الصرف.",
+  "recommendationCaveatExistingBudget": "لديك ميزانية هنا بالفعل؛ راجعها قبل استبدالها.",
+  "budgetSpentOfLimit": "{spent} من {limit}",
+  "@budgetSpentOfLimit": {
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetRemainingAmount": "المتبقي {amount}",
+  "@budgetRemainingAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryBudgetIgnoredCurrencyExpenses": "{count, plural, =1{تم تجاهل مصروف واحد بسبب العملة} =2{تم تجاهل مصروفين بسبب العملة} few{تم تجاهل {count} مصروفات بسبب العملة} many{تم تجاهل {count} مصروفًا بسبب العملة} other{تم تجاهل {count} مصروف بسبب العملة}}",
+  "@categoryBudgetIgnoredCurrencyExpenses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectCategory": "اختر فئة.",
+  "selectMonth": "اختر شهرًا.",
+  "selectCurrency": "اختر عملة.",
+  "enterValidBudgetLimit": "أدخل حد ميزانية صحيح.",
+  "warningThresholdRange": "يجب أن تكون نسبة التنبيه بين 1 و100.",
+  "manageRecurringExpenses": "إدارة المصروفات المتكررة",
+  "failedToLoadSubscriptions": "تعذر تحميل الاشتراكات.",
+  "estimatedMonthlyImpact": "الأثر الشهري التقديري",
+  "subscriptionMixedCurrencyCaveat": "تبقى الإجماليات مفصولة حسب العملة حتى تتم مراجعة تحويل الاشتراكات.",
+  "dailyMonthlyImpactEstimateCaveat": "يتم تقدير الاشتراكات اليومية على أساس 30 تجديدا في الشهر.",
+  "weeklyMonthlyImpactEstimateCaveat": "يتم تقدير الاشتراكات الأسبوعية على أساس 52 تجديدا على 12 شهرا.",
+  "upcomingRenewals": "التجديدات القادمة",
+  "renewsOn": "يتجدد {date}",
+  "@renewsOn": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "possiblePriceChanges": "تغييرات سعر محتملة",
+  "possiblePriceIncrease": "زيادة محتملة من {previous} إلى {current}",
+  "@possiblePriceIncrease": {
+    "placeholders": {
+      "previous": {},
+      "current": {}
+    }
+  },
+  "cautiousSignal": "إشارة حذرة",
+  "activeSubscriptions": "الاشتراكات النشطة",
+  "subscriptionNextDue": "{frequency} - {paymentMethod} - التالي {date}",
+  "@subscriptionNextDue": {
+    "placeholders": {
+      "frequency": {
+        "type": "String"
+      },
+      "paymentMethod": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyImpactSuffix": "{amount}/شهريًا",
+  "@monthlyImpactSuffix": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "noActiveSubscriptionsYet": "لا توجد اشتراكات نشطة بعد",
+  "exportEndDateBeforeStart": "يجب أن يكون تاريخ النهاية في نفس يوم البداية أو بعدها.",
+  "exportCurrencyFilterEmpty": "يجب ألا يكون فلتر العملة فارغًا.",
+  "exportPdfTitle": "تصدير المصروفات",
+  "exportPdfPeriod": "الفترة: {startDate} - {endDate}",
+  "@exportPdfPeriod": {
+    "placeholders": {
+      "startDate": {
+        "type": "String"
+      },
+      "endDate": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfTotal": "الإجمالي: {total}",
+  "@exportPdfTotal": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "exportHeaderDate": "التاريخ",
+  "exportHeaderAmount": "المبلغ",
+  "exportHeaderCurrency": "العملة",
+  "exportHeaderCategory": "الفئة",
+  "exportHeaderPaymentMethod": "طريقة الدفع",
+  "exportHeaderDescription": "الوصف",
+  "exportHeaderConvertedAmount": "المبلغ المحول",
+  "exportHeaderConvertedCurrency": "عملة التحويل",
+  "exportHeaderConversionRate": "سعر الصرف",
+  "exportHeaderConversionRateDate": "تاريخ سعر الصرف",
+  "exportHeaderConversionStatus": "حالة التحويل",
+  "exportConversionStatusOriginal": "أصلي",
+  "exportConversionStatusConverted": "تم التحويل",
+  "exportConversionStatusMissingRate": "سعر غير متاح",
+  "exportPdfConvertedTotal": "الإجمالي المحول: {total}",
+  "@exportPdfConvertedTotal": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfMissingRates": "{count, plural, =1{لا يوجد سعر صرف لـ {currencies}؛ لم يتم احتساب صف واحد.} =2{لا توجد أسعار صرف لـ {currencies}؛ لم يتم احتساب صفين.} few{لا توجد أسعار صرف لـ {currencies}؛ لم يتم احتساب {count} صفوف.} many{لا توجد أسعار صرف لـ {currencies}؛ لم يتم احتساب {count} صفا.} other{لا توجد أسعار صرف لـ {currencies}؛ لم يتم احتساب {count} صف.}}",
+  "@exportPdfMissingRates": {
+    "placeholders": {
+      "currencies": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exportArabicFontMissing": "يحتاج تصدير PDF إلى خط العربية المدمج قبل التشغيل. أضف assets/fonts/NotoSansArabic-Regular.ttf ثم أعد توليد الأصول.",
+  "wallets": "المحافظ",
+  "walletAccount": "حساب المحفظة",
+  "walletType": "نوع المحفظة",
+  "openingBalance": "الرصيد الافتتاحي",
+  "archiveWallet": "أرشفة المحفظة",
+  "transfers": "التحويلات",
+  "transfer": "تحويل",
+  "sourceWallet": "المحفظة المصدر",
+  "destinationWallet": "المحفظة الوجهة",
+  "transferFee": "رسوم التحويل",
+  "feeWallet": "محفظة الرسوم"
+}

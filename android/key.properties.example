@@ -1,0 +1,14 @@
+# Android release signing template.
+# Copy this file to android/key.properties on your local machine only.
+# Do not commit android/key.properties or any keystore file.
+
+# Relative paths are resolved from the android/ directory.
+# Windows paths can use forward slashes:
+# storeFile=C:/Users/you/secure-keys/ai-expenses-upload.jks
+# Or escape backslashes:
+# storeFile=C:\\Users\\you\\secure-keys\\ai-expenses-upload.jks
+storeFile=C:/path/to/ai-expenses-upload.jks
+
+storePassword=replace-with-store-password
+keyAlias=replace-with-key-alias
+keyPassword=replace-with-key-password

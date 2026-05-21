@@ -1,0 +1,22 @@
+name = "ai-expenses-gateway"
+main = "src/index.ts"
+compatibility_date = "2026-05-16"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+FIREBASE_PROJECT_ID = "ai-expenses-tracker-studio"
+AI_PROVIDER = "gemini"
+AI_MODEL = "gemini-2.5-flash"
+AI_PARSE_DAILY_USER_LIMIT = "5"
+AI_RECEIPT_DAILY_USER_LIMIT = "3"
+AI_ADVICE_DAILY_USER_LIMIT = "3"
+
+[[d1_databases]]
+binding = "AI_DB"
+database_name = "ai_expenses_gateway"
+database_id = "89d0a767-f2ec-48fd-83ff-2975c9e25f85"
+migrations_dir = "migrations"
+
+[observability]
+enabled = true
+head_sampling_rate = 1

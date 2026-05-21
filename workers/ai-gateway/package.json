@@ -1,0 +1,22 @@
+{
+  "name": "ai-expenses-gateway",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "migrate:local": "wrangler d1 migrations apply ai_expenses_gateway --local",
+    "migrate:remote": "wrangler d1 migrations apply ai_expenses_gateway --remote"
+  },
+  "dependencies": {
+    "jose": "latest"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "latest",
+    "typescript": "latest",
+    "vitest": "latest",
+    "wrangler": "latest"
+  }
+}

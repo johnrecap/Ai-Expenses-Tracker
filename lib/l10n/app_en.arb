@@ -1,0 +1,1317 @@
+{
+  "@@locale": "en",
+  "appTitle": "Expense Tracker",
+  "@appTitle": {
+    "description": "Application title shown to the platform and app shell."
+  },
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "confirm": "Confirm",
+  "retry": "Retry",
+  "reset": "Reset",
+  "settings": "Settings",
+  "expenses": "Expenses",
+  "filters": "Filters",
+  "searchExpenses": "Search expenses",
+  "clearSearch": "Clear search",
+  "resultsCount": "{count, plural, =0{No results} =1{1 result} other{{count} results}}",
+  "@resultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "expenseResultsLimitedToLoadedHistory": "Results are limited to loaded recent history. Load more or choose a date range to widen them.",
+  "expenseResultsLimitedToDateRange": "Results are limited to the loaded page for this date range.",
+  "loadMoreExpenses": "Load more",
+  "loadingMoreExpenses": "Loading more",
+  "allLoadedExpensesShown": "All loaded expenses are shown",
+  "noExpensesMatchFilters": "No expenses match your filters",
+  "expenseDetailsSeparator": "•",
+  "expenseActions": "Expense actions",
+  "editExpense": "Edit expense",
+  "expenseUpdated": "Expense updated",
+  "failedToUpdateExpense": "Failed to update expense. Please try again.",
+  "deleteExpenseTitle": "Delete expense?",
+  "deleteExpenseMessage": "Delete {category} expense for {amount} on {date}?",
+  "@deleteExpenseMessage": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "expenseDeleted": "Expense deleted",
+  "failedToDeleteExpense": "Failed to delete expense. Please try again.",
+  "categories": "Categories",
+  "amount": "Amount",
+  "min": "Min",
+  "max": "Max",
+  "paymentMethod": "Payment Method",
+  "currency": "Currency",
+  "applyFilters": "Apply Filters",
+  "dateRange": "Date range",
+  "anyDate": "Any date",
+  "clearDates": "Clear dates",
+  "pickDates": "Pick dates",
+  "welcome": "Welcome",
+  "thisMonthSpending": "This Month Spending",
+  "budgetLeft": "Budget Left",
+  "budget": "Budget",
+  "setMonthlyBudget": "Set monthly budget",
+  "topCategory": "Top Category",
+  "noSpendingYet": "No spending yet",
+  "transactions": "Transactions",
+  "viewAll": "View All",
+  "noExpensesYet": "No expenses yet",
+  "home": "Home",
+  "stats": "Stats",
+  "aiAssistant": "AI Assistant",
+  "recurringExpenses": "Recurring Expenses",
+  "savingGoals": "Saving Goals",
+  "exportData": "Export Data",
+  "logout": "Logout",
+  "addExpense": "Add Expense",
+  "quickCaptureQuick": "Quick",
+  "quickCaptureNatural": "Text",
+  "quickCaptureReceipt": "Receipt",
+  "quickCaptureMoreDetails": "More details",
+  "quickCaptureLessDetails": "Fewer details",
+  "quickCaptureDraftReady": "Draft filled. Review the fields, then save.",
+  "quickCaptureReceiptTitle": "Scan receipt",
+  "quickCaptureReceiptHelper": "Receipt details fill this same editable form. Saving still requires the Save button.",
+  "quickCaptureReceiptApplied": "Receipt draft filled. Review the fields, then save.",
+  "quickCaptureReceiptReview": "Review receipt fields before saving.",
+  "quickCaptureMissingFields": "Complete missing fields: {fields}.",
+  "@quickCaptureMissingFields": {
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "addCategory": "Add category",
+  "category": "Category",
+  "description": "Description",
+  "merchant": "Merchant",
+  "tags": "Tags",
+  "tagsHelper": "Separate tags with commas",
+  "possibleDuplicateExpense": "Possible duplicate expense",
+  "possibleDuplicateExpenseMessage": "A similar expense already exists: {amount} {currency}, {category}, {date}. Reasons: {reasons}. Save anyway?",
+  "@possibleDuplicateExpenseMessage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      },
+      "reasons": {
+        "type": "String"
+      }
+    }
+  },
+  "saveAnyway": "Save anyway",
+  "duplicateReasonSameDay": "same day",
+  "duplicateReasonSameAmount": "same amount",
+  "duplicateReasonSameCategory": "same category",
+  "duplicateReasonSameMerchant": "same merchant",
+  "date": "Date",
+  "noActiveCategoriesYet": "No active categories yet",
+  "enterValidExpenseAmount": "Enter a valid expense amount",
+  "selectCategoryBeforeSaving": "Select a category before saving",
+  "failedToSaveExpense": "Failed to save expense. Please try again.",
+  "failedToSaveCategory": "Failed to save category. Please try again.",
+  "failedToLoadCategories": "Failed to load categories",
+  "categoryBudgets": "Category Budgets",
+  "subscriptionCenter": "Subscription Center",
+  "confirmLogoutTitle": "Log out?",
+  "confirmLogoutMessage": "You will need to sign in again to access your expenses.",
+  "failedToLoadExpenses": "Failed to load expenses",
+  "checkConnectionTryAgain": "Please check your connection and try again.",
+  "cash": "Cash",
+  "visa": "Visa",
+  "wallet": "Wallet",
+  "bankTransfer": "Bank Transfer",
+  "profile": "Profile",
+  "authenticatedAccount": "Authenticated account",
+  "profileSettingsDescription": "Manage your app profile, sign-in details, and account actions.",
+  "profileFallbackUser": "User",
+  "profileName": "Profile name",
+  "editProfileName": "Edit profile name",
+  "displayNameLabel": "Display name",
+  "displayNameHint": "Enter the name shown in the app",
+  "displayNameRequired": "Enter a display name.",
+  "displayNameTooLong": "Display name must be 60 characters or fewer.",
+  "displayNameUpdated": "Display name updated.",
+  "displayNameUpdateFailed": "Failed to update display name. Please try again.",
+  "accountId": "Account ID",
+  "copyAccountId": "Copy account ID",
+  "accountIdCopied": "Account ID copied.",
+  "accountProfileTitle": "Account/Profile",
+  "accountProfileLoadFailed": "Account profile could not be loaded.",
+  "accountEmail": "Email",
+  "accountEmailMissing": "No email on this account",
+  "accountProvider": "Sign-in provider",
+  "accountProviderEmailPassword": "Email and password",
+  "accountProviderGoogle": "Google",
+  "accountProviderUnknown": "Provider unavailable",
+  "accountActionUnavailableForProvider": "This action is unavailable for the current sign-in provider.",
+  "accountPasswordReset": "Reset password",
+  "accountPasswordResetDescription": "Send a password reset email to this account.",
+  "accountPasswordResetSent": "Password reset email sent.",
+  "accountPasswordResetFailed": "Password reset could not be sent.",
+  "accountUpdateEmail": "Update email",
+  "accountUpdateEmailDescription": "Change the email used for this account.",
+  "accountNewEmail": "New email",
+  "accountEmailInvalid": "Enter a valid email address.",
+  "accountEmailUpdated": "Email updated.",
+  "accountEmailUpdateFailed": "Email could not be updated.",
+  "accountReauthRequired": "Sign in again before changing this sensitive account setting.",
+  "accountReauthTitle": "Sign in again",
+  "accountReauthPasswordDescription": "Enter your current password, then the app will retry the account action.",
+  "accountReauthGoogleDescription": "Continue with Google, then the app will retry the account action.",
+  "accountReauthPasswordLabel": "Current password",
+  "accountReauthGoogleButton": "Continue with Google",
+  "accountReauthSucceeded": "Sign-in confirmed. Retrying the account action.",
+  "accountReauthFailed": "Sign-in could not be confirmed.",
+  "accountReauthCanceled": "Sign-in confirmation was canceled.",
+  "accountReauthUnavailable": "Sign-in confirmation is unavailable for this provider.",
+  "accountDeleteTitle": "Delete account",
+  "accountDeleteShortDescription": "Delete your account and user-owned app data.",
+  "accountDeleteWarning": "This permanently requests deletion of your account and user-owned expenses, categories, budgets, recurring expenses, saving goals, settings, and AI action history. This cannot be undone.",
+  "accountDeleteConfirmCheckbox": "I understand this deletion cannot be undone.",
+  "accountDeleteButton": "Delete account",
+  "accountDeleteConfirmationRequired": "Confirm the warning before deleting your account.",
+  "accountDataDeleteFailed": "Your account data could not be deleted. Your sign-in account was not deleted.",
+  "accountAuthDeleteFailed": "Your app data deletion was requested, but the sign-in account could not be deleted.",
+  "accountDeleted": "Account deleted.",
+  "accountDeleteFailed": "Account deletion could not be completed.",
+  "appLanguage": "App language",
+  "appLanguageDescription": "Language controls app text, dates, AI locale, and voice input. It does not change your currency.",
+  "languageSystem": "System",
+  "languageSystemDescription": "Follow the device language when it is Arabic or English.",
+  "languageArabic": "Arabic",
+  "languageArabicDescription": "Use Arabic text and right-to-left layout.",
+  "languageEnglish": "English",
+  "languageEnglishDescription": "Use English text and left-to-right layout.",
+  "failedToLoadSettings": "Settings could not be loaded.",
+  "baseCurrency": "Base currency",
+  "supportedCurrencies": "Supported currencies",
+  "currencySettingsDescription": "Language and currency are independent. Base currency is used for manual and AI defaults. Exchange rates convert dashboard totals only.",
+  "exchangeRates": "Exchange rates",
+  "exchangeRatesDescription": "Enter how much 1 unit of each currency is worth in your base currency.",
+  "exchangeRateInputLabel": "1 {currency} =",
+  "@exchangeRateInputLabel": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "exchangeRateInvalid": "Enter a rate greater than zero.",
+  "exchangeRateSaved": "Exchange rate saved.",
+  "convertedCurrenciesStatus": "Converted: {currencies}",
+  "@convertedCurrenciesStatus": {
+    "placeholders": {
+      "currencies": {
+        "type": "String"
+      }
+    }
+  },
+  "unconvertedCurrenciesStatus": "{count, plural, =1{Missing rate for {currencies}; 1 expense not included} other{Missing rates for {currencies}; {count} expenses not included}}",
+  "@unconvertedCurrenciesStatus": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "currencies": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUnavailableTitle": "Settings need attention",
+  "settingsUnavailableMessage": "Retry settings or choose currency and payment method before saving.",
+  "chooseCurrencyAndPaymentBeforeSaving": "Choose currency and payment method before saving.",
+  "settingsLoadRequiredForAi": "Settings could not be loaded. Retry settings before using AI so currency and payment defaults are not guessed.",
+  "aiQuotaUnavailable": "AI quota is unavailable right now.",
+  "aiQuotaExhausted": "You have used today's AI limit.",
+  "aiCouldNotUnderstand": "I could not understand that request. Try adding the amount, category, and date.",
+  "aiProviderUnavailable": "AI service is unavailable. Try again later.",
+  "aiFormFillTitle": "Fill with AI",
+  "aiFormFillHint": "Example: spent 100 dollars on food last night",
+  "aiFormFillHelper": "AI fills the form only. Review and press Save yourself.",
+  "aiFormFillAction": "Fill",
+  "aiFormFillApplied": "AI filled the form. Review before saving.",
+  "aiFormFillFailed": "AI could not fill the form. You can still enter it manually.",
+  "aiFormFillNeedsReview": "AI needs more review. Complete the form manually.",
+  "no": "No",
+  "notificationsSettingsTitle": "Notifications",
+  "budgetAlerts": "Budget alerts",
+  "budgetAlertsDescription": "Warn when spending nears or exceeds budget.",
+  "dailyCheckIn": "Daily check-in",
+  "dailyCheckInDescription": "Review today's spending and keep your streak active.",
+  "checkInTime": "Check-in time",
+  "weeklyDigest": "Weekly digest",
+  "weeklyDigestDescription": "Remind me to review my weekly spending summary.",
+  "weeklyDigestEmpty": "No spending tracked for this week yet.",
+  "weeklyDigestThisWeek": "This week",
+  "weeklyDigestPreviousWeek": "Previous week",
+  "weeklyDigestChange": "Change",
+  "weeklyDigestLocalInsight": "Local insight",
+  "weeklyDigestIgnoredCurrencyExpenses": "{count, plural, =1{1 expense in another currency was ignored because no saved rate was available.} other{{count} expenses in other currencies were ignored because no saved rates were available.}}",
+  "@weeklyDigestIgnoredCurrencyExpenses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyDigestHealthScore": "{label} ({score}/100)",
+  "@weeklyDigestHealthScore": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyInsightStartLogging": "Start by logging one expense this week.",
+  "weeklyInsightTopCategory": "{category} is your largest category this week.",
+  "@weeklyInsightTopCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "weeklyInsightFirstTrackedWeek": "This is your first tracked week in this comparison.",
+  "weeklyInsightHigherThanLastWeek": "Spending is higher than last week.",
+  "weeklyInsightLowerThanLastWeek": "Spending is lower than last week.",
+  "weeklyInsightUnchanged": "Spending is unchanged from last week.",
+  "spendingHealthAddFewExpenses": "Add a few expenses",
+  "spendingHealthOnTrack": "On track",
+  "spendingHealthWorthWatching": "Worth watching",
+  "spendingHealthNeedsReview": "Needs review",
+  "spendingHealthReasonLogExpensesOrBudget": "Log expenses or set a monthly budget to see a score.",
+  "spendingHealthReasonBudgetExceeded": "Monthly budget is exceeded.",
+  "spendingHealthReasonBudgetNearLimit": "Monthly budget is near its limit.",
+  "spendingHealthReasonBudgetOnTrack": "Monthly budget is on track.",
+  "spendingHealthReasonNoBudget": "No monthly budget is set.",
+  "spendingHealthReasonOneCategoryHigh": "One category is over 60% of this month's spending.",
+  "spendingHealthReasonSpreadAcrossCategories": "Spending is spread across categories.",
+  "spendingHealthReasonTrackedToday": "Today has at least one logged expense.",
+  "spendingHealthReasonRecentTracking": "Recent tracking activity is active.",
+  "spendingHealthReasonNoRecentStreak": "No recent tracking streak yet.",
+  "digestTime": "Digest time",
+  "monday": "Monday",
+  "appProtection": "App Protection",
+  "pinLock": "PIN lock",
+  "pinLockDescription": "Require a local PIN on launch/resume.",
+  "changePin": "Change PIN",
+  "createPin": "Create PIN",
+  "createPinIntro": "Protect your expense data with a local PIN.",
+  "changePinIntro": "Choose a new app PIN.",
+  "pinLabel": "PIN",
+  "confirmPinLabel": "Confirm PIN",
+  "saveNewPin": "Save New PIN",
+  "enableAppLock": "Enable App Lock",
+  "pinDigitsValidation": "PIN must be 4 to 8 digits.",
+  "pinConfirmationMismatch": "PIN confirmation does not match.",
+  "expenseTrackerLocked": "Expense Tracker is locked",
+  "enterPinToContinue": "Enter your PIN to continue.",
+  "unlock": "Unlock",
+  "useBiometrics": "Use biometrics",
+  "biometricUnlock": "Biometric unlock",
+  "biometricUnlockAvailableDescription": "Use fingerprint or Face ID when available.",
+  "biometricUnlockUnavailableDescription": "Not available on this device.",
+  "aiUsageSettingsTitle": "AI Usage",
+  "aiUsageSettingsDescription": "Free daily AI limits. Manual expenses and local reports keep working when AI is unavailable.",
+  "aiUsageTextParsing": "Text parsing",
+  "aiUsageReceiptExtraction": "Receipt extraction",
+  "aiUsageFinancialAdvice": "Financial advice",
+  "aiUsageUsed": "{used}/{limit} used",
+  "@aiUsageUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "aiUsageResetsAround": "resets around {time}",
+  "@aiUsageResetsAround": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "aiUsageWaitingForLiveUsage": "waiting for live Worker usage",
+  "aiUsageRemaining": "{count} left",
+  "@aiUsageRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freePlan": "Free plan",
+  "premiumPlan": "Premium plan",
+  "unknownPlan": "Unknown plan",
+  "pendingPlan": "Pending plan",
+  "loadingLivePlanState": "Loading live plan state...",
+  "adsDisabled": "Ads disabled",
+  "viewLimitsAdsAndPremium": "View limits, ads, and Premium",
+  "removeAds": "Remove ads",
+  "removeAdsDescription": "Coming with Premium purchase setup.",
+  "usingFreeSafePlanState": "Using Free-safe plan state",
+  "refreshPlanState": "Refresh plan state",
+  "privacyAndAdChoices": "Privacy and ad choices",
+  "privacy": "Privacy",
+  "privacySettingsDescription": "Your expenses stay user-scoped in Firebase. AI actions require preview and confirmation before any write.",
+  "dataOwnership": "Data ownership",
+  "dataOwnershipDescription": "Only your authenticated account can access your data.",
+  "support": "Support",
+  "supportSettingsDescription": "Send feedback without attaching expense data.",
+  "sendFeedback": "Send feedback",
+  "sendFeedbackDescription": "Includes app version only if you approve it.",
+  "feedbackDiagnosticsPrompt": "No expense descriptions, receipts, account tokens, PINs, or AI provider details will be included. Add app version 1.0.0+1?",
+  "includeVersion": "Include version",
+  "appVersion": "App version",
+  "feedbackShareTemplate": "Expense Tracker feedback\n\nWhat happened?\n\nWhat did you expect?",
+  "feedbackSubject": "Expense Tracker feedback",
+  "paymentSettingsTitle": "Payment",
+  "paymentSettingsDescription": "Used as the default when a manual or AI expense does not specify a payment method.",
+  "defaultPaymentMethod": "Default payment method",
+  "onboardingTitle": "First-run setup",
+  "onboardingLoading": "Loading setup",
+  "onboardingLoadFailed": "Setup could not load your settings. Check your connection and try again.",
+  "onboardingSaveFailed": "Setup could not save your choices. Keep them selected and try again.",
+  "onboardingSelectRequired": "Choose language, base currency, and default payment method to continue.",
+  "onboardingContinue": "Continue",
+  "onboardingBack": "Back",
+  "onboardingFinish": "Finish setup",
+  "onboardingComplete": "Setup complete",
+  "onboardingSkipReminders": "Skip reminders",
+  "onboardingEssentialsTitle": "Choose your essentials",
+  "onboardingEssentialsSubtitle": "These choices control app language and the defaults used before any expense is saved.",
+  "onboardingLanguageLabel": "Language",
+  "onboardingLanguageEnglish": "English",
+  "onboardingLanguageArabic": "Arabic",
+  "onboardingCurrencyLabel": "Base currency",
+  "onboardingPaymentLabel": "Default payment method",
+  "onboardingAiTitle": "AI stays under your control",
+  "onboardingAiSubtitle": "AI can help prepare expenses, but setup never calls the AI provider or uses quota.",
+  "onboardingAiPreviewTitle": "Preview first",
+  "onboardingAiPreviewBody": "AI suggestions are shown for review. Nothing is saved until you confirm.",
+  "onboardingAiLimitTitle": "Free daily limits",
+  "onboardingAiLimitBody": "AI has free daily limits and can be unavailable, so the app never depends on it for manual tracking.",
+  "onboardingAiManualTitle": "Manual entry always works",
+  "onboardingAiManualBody": "You can add expenses yourself even when AI quota is finished or the gateway is offline.",
+  "onboardingAiSample": "Example only: \"Lunch 12 USD by wallet\". This sample is not sent to AI.",
+  "onboardingAiSampleSemantics": "AI example text that is not submitted",
+  "onboardingReminderTitle": "Optional reminders",
+  "onboardingReminderSubtitle": "Reminders can help you keep tracking, but they are optional and can be changed later.",
+  "onboardingDailyReminder": "Daily expense check-in",
+  "onboardingDailyReminderDescription": "Ask for a quick spending review in the evening when you have not logged today.",
+  "onboardingWeeklyDigest": "Weekly spending digest",
+  "onboardingWeeklyDigestDescription": "Show a Monday digest prompt for your weekly summary and health score.",
+  "onboardingReminderLater": "If permission is denied, setup still finishes and reminders stay off.",
+  "onboardingReminderPermissionDenied": "Reminders were not enabled because notification permission or scheduling was unavailable.",
+  "guidedTourNext": "Next",
+  "guidedTourBack": "Back",
+  "guidedTourSkip": "Skip",
+  "guidedTourDone": "Done",
+  "guidedTourReplayTour": "Replay Tour",
+  "guidedTourStepCount": "Step {current} of {total}",
+  "@guidedTourStepCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "guidedTourAiTitle": "Meet the AI Assistant",
+  "guidedTourAiBody": "Write or speak an expense here. AI always shows a preview before anything is saved.",
+  "guidedTourManualExpenseTitle": "Add expenses manually",
+  "guidedTourManualExpenseBody": "Use the plus button to open the normal expense form. AI can fill it at the top, and Save is still your final step.",
+  "guidedTourAiPreviewTitle": "Review before saving",
+  "guidedTourAiPreviewBody": "AI suggestions are never saved directly. Check the amount, category, date, and payment method before confirming.",
+  "guidedTourBudgetTitle": "Track your budget",
+  "guidedTourBudgetBody": "Monthly budgets power remaining-balance views, alerts, and grounded advice from real expenses.",
+  "guidedTourReportsTitle": "Read real reports",
+  "guidedTourReportsBody": "Reports summarize your actual spending by week, month, and category.",
+  "guidedTourCategoriesTitle": "Organize categories",
+  "guidedTourCategoriesBody": "Open the menu for categories. You can edit category names, icons, colors, and archived choices safely.",
+  "guidedTourSettingsTitle": "Tune Settings",
+  "guidedTourSettingsBody": "Settings keeps currency, payment, notifications, protection, AI usage, monetization, and privacy controls together.",
+  "guidedTourFreePremiumTitle": "Free and Premium",
+  "guidedTourFreePremiumBody": "Free keeps manual tracking available. Premium options, ads, and limits live in Settings without interrupting expense entry.",
+  "guidedTourSettingsSectionTitle": "Guidance",
+  "guidedTourSettingsSectionDescription": "Replay the guided tour for the current app version.",
+  "guidedTourReplayTourDescription": "Show the Home tour again.",
+  "archive": "Archive",
+  "clear": "Clear",
+  "close": "Close",
+  "parse": "Parse",
+  "add": "Add",
+  "week": "Week",
+  "month": "Month",
+  "required": "Required",
+  "export": "Export",
+  "shareFile": "Share file",
+  "allCurrencies": "All currencies",
+  "pickRange": "Pick range",
+  "selectDateRangeBeforeExporting": "Select a date range before exporting.",
+  "exportReady": "Export ready: {fileName}",
+  "@exportReady": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "reports": "Reports",
+  "activeReportDrilldownFilter": "Report drilldown filter active",
+  "monthlyStoryTitle": "Monthly story",
+  "monthlyStoryEmpty": "No spending was recorded for this month or the previous month.",
+  "monthlyStoryNewSpending": "This month has {current} in spending, with no previous month spending to compare yet.",
+  "@monthlyStoryNewSpending": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyStoryIncrease": "Spending rose to {current} from {previous}, up {percent}%.",
+  "@monthlyStoryIncrease": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "previous": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyStoryDecrease": "Spending improved to {current} from {previous}, down {percent}%.",
+  "@monthlyStoryDecrease": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "previous": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyStoryFlat": "Spending stayed close to last month: {current} now versus {previous} before.",
+  "@monthlyStoryFlat": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "previous": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyStoryDriversHeading": "Main drivers",
+  "monthlyStoryDriver": "{category}: {amount}, about {percent}% of this month.",
+  "@monthlyStoryDriver": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyStoryOutliersHeading": "Large expenses",
+  "monthlyStoryOutlier": "{expense}: {amount}",
+  "@monthlyStoryOutlier": {
+    "placeholders": {
+      "expense": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyStoryMissingRateCaveat": "{count, plural, =1{This story excludes 1 expense with a missing rate for {currencies}.} other{This story excludes {count} expenses with missing rates for {currencies}.}}",
+  "@monthlyStoryMissingRateCaveat": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "currencies": {
+        "type": "String"
+      }
+    }
+  },
+  "noSpendingInThisPeriod": "No spending in this period.",
+  "noCategorySpendingYet": "No category spending yet.",
+  "none": "None",
+  "topCategoryLabel": "Top category: {category}",
+  "@topCategoryLabel": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "ignoredOtherCurrencyExpenses": "{count, plural, =1{1 expense in another currency ignored.} other{{count} expenses in other currencies ignored.}}",
+  "@ignoredOtherCurrencyExpenses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "periodComparison": "Period Comparison",
+  "currentAmountLabel": "Current: {amount}",
+  "@currentAmountLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "previousAmountLabel": "Previous: {amount}",
+  "@previousAmountLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "daily": "Daily",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "frequency": "Frequency",
+  "newRecurring": "New Recurring",
+  "editRecurringExpense": "Edit Recurring Expense",
+  "archiveRecurringExpense": "Archive Recurring Expense",
+  "archiveRecurringExpenseMessage": "Archive {name}?",
+  "@archiveRecurringExpenseMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "createActiveCategoryBeforeRecurring": "Create an active category before recurring expenses.",
+  "noActiveRecurringExpensesYet": "No active recurring expenses yet",
+  "nextDateLabel": "Next {date}",
+  "@nextDateLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "enterRecurringAmountAndCategory": "Enter amount and category.",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "noEndDate": "No end date",
+  "clearEndDate": "Clear end date",
+  "savingGoalsTitle": "Saving Goals",
+  "newSavingGoal": "New Saving Goal",
+  "editSavingGoal": "Edit Saving Goal",
+  "goalName": "Goal name",
+  "targetAmount": "Target amount",
+  "currentAmount": "Current amount",
+  "deadline": "Deadline",
+  "noDeadline": "No deadline",
+  "clearDeadline": "Clear deadline",
+  "addContribution": "Add contribution",
+  "contributionAmount": "Contribution amount",
+  "addContributionToGoal": "Add to {goal}",
+  "@addContributionToGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSavingGoal": "Archive Saving Goal",
+  "archiveSavingGoalMessage": "Archive {goal}?",
+  "@archiveSavingGoalMessage": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "noActiveSavingGoalsYet": "No active saving goals yet",
+  "enterSavingGoalNameAndTarget": "Enter a name and positive target amount.",
+  "currentAmountCannotBeNegative": "Current amount cannot be negative.",
+  "goalReached": "Goal reached",
+  "remainingAmountLabel": "{amount} remaining",
+  "@remainingAmountLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savedPercentLabel": "{percent}% saved",
+  "@savedPercentLabel": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "deadlineDateLabel": "Deadline {date}",
+  "@deadlineDateLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "freePremiumTitle": "Free / Premium",
+  "planRefreshFailedFreeSafe": "Plan refresh failed, so Free-safe limits are shown. Manual expense tracking is still available. {message}",
+  "@planRefreshFailedFreeSafe": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "premiumStillWorks": "Premium removes ads and raises limits. Manual tracking remains the core experience.",
+  "freeStillWorks": "Free keeps manual expenses, categories, budgets, basic reports, exports, and offline sync working even when AI quota is finished.",
+  "adsOnFree": "Ads on Free",
+  "premiumAdsDisabledBody": "The app must not initialize or request ads while Premium is active.",
+  "freeAdsBody": "Ads are reserved for passive banner slots or natural completion moments. They never interrupt add expense, AI preview, auth, app lock, or purchase flows.",
+  "consentStatusLabel": "Consent: {status}",
+  "@consentStatusLabel": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "todayAiUsage": "Today AI usage",
+  "textParse": "Text parse",
+  "receipts": "Receipts",
+  "advice": "Advice",
+  "leftByDefault": "{count} left by default",
+  "@leftByDefault": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "leftCount": "{count} left",
+  "@leftCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "showingPolicyDefaultsUntilWorker": "Showing policy defaults until the Worker returns live usage.",
+  "resetsAroundWithPeriod": "Resets around {time}.",
+  "@resetsAroundWithPeriod": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "free": "Free",
+  "premium": "Premium",
+  "included": "Included",
+  "manualTracking": "Manual tracking",
+  "aiTextParse": "AI text parse",
+  "higherFiniteLimit": "Higher finite limit",
+  "moreReceipts": "More receipts",
+  "moreAdvice": "More advice",
+  "ads": "Ads",
+  "politeAds": "Polite ads",
+  "noAds": "No ads",
+  "reportsExport": "Reports/export",
+  "basic": "Basic",
+  "advancedLater": "Advanced reports, export templates, smart budgets",
+  "premiumIsActive": "Premium is active",
+  "premiumActiveBody": "Ads are disabled and Premium entitlements are enabled.",
+  "premiumComingSoon": "Premium coming soon",
+  "premiumPurchasesDisabledBody": "Purchases are not enabled yet because backend verification is not deployed. The app will not fake a subscription or charge you from this screen.",
+  "checkAvailability": "Check availability",
+  "restorePurchases": "Restore purchases",
+  "readinessComingSoonLabel": "Coming soon",
+  "readinessDisabledLabel": "Unavailable now",
+  "premiumRestoreDisabledBody": "Purchase restore is disabled until trusted backend entitlement verification is available.",
+  "premiumBackendVerificationUnavailable": "Paid subscriptions are disabled because backend verification is not configured yet.",
+  "walletsReadinessBody": "Wallet management stays disabled until list, create, edit, archive, and expense assignment are complete.",
+  "transfersReadinessBody": "Transfers stay disabled until the transfer form and currency policy are complete; they remain separate from expenses.",
+  "backupExportTitle": "Backup export",
+  "backupExportReadinessBody": "Backup export is not available from the app UI until safe data collection is complete.",
+  "restorePreviewTitle": "Restore preview",
+  "restorePreviewReadinessBody": "Restore requires an impact preview and explicit confirmation before any data can change.",
+  "restoreExecutionTitle": "Restore execution",
+  "restoreExecutionReadinessBody": "Restore execution is intentionally blocked until conflict policy and repository write tests exist.",
+  "aiInputExampleHint": "Example: spent 250 EGP on food yesterday with cash",
+  "receipt": "Receipt",
+  "camera": "Camera",
+  "gallery": "Gallery",
+  "receiptImageReadFailed": "Could not read the receipt image. Add the expense manually.",
+  "thisWeek": "This week",
+  "thisMonth": "This month",
+  "reviewBeforeSaving": "Review before saving",
+  "newCategoryName": "New category name",
+  "confirmingCreatesCategoryFirst": "Confirming will create this category first.",
+  "suggestedNewCategory": "Suggested new category: {category}",
+  "@suggestedNewCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "matchedCategory": "Matched category: {category}",
+  "@matchedCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "sourceLabel": "Source: {source}",
+  "@sourceLabel": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "confidenceLabel": "Confidence: {percent}%",
+  "@confidenceLabel": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "aiCategoryId": "AI category id",
+  "aiCategoryName": "AI category name",
+  "categoryAlias": "category alias",
+  "recentHistory": "recent history",
+  "newCategorySuggestion": "new category suggestion",
+  "manualSelection": "manual selection",
+  "noMatch": "no match",
+  "failedToCreateAiSuggestedCategory": "Failed to create AI suggested category.",
+  "createCategoryBeforeSavingRecurrence": "Create a category before saving recurrence.",
+  "recurringExpenseSuggestionSaved": "Recurring expense suggestion saved.",
+  "failedToSaveAiExpense": "Failed to save AI expense. Please try again.",
+  "pleaseAddMoreDetails": "Please add more details.",
+  "couldNotParseExpense": "Could not parse this expense.",
+  "searchReady": "Search ready",
+  "readyToOpenFilteredExpenses": "Ready to open filtered expenses.",
+  "openResults": "Open results",
+  "historyAnswer": "History",
+  "historySourceLocal": "Source: deterministic local history",
+  "historyNoMatchingExpenses": "No loaded expenses match that history question.",
+  "historyMatchingExpenses": "{count, plural, =1{1 matching expense.} other{{count} matching expenses.}}",
+  "@historyMatchingExpenses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyMutationReadOnly": "History answers are read-only. Use the existing preview and confirmation flow for changes.",
+  "summary": "Summary",
+  "totalAmountLabel": "Total: {amount}",
+  "@totalAmountLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "topCategoryWithAmount": "Top category: {category} ({amount})",
+  "@topCategoryWithAmount": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "ignoredOtherCurrencyExpensesBecause": "{count, plural, =1{1 expense ignored because it uses another currency.} other{{count} expenses ignored because they use another currency.}}",
+  "@ignoredOtherCurrencyExpensesBecause": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "financialAdvice": "Financial advice",
+  "localAdviceFallback": "Local advice fallback",
+  "aiFinancialAdvice": "AI financial advice",
+  "aiAdviceEvidenceTotal": "Total: {amount} {currency}",
+  "@aiAdviceEvidenceTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceEvidenceTopCategory": "Top category: {category} ({amount} {currency})",
+  "@aiAdviceEvidenceTopCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceEvidenceBudgetUsed": "Budget used: {percent}%",
+  "@aiAdviceEvidenceBudgetUsed": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceEvidenceConvertedCurrencies": "Converted currencies: {currencies}",
+  "@aiAdviceEvidenceConvertedCurrencies": {
+    "placeholders": {
+      "currencies": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceEvidenceMissingRates": "Missing rates for {currencies}; {count, plural, =1{1 expense was not included} other{{count} expenses were not included}}",
+  "@aiAdviceEvidenceMissingRates": {
+    "placeholders": {
+      "currencies": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "aiAdviceNoSpending": "No spending found for this period. Keep recording expenses so advice can be more useful.",
+  "aiAdviceOverBudget": "You are over budget. Review {category} first and pause non-essential spending until the next period.",
+  "@aiAdviceOverBudget": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceOverBudgetFallback": "You are over budget. Review your biggest category first and pause non-essential spending until the next period.",
+  "aiAdviceNearLimit": "You are close to your budget limit. Keep the next purchases small and watch {category}.",
+  "@aiAdviceNearLimit": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceNearLimitFallback": "You are close to your budget limit. Keep the next purchases small and watch your top category.",
+  "aiAdviceFocusCategory": "For {category}, compare each purchase against your plan before spending again this period.",
+  "@aiAdviceFocusCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceTopCategory": "Your highest spending is {category}. Set a smaller limit for it and move routine purchases to planned days.",
+  "@aiAdviceTopCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "aiAdviceStable": "Your spending is stable for this period. Keep checking totals before adding new non-essential expenses.",
+  "aiAdviceRequestsLeftToday": "{count} AI advice request(s) left today.",
+  "@aiAdviceRequestsLeftToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "aiNeedsReview": "AI needs review",
+  "aiUnavailable": "AI unavailable",
+  "providerAiUnavailableManualStillWorks": "Provider-backed AI is unavailable. Manual entry and local insights still work.",
+  "localSpendingPrediction": "Local spending prediction",
+  "expectedThisMonth": "Expected this month: {amount}",
+  "@expectedThisMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatedExpenseFound": "Repeated expense found",
+  "repeatedExpenseLooksFrequency": "{description} looks {frequency}.",
+  "@repeatedExpenseLooksFrequency": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      },
+      "frequency": {
+        "type": "String"
+      }
+    }
+  },
+  "matchingExpensesAverage": "{count} matching expenses, average {amount}.",
+  "@matchingExpensesAverage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRecurring": "Review recurring",
+  "confirmDelete": "Confirm delete",
+  "confirmUpdate": "Confirm update",
+  "chooseExactExpenseFirst": "Choose the exact expense first.",
+  "update": "Update",
+  "target": "Target",
+  "after": "After",
+  "preparingVoiceInput": "Preparing voice input...",
+  "listeningVoiceInput": "Listening. Pause support depends on your device.",
+  "createCategory": "Create Category",
+  "editCategory": "Edit Category",
+  "archiveCategory": "Archive Category",
+  "archiveCategoryMessage": "Archive {category}? Existing expenses will still show it.",
+  "@archiveCategoryMessage": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryCreated": "Category created.",
+  "categoryUpdated": "Category updated.",
+  "categoryArchived": "Category archived.",
+  "failedToCreateCategory": "Failed to create category.",
+  "failedToUpdateCategory": "Failed to update category.",
+  "failedToArchiveCategory": "Failed to archive category.",
+  "selectCategoryToArchive": "Select a category to archive.",
+  "enterCategoryNameIconColor": "Enter category name, icon, and color.",
+  "categoryName": "Name",
+  "categoryIcon": "Icon",
+  "selectedCategoryIcon": "Selected category icon",
+  "categoryColor": "Color",
+  "customColor": "Custom color",
+  "saveColor": "Save Color",
+  "searchIcons": "Search icons",
+  "categoryIconSemantics": "Icon {label}",
+  "@categoryIconSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryColorSemantics": "Color {label}",
+  "@categoryColorSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryExpenseCount": "{count, plural, =0{No expenses} =1{1 expense} other{{count} expenses}}",
+  "@categoryExpenseCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyBudgetTitle": "Monthly Budget",
+  "budgetSetAction": "Set",
+  "budgetNoBudgetSet": "No budget set for this month.",
+  "budgetSpentLabel": "Spent",
+  "budgetRemainingLabel": "Remaining",
+  "budgetPercentOfLimit": "{percent}% of {amount}",
+  "@budgetPercentOfLimit": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetExceededWarning": "Budget exceeded.",
+  "budgetNearLimitWarning": "You are close to your budget limit.",
+  "budgetIgnoredCurrencyExpenses": "{count, plural, =1{1 expense in another currency was excluded because no saved rate was available.} other{{count} expenses in other currencies were excluded because no saved rates were available.}}",
+  "@budgetIgnoredCurrencyExpenses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "categoryBudgetsCreateCategoryFirst": "Create an active category before category budgets.",
+  "categoryBudgetsLoadFailed": "Failed to load category budgets.",
+  "categoryBudgetSaved": "Category budget saved.",
+  "categoryBudgetSaveFailed": "Failed to save category budget.",
+  "categoryBudgetArchived": "Category budget archived.",
+  "categoryBudgetArchiveFailed": "Failed to archive category budget.",
+  "selectCategoryBudgetToArchive": "Select a category budget to archive.",
+  "archiveCategoryBudget": "Archive Category Budget",
+  "archiveCategoryBudgetMessage": "Archive {category} budget?",
+  "@archiveCategoryBudgetMessage": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "previousMonth": "Previous month",
+  "nextMonth": "Next month",
+  "noCategoryBudgetsYet": "No category budgets yet",
+  "addCategoryBudget": "Add Category Budget",
+  "editCategoryBudget": "Edit Category Budget",
+  "limitAmount": "Limit amount",
+  "warningThresholdPercent": "Warning threshold percent",
+  "budgetRecommendationTitle": "Suggested monthly budget",
+  "budgetRecommendationMeta": "{confidence} confidence - {period}",
+  "@budgetRecommendationMeta": {
+    "placeholders": {
+      "confidence": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetRecommendationMonthlyExplanation": "Based on recent monthly spending and trend.",
+  "budgetRecommendationCategoryExplanation": "Based on recent {category} spending and trend.",
+  "@budgetRecommendationCategoryExplanation": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "useEditableRecommendation": "Use editable suggestion",
+  "categoryBudgetRecommendationsTitle": "Suggested category budgets",
+  "categoryBudgetRecommendationSubtitle": "{amount} - {confidence} confidence",
+  "@categoryBudgetRecommendationSubtitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "confidence": {
+        "type": "String"
+      }
+    }
+  },
+  "recommendationConfidenceHigh": "High",
+  "recommendationConfidenceMedium": "Medium",
+  "recommendationConfidenceLow": "Low",
+  "recommendationCaveatSparseHistory": "Limited history makes this a cautious estimate.",
+  "recommendationCaveatOutlierMonth": "One unusual month was reduced in the estimate.",
+  "recommendationCaveatMissingRates": "Expenses with missing exchange rates were excluded.",
+  "recommendationCaveatExistingBudget": "You already have a budget here; review before replacing it.",
+  "budgetSpentOfLimit": "{spent} of {limit}",
+  "@budgetSpentOfLimit": {
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetRemainingAmount": "Remaining {amount}",
+  "@budgetRemainingAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryBudgetIgnoredCurrencyExpenses": "{count, plural, =1{1 expense ignored due to currency} other{{count} expenses ignored due to currency}}",
+  "@categoryBudgetIgnoredCurrencyExpenses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectCategory": "Select a category.",
+  "selectMonth": "Select a month.",
+  "selectCurrency": "Select a currency.",
+  "enterValidBudgetLimit": "Enter a valid budget limit.",
+  "warningThresholdRange": "Warning threshold must be between 1 and 100.",
+  "manageRecurringExpenses": "Manage recurring expenses",
+  "failedToLoadSubscriptions": "Failed to load subscriptions.",
+  "estimatedMonthlyImpact": "Estimated monthly impact",
+  "subscriptionMixedCurrencyCaveat": "Totals stay separated by currency until subscription conversion is audited.",
+  "dailyMonthlyImpactEstimateCaveat": "Daily subscriptions are estimated as 30 renewals per month.",
+  "weeklyMonthlyImpactEstimateCaveat": "Weekly subscriptions are estimated as 52 renewals across 12 months.",
+  "upcomingRenewals": "Upcoming renewals",
+  "renewsOn": "Renews {date}",
+  "@renewsOn": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "possiblePriceChanges": "Possible price changes",
+  "possiblePriceIncrease": "Possible increase from {previous} to {current}",
+  "@possiblePriceIncrease": {
+    "placeholders": {
+      "previous": {},
+      "current": {}
+    }
+  },
+  "cautiousSignal": "Cautious signal",
+  "activeSubscriptions": "Active subscriptions",
+  "subscriptionNextDue": "{frequency} - {paymentMethod} - Next {date}",
+  "@subscriptionNextDue": {
+    "placeholders": {
+      "frequency": {
+        "type": "String"
+      },
+      "paymentMethod": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyImpactSuffix": "{amount}/mo",
+  "@monthlyImpactSuffix": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "noActiveSubscriptionsYet": "No active subscriptions yet",
+  "exportEndDateBeforeStart": "End date must be on or after start date.",
+  "exportCurrencyFilterEmpty": "Currency filter must not be empty.",
+  "exportPdfTitle": "Expense Export",
+  "exportPdfPeriod": "Period: {startDate} - {endDate}",
+  "@exportPdfPeriod": {
+    "placeholders": {
+      "startDate": {
+        "type": "String"
+      },
+      "endDate": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfTotal": "Total: {total}",
+  "@exportPdfTotal": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "exportHeaderDate": "date",
+  "exportHeaderAmount": "amount",
+  "exportHeaderCurrency": "currency",
+  "exportHeaderCategory": "category",
+  "exportHeaderPaymentMethod": "paymentMethod",
+  "exportHeaderDescription": "description",
+  "exportHeaderConvertedAmount": "convertedAmount",
+  "exportHeaderConvertedCurrency": "convertedCurrency",
+  "exportHeaderConversionRate": "conversionRate",
+  "exportHeaderConversionRateDate": "conversionRateDate",
+  "exportHeaderConversionStatus": "conversionStatus",
+  "exportConversionStatusOriginal": "original",
+  "exportConversionStatusConverted": "converted",
+  "exportConversionStatusMissingRate": "missingRate",
+  "exportPdfConvertedTotal": "Converted total: {total}",
+  "@exportPdfConvertedTotal": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfMissingRates": "Missing rates for {currencies}; {count, plural, =1{1 row was not included.} other{{count} rows were not included.}}",
+  "@exportPdfMissingRates": {
+    "placeholders": {
+      "currencies": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exportArabicFontMissing": "PDF export needs the bundled Arabic font asset before it can run. Add assets/fonts/NotoSansArabic-Regular.ttf and regenerate assets.",
+  "wallets": "Wallets",
+  "walletAccount": "Wallet account",
+  "walletType": "Wallet type",
+  "openingBalance": "Opening balance",
+  "archiveWallet": "Archive wallet",
+  "transfers": "Transfers",
+  "transfer": "Transfer",
+  "sourceWallet": "Source wallet",
+  "destinationWallet": "Destination wallet",
+  "transferFee": "Transfer fee",
+  "feeWallet": "Fee wallet"
+}

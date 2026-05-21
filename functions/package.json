@@ -1,0 +1,25 @@
+{
+  "name": "expense-tracker-functions",
+  "private": true,
+  "type": "module",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test --import tsx test/*.test.ts",
+    "test:rules": "firebase emulators:exec --only firestore \"node --test --import tsx test/firestoreRules.rules.ts\"",
+    "test:all": "npm test && npm run test:rules"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0",
+    "firebase-functions": "^5.1.1"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.1",
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": "20"
+  }
+}

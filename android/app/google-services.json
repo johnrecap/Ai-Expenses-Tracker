@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "216033590804",
+    "project_id": "ai-expenses-tracker-studio",
+    "storage_bucket": "ai-expenses-tracker-studio.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216033590804:android:688869c4f8359f276b3101",
+        "android_client_info": {
+          "package_name": "com.saeeddevstudio.ai_expenses_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216033590804-c5ig1er2c8aai9u2aa7gnudrkdbgr8mn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.saeeddevstudio.ai_expenses_tracker",
+            "certificate_hash": "d0c3e1b333e0d06eec1803e4f149e66e486da5c6"
+          }
+        },
+        {
+          "client_id": "216033590804-s2rm7cur6qohi5hitvbnj6ngd90adpvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBokg1kMCS4EzoxKGGiWfecOwkGHeSBAMI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216033590804-s2rm7cur6qohi5hitvbnj6ngd90adpvq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

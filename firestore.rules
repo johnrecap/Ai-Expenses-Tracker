@@ -1,0 +1,844 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function ownsPath(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function hasOnly(data, keys) {
+      return data.keys().hasOnly(keys);
+    }
+
+    function hasAll(data, keys) {
+      return data.keys().hasAll(keys);
+    }
+
+    function optionalString(data, field) {
+      return !(field in data) || data[field] == null || data[field] is string;
+    }
+
+    function optionalTimestamp(data, field) {
+      return !(field in data) || data[field] == null || data[field] is timestamp;
+    }
+
+    function nonEmptyString(value) {
+      return value is string && value.size() > 0 && value.size() <= 256;
+    }
+
+    function safeText(value) {
+      return value is string && value.size() <= 5000;
+    }
+
+    function positiveMoney(value) {
+      return (value is int || value is float) && value > 0;
+    }
+
+    function nonNegativeMoney(value) {
+      return (value is int || value is float) && value >= 0;
+    }
+
+    function nonNegativeInt(value) {
+      return value is int && value >= 0;
+    }
+
+    function validCurrency(value) {
+      return value is string && value.matches('^[A-Z]{3}$');
+    }
+
+    function validMonthId(value) {
+      return value is string && value.matches('^[0-9]{4}-(0[1-9]|1[0-2])$');
+    }
+
+    function validMonthNumber(value) {
+      return value is int && value >= 1 && value <= 12;
+    }
+
+    function validYear(value) {
+      return value is int && value >= 2000 && value <= 2100;
+    }
+
+    function validPercent(value) {
+      return value is int && value >= 0 && value <= 100;
+    }
+
+    function validPaymentMethod(value) {
+      return value == 'cash'
+        || value == 'visa'
+        || value == 'wallet'
+        || value == 'bank_transfer';
+    }
+
+    function validWalletType(value) {
+      return value == 'cash'
+        || value == 'bank'
+        || value == 'card'
+        || value == 'mobile_wallet'
+        || value == 'other';
+    }
+
+    function validLanguagePreference(value) {
+      return value == 'system'
+        || value == 'en'
+        || value == 'ar';
+    }
+
+    function optionalBoundedString(data, field, maxLength) {
+      return !(field in data)
+        || data[field] == null
+        || (data[field] is string && data[field].size() <= maxLength);
+    }
+
+    function validCurrencyAt(value, index) {
+      return value.size() <= index || validCurrency(value[index]);
+    }
+
+    function validCurrencyList(value) {
+      return value is list
+        && value.size() > 0
+        && value.size() <= 20
+        && validCurrencyAt(value, 0)
+        && validCurrencyAt(value, 1)
+        && validCurrencyAt(value, 2)
+        && validCurrencyAt(value, 3)
+        && validCurrencyAt(value, 4)
+        && validCurrencyAt(value, 5)
+        && validCurrencyAt(value, 6)
+        && validCurrencyAt(value, 7)
+        && validCurrencyAt(value, 8)
+        && validCurrencyAt(value, 9)
+        && validCurrencyAt(value, 10)
+        && validCurrencyAt(value, 11)
+        && validCurrencyAt(value, 12)
+        && validCurrencyAt(value, 13)
+        && validCurrencyAt(value, 14)
+        && validCurrencyAt(value, 15)
+        && validCurrencyAt(value, 16)
+        && validCurrencyAt(value, 17)
+        && validCurrencyAt(value, 18)
+        && validCurrencyAt(value, 19);
+    }
+
+    function validConversionRateAt(rates, currencies, index) {
+      return currencies.size() <= index
+        || !(currencies[index] in rates)
+        || (currencies[index] != request.resource.data.baseCurrency
+          && positiveMoney(rates[currencies[index]]));
+    }
+
+    function validConversionRates(value, supportedCurrencies) {
+      return value is map
+        && value.keys().hasOnly(supportedCurrencies)
+        && !(request.resource.data.baseCurrency in value)
+        && validConversionRateAt(value, supportedCurrencies, 0)
+        && validConversionRateAt(value, supportedCurrencies, 1)
+        && validConversionRateAt(value, supportedCurrencies, 2)
+        && validConversionRateAt(value, supportedCurrencies, 3)
+        && validConversionRateAt(value, supportedCurrencies, 4)
+        && validConversionRateAt(value, supportedCurrencies, 5)
+        && validConversionRateAt(value, supportedCurrencies, 6)
+        && validConversionRateAt(value, supportedCurrencies, 7)
+        && validConversionRateAt(value, supportedCurrencies, 8)
+        && validConversionRateAt(value, supportedCurrencies, 9)
+        && validConversionRateAt(value, supportedCurrencies, 10)
+        && validConversionRateAt(value, supportedCurrencies, 11)
+        && validConversionRateAt(value, supportedCurrencies, 12)
+        && validConversionRateAt(value, supportedCurrencies, 13)
+        && validConversionRateAt(value, supportedCurrencies, 14)
+        && validConversionRateAt(value, supportedCurrencies, 15)
+        && validConversionRateAt(value, supportedCurrencies, 16)
+        && validConversionRateAt(value, supportedCurrencies, 17)
+        && validConversionRateAt(value, supportedCurrencies, 18)
+        && validConversionRateAt(value, supportedCurrencies, 19);
+    }
+
+    function validExpenseSource(value) {
+      return value == 'manual'
+        || value == 'ai'
+        || value == 'recurring'
+        || value == 'receipt';
+    }
+
+    function validTagAt(value, index) {
+      return value.size() <= index
+        || (value[index] is string
+          && value[index].size() > 0
+          && value[index].size() <= 40);
+    }
+
+    function validExpenseTags(value) {
+      return value is list
+        && value.size() <= 20
+        && validTagAt(value, 0)
+        && validTagAt(value, 1)
+        && validTagAt(value, 2)
+        && validTagAt(value, 3)
+        && validTagAt(value, 4)
+        && validTagAt(value, 5)
+        && validTagAt(value, 6)
+        && validTagAt(value, 7)
+        && validTagAt(value, 8)
+        && validTagAt(value, 9)
+        && validTagAt(value, 10)
+        && validTagAt(value, 11)
+        && validTagAt(value, 12)
+        && validTagAt(value, 13)
+        && validTagAt(value, 14)
+        && validTagAt(value, 15)
+        && validTagAt(value, 16)
+        && validTagAt(value, 17)
+        && validTagAt(value, 18)
+        && validTagAt(value, 19);
+    }
+
+    function validFrequency(value) {
+      return value == 'daily'
+        || value == 'weekly'
+        || value == 'monthly';
+    }
+
+    function validAiStatus(value) {
+      return value == 'previewed'
+        || value == 'confirmed'
+        || value == 'canceled'
+        || value == 'failed';
+    }
+
+    function validUserField(data, userId) {
+      return !('userId' in data) || data.userId == userId;
+    }
+
+    function validCategorySnapshot(value, userId) {
+      return value is map
+        && hasOnly(value, [
+          'categoryId',
+          'userId',
+          'name',
+          'totalExpenses',
+          'icon',
+          'color',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && optionalString(value, 'categoryId')
+        && optionalString(value, 'userId')
+        && (!('userId' in value) || value.userId == userId || value.userId == '')
+        && optionalString(value, 'name')
+        && (!('totalExpenses' in value) || nonNegativeInt(value.totalExpenses))
+        && optionalString(value, 'icon')
+        && (!('color' in value) || value.color is int)
+        && (!('isArchived' in value) || value.isArchived is bool)
+        && optionalTimestamp(value, 'createdAt')
+        && optionalTimestamp(value, 'updatedAt');
+    }
+
+    function validExpense(data, userId, expenseId) {
+      return hasOnly(data, [
+          'expenseId',
+          'userId',
+          'categoryId',
+          'categoryName',
+          'categoryIcon',
+          'categoryColor',
+          'category',
+          'date',
+          'amount',
+          'description',
+          'merchant',
+          'tags',
+          'paymentMethod',
+          'currency',
+          'createdAt',
+          'updatedAt',
+          'source',
+          'walletAccountId',
+          'walletAccountName',
+          'recurringExpenseId',
+          'aiActionId',
+        ])
+        && hasAll(data, [
+          'expenseId',
+          'userId',
+          'date',
+          'amount',
+          'paymentMethod',
+          'currency',
+          'createdAt',
+          'updatedAt',
+          'source',
+        ])
+        && data.expenseId == expenseId
+        && data.userId == userId
+        && data.date is timestamp
+        && positiveMoney(data.amount)
+        && validPaymentMethod(data.paymentMethod)
+        && validCurrency(data.currency)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && validExpenseSource(data.source)
+        && optionalString(data, 'categoryId')
+        && optionalString(data, 'categoryName')
+        && optionalString(data, 'categoryIcon')
+        && (!('categoryColor' in data) || data.categoryColor is int)
+        && (!('category' in data) || validCategorySnapshot(data.category, userId))
+        && (!('description' in data) || safeText(data.description))
+        && optionalBoundedString(data, 'merchant', 120)
+        && (!('tags' in data) || validExpenseTags(data.tags))
+        && optionalString(data, 'walletAccountId')
+        && optionalBoundedString(data, 'walletAccountName', 120)
+        && optionalString(data, 'recurringExpenseId')
+        && optionalString(data, 'aiActionId');
+    }
+
+    function validWallet(data, userId, walletId) {
+      return hasOnly(data, [
+          'walletId',
+          'userId',
+          'name',
+          'type',
+          'currency',
+          'openingBalance',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && hasAll(data, [
+          'walletId',
+          'userId',
+          'name',
+          'type',
+          'currency',
+          'openingBalance',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && data.walletId == walletId
+        && data.userId == userId
+        && nonEmptyString(data.name)
+        && validWalletType(data.type)
+        && validCurrency(data.currency)
+        && nonNegativeMoney(data.openingBalance)
+        && data.isArchived is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function validTransfer(data, userId, transferId) {
+      return hasOnly(data, [
+          'transferId',
+          'userId',
+          'sourceWalletId',
+          'destinationWalletId',
+          'amount',
+          'currency',
+          'feeAmount',
+          'feeWalletId',
+          'date',
+          'note',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && hasAll(data, [
+          'transferId',
+          'userId',
+          'sourceWalletId',
+          'destinationWalletId',
+          'amount',
+          'currency',
+          'feeAmount',
+          'date',
+          'note',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && data.transferId == transferId
+        && data.userId == userId
+        && nonEmptyString(data.sourceWalletId)
+        && nonEmptyString(data.destinationWalletId)
+        && data.sourceWalletId != data.destinationWalletId
+        && positiveMoney(data.amount)
+        && validCurrency(data.currency)
+        && nonNegativeMoney(data.feeAmount)
+        && optionalString(data, 'feeWalletId')
+        && data.date is timestamp
+        && safeText(data.note)
+        && data.isArchived is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function validCategory(data, userId, categoryId) {
+      return hasOnly(data, [
+          'categoryId',
+          'userId',
+          'name',
+          'totalExpenses',
+          'icon',
+          'color',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && hasAll(data, [
+          'categoryId',
+          'userId',
+          'name',
+          'totalExpenses',
+          'icon',
+          'color',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && data.categoryId == categoryId
+        && data.userId == userId
+        && nonEmptyString(data.name)
+        && nonNegativeInt(data.totalExpenses)
+        && safeText(data.icon)
+        && data.color is int
+        && data.isArchived is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function validBudget(data, userId, budgetId) {
+      return hasOnly(data, [
+          'budgetId',
+          'userId',
+          'month',
+          'year',
+          'amount',
+          'currency',
+          'warningThresholdPercent',
+          'createdAt',
+          'updatedAt',
+        ])
+        && hasAll(data, [
+          'budgetId',
+          'userId',
+          'month',
+          'year',
+          'amount',
+          'currency',
+          'warningThresholdPercent',
+          'createdAt',
+          'updatedAt',
+        ])
+        && data.budgetId == budgetId
+        && data.userId == userId
+        && validMonthNumber(data.month)
+        && validYear(data.year)
+        && positiveMoney(data.amount)
+        && validCurrency(data.currency)
+        && validPercent(data.warningThresholdPercent)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function validCategoryBudget(data, userId, budgetId) {
+      return hasOnly(data, [
+          'categoryBudgetId',
+          'userId',
+          'categoryId',
+          'categoryName',
+          'month',
+          'currency',
+          'limitAmount',
+          'warningThresholdPercent',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && hasAll(data, [
+          'categoryBudgetId',
+          'userId',
+          'categoryId',
+          'categoryName',
+          'month',
+          'currency',
+          'limitAmount',
+          'warningThresholdPercent',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && data.categoryBudgetId == budgetId
+        && data.userId == userId
+        && nonEmptyString(data.categoryId)
+        && safeText(data.categoryName)
+        && validMonthId(data.month)
+        && validCurrency(data.currency)
+        && positiveMoney(data.limitAmount)
+        && validPercent(data.warningThresholdPercent)
+        && data.isArchived is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function validRecurringExpense(data, userId, recurringExpenseId) {
+      return hasOnly(data, [
+          'recurringExpenseId',
+          'userId',
+          'amount',
+          'category',
+          'categoryId',
+          'categoryName',
+          'categoryIcon',
+          'categoryColor',
+          'description',
+          'paymentMethod',
+          'currency',
+          'startDate',
+          'nextRunDate',
+          'endDate',
+          'frequency',
+          'isActive',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && hasAll(data, [
+          'recurringExpenseId',
+          'userId',
+          'amount',
+          'paymentMethod',
+          'currency',
+          'startDate',
+          'nextRunDate',
+          'frequency',
+          'isActive',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && data.recurringExpenseId == recurringExpenseId
+        && data.userId == userId
+        && positiveMoney(data.amount)
+        && optionalString(data, 'categoryId')
+        && optionalString(data, 'categoryName')
+        && optionalString(data, 'categoryIcon')
+        && (!('categoryColor' in data) || data.categoryColor is int)
+        && (!('category' in data) || validCategorySnapshot(data.category, userId))
+        && (!('description' in data) || safeText(data.description))
+        && validPaymentMethod(data.paymentMethod)
+        && validCurrency(data.currency)
+        && data.startDate is timestamp
+        && data.nextRunDate is timestamp
+        && optionalTimestamp(data, 'endDate')
+        && validFrequency(data.frequency)
+        && data.isActive is bool
+        && data.isArchived is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function validSavingGoal(data, userId, goalId) {
+      return hasOnly(data, [
+          'goalId',
+          'userId',
+          'name',
+          'targetAmount',
+          'currentAmount',
+          'currency',
+          'deadline',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && hasAll(data, [
+          'goalId',
+          'userId',
+          'name',
+          'targetAmount',
+          'currentAmount',
+          'currency',
+          'isArchived',
+          'createdAt',
+          'updatedAt',
+        ])
+        && data.goalId == goalId
+        && data.userId == userId
+        && nonEmptyString(data.name)
+        && positiveMoney(data.targetAmount)
+        && nonNegativeMoney(data.currentAmount)
+        && validCurrency(data.currency)
+        && optionalTimestamp(data, 'deadline')
+        && data.isArchived is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function validNotificationSettings(value) {
+      return value is map
+        && hasOnly(value, [
+          'budgetAlertsEnabled',
+          'dailyReminderEnabled',
+          'reminderTime',
+          'weeklyDigestEnabled',
+          'weeklyDigestTime',
+          'lastExceededAlertMonth',
+        ])
+        && hasAll(value, [
+          'budgetAlertsEnabled',
+          'dailyReminderEnabled',
+          'reminderTime',
+          'weeklyDigestEnabled',
+          'weeklyDigestTime',
+        ])
+        && value.budgetAlertsEnabled is bool
+        && value.dailyReminderEnabled is bool
+        && value.reminderTime is string
+        && value.reminderTime.matches('^([01][0-9]|2[0-3]):[0-5][0-9]$')
+        && value.weeklyDigestEnabled is bool
+        && value.weeklyDigestTime is string
+        && value.weeklyDigestTime.matches('^([01][0-9]|2[0-3]):[0-5][0-9]$')
+        && optionalString(value, 'lastExceededAlertMonth');
+    }
+
+    function validSettings(data, userId) {
+      return hasOnly(data, [
+          'userId',
+          'appDisplayName',
+          'languagePreference',
+          'baseCurrency',
+          'supportedCurrencies',
+          'conversionRates',
+          'defaultPaymentMethod',
+          'notificationSettings',
+          'onboardingCompleted',
+          'onboardingVersion',
+          'guidedTourCompletedVersion',
+          'guidedTourSkippedVersion',
+          'guidedTourLastStepId',
+          'exchangeRatesUpdatedAt',
+          'updatedAt',
+        ])
+        && hasAll(data, [
+          'userId',
+          'languagePreference',
+          'baseCurrency',
+          'supportedCurrencies',
+          'conversionRates',
+          'defaultPaymentMethod',
+          'notificationSettings',
+          'onboardingCompleted',
+          'onboardingVersion',
+          'guidedTourCompletedVersion',
+          'guidedTourSkippedVersion',
+          'updatedAt',
+        ])
+        && data.userId == userId
+        && optionalBoundedString(data, 'appDisplayName', 80)
+        && validLanguagePreference(data.languagePreference)
+        && validCurrency(data.baseCurrency)
+        && validCurrencyList(data.supportedCurrencies)
+        && validConversionRates(data.conversionRates, data.supportedCurrencies)
+        && validPaymentMethod(data.defaultPaymentMethod)
+        && validNotificationSettings(data.notificationSettings)
+        && data.onboardingCompleted is bool
+        && nonNegativeInt(data.onboardingVersion)
+        && nonNegativeInt(data.guidedTourCompletedVersion)
+        && nonNegativeInt(data.guidedTourSkippedVersion)
+        && optionalBoundedString(data, 'guidedTourLastStepId', 128)
+        && optionalTimestamp(data, 'exchangeRatesUpdatedAt')
+        && data.updatedAt is timestamp;
+    }
+
+    function validAiActionLog(data, userId, actionId) {
+      return hasOnly(data, [
+          'actionId',
+          'userId',
+          'rawInput',
+          'parsedResponse',
+          'intent',
+          'confidence',
+          'status',
+          'createdAt',
+          'confirmedAt',
+          'targetExpenseId',
+          'errorMessage',
+          'provider',
+          'model',
+          'providerRequestId',
+          'inputTokens',
+          'outputTokens',
+          'errorCode',
+        ])
+        && hasAll(data, [
+          'actionId',
+          'userId',
+          'rawInput',
+          'parsedResponse',
+          'intent',
+          'confidence',
+          'status',
+          'createdAt',
+        ])
+        && data.actionId == actionId
+        && data.userId == userId
+        && safeText(data.rawInput)
+        && data.parsedResponse is map
+        && nonEmptyString(data.intent)
+        && (data.confidence is int || data.confidence is float)
+        && data.confidence >= 0
+        && data.confidence <= 1
+        && validAiStatus(data.status)
+        && data.createdAt is timestamp
+        && optionalTimestamp(data, 'confirmedAt')
+        && optionalString(data, 'targetExpenseId')
+        && optionalString(data, 'errorMessage')
+        && optionalString(data, 'provider')
+        && optionalString(data, 'model')
+        && optionalString(data, 'providerRequestId')
+        && (!('inputTokens' in data) || data.inputTokens == null || nonNegativeInt(data.inputTokens))
+        && (!('outputTokens' in data) || data.outputTokens == null || nonNegativeInt(data.outputTokens))
+        && optionalString(data, 'errorCode');
+    }
+
+    function validCategoryAlias(data, userId, aliasId) {
+      return hasOnly(data, [
+          'aliasId',
+          'userId',
+          'categoryId',
+          'phrase',
+          'locale',
+          'createdAt',
+          'updatedAt',
+          'lastUsedAt',
+          'useCount',
+        ])
+        && hasAll(data, [
+          'aliasId',
+          'userId',
+          'categoryId',
+          'phrase',
+          'locale',
+          'createdAt',
+          'updatedAt',
+          'lastUsedAt',
+          'useCount',
+        ])
+        && data.aliasId == aliasId
+        && data.userId == userId
+        && nonEmptyString(data.categoryId)
+        && nonEmptyString(data.phrase)
+        && data.locale is string
+        && data.locale.size() <= 32
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && data.lastUsedAt is timestamp
+        && nonNegativeInt(data.useCount);
+    }
+
+    match /users/{userId} {
+      allow read: if ownsPath(userId);
+      allow create, update, delete: if false;
+
+      match /expenses/{expenseId} {
+        allow read: if ownsPath(userId);
+        allow create, update: if ownsPath(userId)
+          && validExpense(request.resource.data, userId, expenseId);
+        allow delete: if ownsPath(userId);
+      }
+
+      match /categories/{categoryId} {
+        allow read: if ownsPath(userId);
+        allow create, update: if ownsPath(userId)
+          && validCategory(request.resource.data, userId, categoryId);
+        allow delete: if false;
+      }
+
+      match /budgets/{budgetId} {
+        allow read: if ownsPath(userId);
+        allow create, update: if ownsPath(userId)
+          && validBudget(request.resource.data, userId, budgetId);
+        allow delete: if false;
+      }
+
+      match /wallets/{walletId} {
+        allow read: if ownsPath(userId);
+        allow create, update: if ownsPath(userId)
+          && validWallet(request.resource.data, userId, walletId);
+        allow delete: if false;
+      }
+
+      match /transfers/{transferId} {
+        allow read: if ownsPath(userId);
+        allow create, update: if ownsPath(userId)
+          && validTransfer(request.resource.data, userId, transferId);
+        allow delete: if false;
+      }
+
+      match /category_budgets/{budgetId} {
+        allow read: if ownsPath(userId);
+        allow create, update: if ownsPath(userId)
+          && validCategoryBudget(request.resource.data, userId, budgetId);
+        allow delete: if false;
+      }
+
+      match /recurring_expenses/{recurringExpenseId} {
+        allow read: if ownsPath(userId);
+        allow create, update: if ownsPath(userId)
+          && validRecurringExpense(
+            request.resource.data,
+            userId,
+            recurringExpenseId
+          );
+        allow delete: if false;
+      }
+
+      match /saving_goals/{goalId} {
+        allow read: if ownsPath(userId);
+        allow create, update: if ownsPath(userId)
+          && validSavingGoal(request.resource.data, userId, goalId);
+        allow delete: if false;
+      }
+
+      match /settings/{settingsId} {
+        allow read: if ownsPath(userId);
+        allow create, update: if ownsPath(userId)
+          && settingsId == 'profile'
+          && validSettings(request.resource.data, userId);
+        allow delete: if false;
+      }
+
+      match /ai_actions/{actionId} {
+        allow read: if ownsPath(userId);
+        allow create, update: if ownsPath(userId)
+          && validAiActionLog(request.resource.data, userId, actionId);
+        allow delete: if false;
+      }
+
+      match /category_aliases/{aliasId} {
+        allow read: if ownsPath(userId);
+        allow create, update: if ownsPath(userId)
+          && validCategoryAlias(request.resource.data, userId, aliasId);
+        allow delete: if ownsPath(userId);
+      }
+
+      match /{document=**} {
+        allow read, write: if false;
+      }
+    }
+
+    match /expenses/{document=**} {
+      allow read, write: if false;
+    }
+
+    match /categories/{document=**} {
+      allow read, write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

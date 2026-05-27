@@ -1,16 +1,17 @@
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
 import { env } from "../src/config/env.js";
+import { closeDatabase } from "../src/db/client.js";
 import {
   type FirestoreCollectionName,
   mapFirestoreUserExport,
   type FirestoreUserExport,
 } from "../src/migration/firestoreMappers.js";
 import {
-  InMemoryMigrationTarget,
   MigrationImportService,
+  PostgresSyncMigrationTarget,
 } from "../src/migration/importService.js";
 
 async function main() {
@@ -29,21 +30,31 @@ async function main() {
       ? await readFirestoreUserExport(args[1])
       : (JSON.parse(await readFile(fixturePath, "utf8")) as FirestoreUserExport);
   const records = mapFirestoreUserExport(payload);
-  const target = new InMemoryMigrationTarget();
+  const target = new PostgresSyncMigrationTarget();
   const service = new MigrationImportService(target);
   const result = await service.importRecords(records);
+  const targetRecords = await target.allRecords(payload.userId);
+  const sourcePath = `source-records-${payload.userId}.json`;
+  const targetPath = `target-records-${payload.userId}.json`;
+
+  await writeFile(sourcePath, JSON.stringify(records, null, 2));
+  await writeFile(targetPath, JSON.stringify(targetRecords, null, 2));
 
   console.log(
     JSON.stringify(
       {
         userId: payload.userId,
         sourceRecords: records.length,
+        targetRecords: targetRecords.length,
+        sourcePath,
+        targetPath,
         result,
       },
       null,
       2,
     ),
   );
+  await closeDatabase();
 }
 
 await main();

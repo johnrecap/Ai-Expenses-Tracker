@@ -59,6 +59,24 @@ pm2 save
 
 ## Nginx Proxy Notes
 
+On aaPanel servers with multiple HTTPS sites on the same public IP, keep every
+public vhost on the same `listen` style. If one site uses the bound public IP
+(`listen 212.47.65.222:443 ssl;`) and another uses wildcard
+(`listen 443 ssl http2;`), Nginx can route Cloudflare HTTPS/SNI traffic to the
+wrong vhost. Normalize API proxy vhosts to the bound IP form used by the other
+sites:
+
+```nginx
+listen 212.47.65.222:80;
+listen 212.47.65.222:443 ssl http2;
+server_name api.saeeddev.com;
+```
+
+If aaPanel emits `listen 443 quic;` but the installed Nginx binary does not
+support QUIC, disable that line before reload. Always run
+`/www/server/nginx/sbin/nginx -t` before reloading aaPanel Nginx, not the
+system `/etc/nginx` command path.
+
 ```nginx
 location / {
   proxy_pass http://127.0.0.1:8080;
@@ -70,6 +88,13 @@ location / {
 ```
 
 Block or protect `/metrics` if the API domain is public.
+
+Smoke-test both the local vhost and the Cloudflare route after every new proxy:
+
+```bash
+curl -H "Host: api.saeeddev.com" http://127.0.0.1/health
+curl "https://api.saeeddev.com/health?nocache=$(date +%s)"
+```
 
 ## AI Gateway Boundary
 

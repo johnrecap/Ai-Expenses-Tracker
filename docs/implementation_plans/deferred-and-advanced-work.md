@@ -102,6 +102,9 @@ this file and mention the relevant items briefly so they are not forgotten.
   backup/restore-check failures before VPS production cutover.
 - Protect the VPS `/metrics` endpoint behind Nginx allowlists or auth before
   exposing the API domain publicly.
+- Create an aaPanel/Nginx post-create checklist or template override so new
+  proxied subdomains consistently use the public-IP `listen` form and do not
+  emit unsupported `quic` listeners.
 - Replace the Plan 082 in-memory metrics collector with a durable monitoring
   backend or external scraper if production diagnostics need historical trends.
 - Run Plan 082 real-device QA in `vpsLocalFirst` mode against a configured VPS

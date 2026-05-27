@@ -47,31 +47,31 @@ Each task states owner, purpose, expected result, risk, and concrete target.
 
 **Purpose**: Make the deployed VPS service recoverable, protected, and maintainable.
 
-- [ ] T024 [Owner] Run `pm2 startup` and follow the printed command. Why: API must restart after VPS reboot. Expected: `ai-expenses-api` comes online automatically. Risk: reboot causes silent outage.
-- [ ] T025 [Owner] Confirm `pm2 save` after final process state. Why: PM2 startup restores the saved process list. Expected: process list contains `ai-expenses-api`. Risk: startup restores an old or missing process.
-- [ ] T026 [Owner] Restrict `.env.production` permissions on the VPS. Why: database and Firebase Admin secrets must not be readable broadly. Expected: only the API owner/root can read the file. Risk: credential exposure.
-- [ ] T027 [Owner] Protect or block public `/metrics` in aaPanel/Nginx. Why: metrics can reveal operational internals. Expected: public requests to `/metrics` are denied or authenticated. Risk: public operational data exposure.
-- [ ] T028 [Owner] Configure daily PostgreSQL backup using `docs/backend/postgres-backup-restore.md`. Why: self-hosted data needs disaster recovery. Expected: encrypted dump is created daily. Risk: VPS disk loss means user data loss.
+- [X] T024 [Owner] Run `pm2 startup` and follow the printed command. Why: API must restart after VPS reboot. Expected: `ai-expenses-api` comes online automatically. Risk: reboot causes silent outage.
+- [X] T025 [Owner] Confirm `pm2 save` after final process state. Why: PM2 startup restores the saved process list. Expected: process list contains `ai-expenses-api`. Risk: startup restores an old or missing process.
+- [X] T026 [Owner] Restrict `.env.production` permissions on the VPS. Why: database and Firebase Admin secrets must not be readable broadly. Expected: only the API owner/root can read the file. Risk: credential exposure.
+- [X] T027 [Owner] Protect or block public `/metrics` in aaPanel/Nginx. Why: metrics can reveal operational internals. Expected: public requests to `/metrics` are denied or authenticated. Risk: public operational data exposure.
+- [X] T028 [Owner] Configure daily PostgreSQL backup using `docs/backend/postgres-backup-restore.md`. Why: self-hosted data needs disaster recovery. Expected: encrypted dump is created daily. Risk: VPS disk loss means user data loss.
 - [ ] T029 [Owner] Copy backups off the VPS. Why: a backup on the same disk does not protect against VPS loss. Expected: at least one off-server backup destination exists. Risk: disaster recovery fails.
-- [ ] T030 [Owner] Run one restore drill into a disposable database. Why: backups are only useful if restore works. Expected: restore-check succeeds and can query migrated tables. Risk: broken backups discovered too late.
-- [ ] T031 [Owner] Keep Cloudflare DNS `api.saeeddev.com` proxied and verify `https://api.saeeddev.com/health` after Nginx changes. Why: app will depend on this stable URL. Expected: health returns JSON. Risk: app points to a broken endpoint.
-- [ ] T032 [Owner] Use `docs/backend/aapanel-cloudflare-subdomain-nginx-fix.md` for future subdomains. Why: aaPanel can generate conflicting `listen` styles. Expected: future subdomains do not route to wrong sites. Risk: repeated routing failures.
+- [X] T030 [Owner] Run one restore drill into a disposable database. Why: backups are only useful if restore works. Expected: restore-check succeeds and can query migrated tables. Risk: broken backups discovered too late. Status: restored into `ai_expenses_restore_check` and queried 15 tables; pg_restore reported one non-blocking default-privileges warning for an old role grant.
+- [X] T031 [Owner] Keep Cloudflare DNS `api.saeeddev.com` proxied and verify `https://api.saeeddev.com/health` after Nginx changes. Why: app will depend on this stable URL. Expected: health returns JSON. Risk: app points to a broken endpoint.
+- [X] T032 [Owner] Use `docs/backend/aapanel-cloudflare-subdomain-nginx-fix.md` for future subdomains. Why: aaPanel can generate conflicting `listen` styles. Expected: future subdomains do not route to wrong sites. Risk: repeated routing failures.
 
 ## Phase 5: Owner - Firebase, AI Gateway, And Secrets (P0/P1)
 
 **Purpose**: Provide the external credentials/configuration needed for safe tests without exposing secrets.
 
-- [ ] T033 [Owner] Confirm Firebase Auth email/password and Google providers are enabled. Why: backend verifies Firebase tokens but Auth remains Firebase-owned. Expected: both login methods work. Risk: pilot accounts cannot sign in.
-- [ ] T034 [Owner] Confirm Android SHA-1/SHA-256 fingerprints for the build being tested. Why: Google Sign-In depends on correct fingerprints. Expected: signed/internal build can use Google login. Risk: Google sign-in fails only on device.
-- [ ] T035 [Owner] Keep Firebase Admin JSON private and only place required env values on VPS. Why: service account keys are high-impact secrets. Expected: no private key is pasted into chat or committed. Risk: credential compromise.
-- [ ] T036 [Owner] Provide the production Cloudflare Worker AI URL for build flags. Why: AI gateway is separate from VPS and still required for AI features. Expected: `AI_GATEWAY_URL` points to the real Worker endpoint. Risk: AI falls back to mock or fails on device.
-- [ ] T037 [Owner] Confirm no provider keys are copied to Flutter or the VPS API. Why: Cloudflare Worker remains the only provider-secret boundary. Expected: secrets stay server-side/edge-side only. Risk: API key exposure in app binary or VPS logs.
+- [X] T033 [Owner] Confirm Firebase Auth email/password and Google providers are enabled. Why: backend verifies Firebase tokens but Auth remains Firebase-owned. Expected: both login methods work. Risk: pilot accounts cannot sign in.
+- [X] T034 [Owner] Confirm Android SHA-1/SHA-256 fingerprints for the build being tested. Why: Google Sign-In depends on correct fingerprints. Expected: signed/internal build can use Google login. Risk: Google sign-in fails only on device.
+- [X] T035 [Owner] Keep Firebase Admin JSON private and only place required env values on VPS. Why: service account keys are high-impact secrets. Expected: no private key is pasted into chat or committed. Risk: credential compromise.
+- [X] T036 [Owner] Provide the production Cloudflare Worker AI URL for build flags. Why: AI gateway is separate from VPS and still required for AI features. Expected: `AI_GATEWAY_URL` points to the real Worker endpoint. Risk: AI falls back to mock or fails on device. URL: `https://ai-expenses-gateway.mohamedsaied-m20.workers.dev`.
+- [X] T037 [Owner] Confirm no provider keys are copied to Flutter or the VPS API. Why: Cloudflare Worker remains the only provider-secret boundary. Expected: secrets stay server-side/edge-side only. Risk: API key exposure in app binary or VPS logs.
 
 ## Phase 6: Joint - Staging Migration And Device QA (P0)
 
 **Purpose**: Prove the full chain with one test account before any broader rollout.
 
-- [ ] T038 [Owner] Create or select a seeded Firebase test account with representative expenses, categories, settings, budgets, recurring items, saving goals, AI logs, wallets, and transfers. Why: migration must cover real shapes, not empty data. Expected: test account exercises important surfaces. Risk: production-only shape breaks later.
+- [X] T038 [Owner] Create or select a seeded Firebase test account with representative expenses, categories, settings, budgets, recurring items, saving goals, AI logs, wallets, and transfers. Why: migration must cover real shapes, not empty data. Expected: test account exercises important surfaces. Risk: production-only shape breaks later. Selected UID: `N8gZqOPSb1Xs0WY0RZvxKIcBxuY2`.
 - [X] T039 [Codex] Provide exact staging backfill and verify commands using the selected UID. Why: owner should run commands without guessing. Expected: migration report is created. Risk: wrong account or broad migration.
 - [ ] T040 [Owner] Run staging backfill against the selected account and send sanitized output. Why: credentials and server access are owner-controlled. Expected: import completes or clear errors appear. Risk: hidden migration failure.
 - [ ] T041 [Owner] Run verification and preserve the report. Why: financial migration needs proof. Expected: no missing/duplicate/hash mismatch, or blockers are listed. Risk: unverified cutover.

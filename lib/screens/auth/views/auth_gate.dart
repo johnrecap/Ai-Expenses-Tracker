@@ -27,8 +27,12 @@ class AuthGate extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is AuthAuthenticated) {
+          final authRepository = context.read<AuthRepository>();
           final repositories = AuthenticatedRepositoryFactory.fromEnvironment()
-              .create(userId: state.user.userId);
+              .create(
+            userId: state.user.userId,
+            authRepository: authRepository,
+          );
           return MultiRepositoryProvider(
             providers: [
               RepositoryProvider<ExpenseRepository>(
@@ -63,7 +67,6 @@ class AuthGate extends StatelessWidget {
               builder: (context) {
                 final expenseRepository = context.read<ExpenseRepository>();
                 final settingsRepository = context.read<SettingsRepository>();
-                final authRepository = context.read<AuthRepository>();
                 final recurringExpenseRepository =
                     context.read<RecurringExpenseRepository>();
                 final adService = GoogleMobileAdsService();
@@ -98,20 +101,25 @@ class AuthGate extends StatelessWidget {
                         create: (_) => AppLockCubit()..initialize(),
                       ),
                     ],
-                    child: _SettingsLanguageBridge(
-                      settingsRepository: settingsRepository,
-                      child: _AppLockGate(
-                        child: FirstRunOnboardingGate(
-                          settingsRepository: settingsRepository,
-                          expenseRepository: expenseRepository,
-                          authenticatedBuilder: (context, settings) {
-                            return _AuthenticatedHome(
-                              expenseRepository: expenseRepository,
-                              settingsRepository: settingsRepository,
-                              recurringExpenseRepository:
-                                  recurringExpenseRepository,
-                            );
-                          },
+                    child: _VpsSyncBridge(
+                      syncCoordinator: repositories.syncCoordinator,
+                      pendingSyncChanges: repositories.pendingSyncChanges,
+                      deviceId: repositories.syncDeviceId,
+                      child: _SettingsLanguageBridge(
+                        settingsRepository: settingsRepository,
+                        child: _AppLockGate(
+                          child: FirstRunOnboardingGate(
+                            settingsRepository: settingsRepository,
+                            expenseRepository: expenseRepository,
+                            authenticatedBuilder: (context, settings) {
+                              return _AuthenticatedHome(
+                                expenseRepository: expenseRepository,
+                                settingsRepository: settingsRepository,
+                                recurringExpenseRepository:
+                                    recurringExpenseRepository,
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -146,6 +154,106 @@ class AuthGate extends StatelessWidget {
       } catch (_) {}
     });
   }
+}
+
+class _VpsSyncBridge extends StatefulWidget {
+  final SyncCoordinator? syncCoordinator;
+  final Stream<List<SyncChange>>? pendingSyncChanges;
+  final String? deviceId;
+  final Widget child;
+
+  const _VpsSyncBridge({
+    required this.syncCoordinator,
+    required this.pendingSyncChanges,
+    required this.deviceId,
+    required this.child,
+  });
+
+  @override
+  State<_VpsSyncBridge> createState() => _VpsSyncBridgeState();
+}
+
+class _VpsSyncBridgeState extends State<_VpsSyncBridge>
+    with WidgetsBindingObserver {
+  StreamSubscription<List<SyncChange>>? _pendingSubscription;
+  var _syncing = false;
+  var _syncRequested = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _subscribe();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _requestSync());
+  }
+
+  @override
+  void didUpdateWidget(covariant _VpsSyncBridge oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.pendingSyncChanges != widget.pendingSyncChanges) {
+      _pendingSubscription?.cancel();
+      _subscribe();
+    }
+    if (oldWidget.syncCoordinator != widget.syncCoordinator ||
+        oldWidget.deviceId != widget.deviceId) {
+      _requestSync();
+    }
+  }
+
+  void _subscribe() {
+    _pendingSubscription = widget.pendingSyncChanges?.listen(
+      (changes) {
+        if (changes.isNotEmpty) {
+          _requestSync();
+        }
+      },
+      onError: (_) {},
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _requestSync();
+    }
+  }
+
+  void _requestSync() {
+    if (!mounted) return;
+    final coordinator = widget.syncCoordinator;
+    final deviceId = widget.deviceId;
+    if (coordinator == null || deviceId == null) return;
+    if (_syncing) {
+      _syncRequested = true;
+      return;
+    }
+    unawaited(_sync(coordinator, deviceId));
+  }
+
+  Future<void> _sync(SyncCoordinator coordinator, String deviceId) async {
+    _syncing = true;
+    try {
+      do {
+        _syncRequested = false;
+        await coordinator.syncNow(deviceId: deviceId);
+      } while (_syncRequested && mounted);
+    } catch (_) {
+      // Sync failures are reflected by pending local changes and must not block
+      // auth, onboarding, app lock, or the home screen.
+    } finally {
+      _syncing = false;
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _pendingSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 class _SettingsLanguageBridge extends StatefulWidget {

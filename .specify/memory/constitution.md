@@ -1,19 +1,20 @@
 <!--
 Sync Impact Report
-Version change: 1.30.0 -> 1.31.0
+Version change: 1.31.0 -> 1.32.0
 Modified principles: Current Architecture and Project Conventions now record
-Plan 082 polish additions: local-first/PostgreSQL currency policy, README
-architecture/developer commands, completed backend and Flutter verification
-status, and blocked staging/device cutover checks.
+Plan 083 pilot-cutover additions: durable PostgreSQL sync changes,
+VPS_API_BASE_URL wiring, Firebase token-backed Flutter sync coordinator, app
+lifecycle sync triggers, hardened migration verification, and final owner-run
+pilot/rollback commands.
 Added sections: None.
 Removed sections: None.
 Templates/guidance reviewed: .specify/templates/plan-template.md (reviewed, no
 change), .specify/templates/spec-template.md (reviewed, no change),
 .specify/templates/tasks-template.md (reviewed, no change), AGENTS.md
-(reviewed, current plan points to specs/082-vps-postgres-full-migration).
-Follow-up work: Run seeded staging migration dry-run, real-device VPS QA, and
-release build only after staging/device checks pass; keep replacing temporary
-in-memory sync/import/metrics with durable PostgreSQL-backed services.
+(reviewed, current plan points to specs/083-vps-pilot-cutover-readiness).
+Follow-up work: Run the seeded staging migration dry-run, protect metrics,
+configure PM2 startup/backups, complete real-device VPS QA, apply remote pull
+changes into local repositories, and build only after staging/device checks pass.
 -->
 
 # Expense Tracker Constitution
@@ -75,16 +76,17 @@ work into one vague plan.
 - Framework: Flutter.
 - State management: Bloc and Flutter Bloc.
 - Backend: Firebase Core and Cloud Firestore through a local repository package.
-- VPS backend migration foundation: `server/` contains the Plan 082 TypeScript
+- VPS backend migration foundation: `server/` contains the TypeScript
   Fastify API scaffold, Drizzle/PostgreSQL schema, Firebase Admin ID-token
   verification middleware, `/v1/users/me`, `/v1/sync/pull`,
   `/v1/sync/push`, `/v1/bootstrap`, `/v1/account`, health route,
   validation/error helpers, Firestore export mapping/import/verification
   scripts, backup/restore smoke script, account deletion service boundary,
-  privacy-safe request logging, `/metrics`, and npm verification scripts. The
-  current sync/import/metrics services are in-memory or MVP scaffolds for
-  contracts and must be replaced by PostgreSQL-backed persistence and real
-  monitoring before pilot or production use.
+  privacy-safe request logging, `/metrics`, and npm verification scripts.
+  Sync changes are now stored durably in PostgreSQL with user-scoped
+  revision/cursor ordering and tombstone support. The remaining import,
+  metrics, and remote-pull application pieces are still pilot-readiness work,
+  not public-production guarantees.
 - Authentication: Firebase Authentication is integrated through `AuthRepository`, `FirebaseAuthRepository`, and `AuthBloc`, including email/password and Google Sign-In provider flows through `google_sign_in`.
 - Repository pattern: `packages/expense_repository` exposes models, entities, auth/settings repositories, `ExpenseRepository`, `FirebaseExpenseRepo`, `CategoryRepository`, `FirebaseCategoryRepository`, and the other feature-specific repository interfaces.
 - Repository runtime mode: `RepositoryRuntimeMode` and
@@ -92,9 +94,13 @@ work into one vague plan.
   construction. The default mode is `firebaseLegacy`; `vpsLocalFirst` now
   provides local settings, categories, aliases, expenses, budgets, category
   budgets, recurring expenses, saving goals, AI action logs, and local wallet/
-  transfer repository implementations for migration feature parity.
-  `migrationComparison` compares legacy Firebase expenses against migrated local
-  expenses and reports discrepancies without changing user-facing flows.
+  transfer repository implementations for migration feature parity. In
+  `vpsLocalFirst` and `migrationComparison`, `VPS_API_BASE_URL` configures the
+  deployed API endpoint, Firebase ID tokens authenticate VPS requests, and the
+  `SyncCoordinator` pushes pending local changes after sign-in, local writes,
+  and app resume. `migrationComparison` compares legacy Firebase expenses
+  against migrated local expenses and reports discrepancies without changing
+  user-facing flows.
 - Expense schema: expenses include user ownership, category snapshot fields, description, payment method, currency, timestamps, source, and optional recurring/AI references while keeping legacy embedded category parsing.
 - User settings: `SettingsRepository` and `FirebaseSettingsRepository` store profile settings under `users/{userId}/settings/profile`, including app-local display name, explicit app language preference independent from currency, supported currencies, conversion rates, default payment method, notification settings, onboarding, guided tour fields, and daily cached exchange-rate metadata.
 - Account/profile: `lib/screens/account` and account services provide provider metadata, app-local display name editing independent from Google profile data, provider-aware actions, and in-app account deletion orchestration through repository/auth boundaries.
@@ -126,7 +132,8 @@ work into one vague plan.
   local settings/category/alias/expense/budget/category-budget/recurring/
   saving-goal/wallet/transfer/AI-action-log repositories, and schema boundary
   for the VPS migration. These are a foundation until durable generated Drift
-  database code and PostgreSQL sync persistence replace the in-memory MVPs.
+  database code and remote pull application replace the in-memory local MVP.
+  PostgreSQL now persists accepted sync changes on the VPS side.
 - Firestore rules: `firestore.rules` validates the current user-owned schema, including settings profile fields, decimal amounts, supported currencies/conversion rates, account display name, notification settings, guided tour state, AI action logs, and category aliases.
 - Verification tooling: `docs/qa/flutter-verification-runbook.md` and `tools/verification/` document safe Windows Flutter/Dart diagnostics and bounded verification commands for local hangs.
 - Build system: Flutter toolchain with Android Gradle, iOS/macOS Xcode projects, CMake for desktop targets, and Flutter web.

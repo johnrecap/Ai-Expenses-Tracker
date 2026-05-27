@@ -38,8 +38,6 @@ this file and mention the relevant items briefly so they are not forgotten.
   cutover.
 - Track Firebase Admin transitive `uuid` moderate npm audit findings in the VPS
   backend and upgrade once upstream packages provide a non-breaking fix.
-- Replace the Plan 082 in-memory sync service with durable PostgreSQL-backed
-  sync persistence before any VPS/local-first pilot or production cutover.
 - Replace the Plan 082 JSON-fixture backfill scaffold with a production
   Firebase Admin export reader plus PostgreSQL transaction writes before real
   user migration.
@@ -48,10 +46,10 @@ this file and mention the relevant items briefly so they are not forgotten.
   before enabling deletion in VPS production.
 - Run Plan 082 staging migration dry-run against seeded Firebase/PostgreSQL
   environments and store verification reports before any pilot cutover.
-- Wire Flutter `VpsApiClient`, API base URL configuration, Firebase token
-  provider, `SyncCoordinator`, and app lifecycle sync triggers before any
-  `vpsLocalFirst` pilot; the current repository factory is local-first only and
-  does not yet push/pull against the deployed VPS.
+- Apply pulled VPS sync changes back into local repositories, not just push
+  pending local writes, before multi-device pilot testing.
+- Add explicit VPS sync UI states for syncing and failed retry conditions beyond
+  the current pending/synced expense status.
 
 ## AI Advanced Reliability
 
@@ -111,7 +109,7 @@ this file and mention the relevant items briefly so they are not forgotten.
   emit unsupported `quic` listeners.
 - Replace the Plan 082 in-memory metrics collector with a durable monitoring
   backend or external scraper if production diagnostics need historical trends.
-- Run Plan 082 real-device QA in `vpsLocalFirst` mode against a configured VPS
+- Run Plan 083 real-device QA in `vpsLocalFirst` mode against a configured VPS
   endpoint before building a release artifact for migration testing.
 
 ## Verification Follow-Up

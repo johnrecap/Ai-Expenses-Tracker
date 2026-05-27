@@ -4,11 +4,13 @@ import 'sync_change.dart';
 
 class LocalSyncQueue {
   final List<SyncChange> _pending;
+  final void Function(List<SyncChange> changes)? onUploaded;
   final StreamController<List<SyncChange>> _controller =
       StreamController<List<SyncChange>>.broadcast();
 
   LocalSyncQueue({
     List<SyncChange>? pending,
+    this.onUploaded,
   }) : _pending = pending ?? [];
 
   List<SyncChange> get pending => List.unmodifiable(_pending);
@@ -25,7 +27,13 @@ class LocalSyncQueue {
 
   void markUploaded(Iterable<String> changeIds) {
     final ids = changeIds.toSet();
+    final uploaded = _pending
+        .where((change) => ids.contains(change.id))
+        .toList(growable: false);
     _pending.removeWhere((change) => ids.contains(change.id));
+    if (uploaded.isNotEmpty) {
+      onUploaded?.call(uploaded);
+    }
     _emit();
   }
 

@@ -29,6 +29,7 @@ export 'src/saving_goal_repo.dart';
 export 'src/transfer_repo.dart';
 export 'src/wallet_account_repo.dart';
 export 'src/api/vps_api_client.dart';
+export 'src/api/vps_api_config.dart';
 export 'src/api/account_api.dart';
 export 'src/api/firebase_token_provider.dart';
 export 'src/local/local_database.dart';

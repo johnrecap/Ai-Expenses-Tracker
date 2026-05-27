@@ -4,8 +4,10 @@ export interface MigrationVerificationReport {
   sourceCount: number;
   targetCount: number;
   missing: string[];
+  unexpected: string[];
   hashMismatches: string[];
   duplicateKeys: string[];
+  warnings: string[];
   passed: boolean;
 }
 
@@ -29,6 +31,7 @@ export function verifyMigrationRecords(
   }
 
   const missing: string[] = [];
+  const unexpected: string[] = [];
   const hashMismatches: string[] = [];
   for (const [key, sourceRecord] of sourceMap) {
     const targetRecord = targetMap.get(key);
@@ -40,15 +43,29 @@ export function verifyMigrationRecords(
       hashMismatches.push(key);
     }
   }
+  for (const key of targetMap.keys()) {
+    if (!sourceMap.has(key)) {
+      unexpected.push(key);
+    }
+  }
+  const warnings = [];
+  if (source.length !== target.length) {
+    warnings.push(
+      `Record count differs: source=${source.length}, target=${target.length}.`,
+    );
+  }
 
   return {
     sourceCount: source.length,
     targetCount: target.length,
     missing,
+    unexpected,
     hashMismatches,
     duplicateKeys,
+    warnings,
     passed:
       missing.length === 0 &&
+      unexpected.length === 0 &&
       hashMismatches.length === 0 &&
       duplicateKeys.length === 0 &&
       source.length === target.length,

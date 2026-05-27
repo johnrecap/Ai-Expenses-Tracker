@@ -1,3 +1,9 @@
+import { and, asc, eq, gt } from "drizzle-orm";
+
+import { db, type Database } from "../db/client.js";
+import { syncChanges } from "../db/schema/index.js";
+import { ensureBackendUser } from "../users/userService.js";
+
 export type SyncEntityType =
   | "settings"
   | "expense"
@@ -63,9 +69,21 @@ interface StoredChange extends SyncEnvelope {
   serverRevision: number;
 }
 
-export class InMemorySyncService implements SyncService {
-  private readonly changes: StoredChange[] = [];
-  private revision = 0;
+export interface SyncChangeRepository {
+  append(
+    firebaseUid: string,
+    deviceId: string,
+    changes: SyncEnvelope[],
+  ): Promise<StoredChange[]>;
+  pull(
+    firebaseUid: string,
+    afterRevision: number,
+    limit: number,
+  ): Promise<StoredChange[]>;
+}
+
+export class DurableSyncService implements SyncService {
+  constructor(private readonly repository: SyncChangeRepository) {}
 
   async push(
     userId: string,
@@ -73,6 +91,7 @@ export class InMemorySyncService implements SyncService {
   ): Promise<SyncPushResult> {
     const accepted: SyncPushResult["accepted"] = [];
     const rejected: SyncPushResult["rejected"] = [];
+    const validChanges: SyncEnvelope[] = [];
 
     for (const change of request.changes) {
       if (!change.entityId || !change.entityType) {
@@ -84,24 +103,31 @@ export class InMemorySyncService implements SyncService {
         });
         continue;
       }
+      validChanges.push(change);
+    }
 
-      const serverRevision = ++this.revision;
-      this.changes.push({
-        ...change,
-        userId,
-        serverRevision,
-      });
+    const storedChanges =
+      validChanges.length === 0
+        ? []
+        : await this.repository.append(userId, request.deviceId, validChanges);
+
+    for (const stored of storedChanges) {
       accepted.push({
-        entityType: change.entityType,
-        entityId: change.entityId,
-        serverRevision,
+        entityType: stored.entityType,
+        entityId: stored.entityId,
+        serverRevision: stored.serverRevision,
       });
     }
+
+    const nextCursor =
+      accepted.length === 0
+        ? "0"
+        : String(accepted[accepted.length - 1].serverRevision);
 
     return {
       accepted,
       rejected,
-      nextCursor: String(this.revision),
+      nextCursor,
     };
   }
 
@@ -112,12 +138,11 @@ export class InMemorySyncService implements SyncService {
   ): Promise<SyncPullResult> {
     const afterRevision = Number.parseInt(cursor, 10) || 0;
     const safeLimit = Math.min(Math.max(limit, 1), 1000);
-    const matching = this.changes
-      .filter(
-        (change) =>
-          change.userId === userId && change.serverRevision > afterRevision,
-      )
-      .sort((a, b) => a.serverRevision - b.serverRevision);
+    const matching = await this.repository.pull(
+      userId,
+      afterRevision,
+      safeLimit + 1,
+    );
     const page = matching.slice(0, safeLimit);
     const nextCursor =
       page.length === 0
@@ -132,4 +157,124 @@ export class InMemorySyncService implements SyncService {
   }
 }
 
-export const defaultSyncService = new InMemorySyncService();
+export class InMemorySyncChangeRepository implements SyncChangeRepository {
+  private readonly changes: StoredChange[] = [];
+  private revision = 0;
+
+  async append(
+    userId: string,
+    _deviceId: string,
+    changes: SyncEnvelope[],
+  ): Promise<StoredChange[]> {
+    const storedChanges: StoredChange[] = [];
+    for (const change of changes) {
+      const serverRevision = ++this.revision;
+      const stored = {
+        ...change,
+        userId,
+        serverRevision,
+      };
+      this.changes.push(stored);
+      storedChanges.push(stored);
+    }
+    return storedChanges;
+  }
+
+  async pull(
+    userId: string,
+    afterRevision: number,
+    limit: number,
+  ): Promise<StoredChange[]> {
+    return this.changes
+      .filter(
+        (change) =>
+          change.userId === userId && change.serverRevision > afterRevision,
+      )
+      .sort((a, b) => a.serverRevision - b.serverRevision)
+      .slice(0, limit);
+  }
+}
+
+export class InMemorySyncService extends DurableSyncService {
+  constructor(repository = new InMemorySyncChangeRepository()) {
+    super(repository);
+  }
+}
+
+export class PostgresSyncChangeRepository implements SyncChangeRepository {
+  constructor(private readonly database: Database = db) {}
+
+  async append(
+    firebaseUid: string,
+    deviceId: string,
+    changes: SyncEnvelope[],
+  ): Promise<StoredChange[]> {
+    const backendUser = await ensureBackendUser({ firebaseUid });
+
+    return this.database.transaction(async (tx) => {
+      const stored: StoredChange[] = [];
+      for (const change of changes) {
+        const [row] = await tx
+          .insert(syncChanges)
+          .values({
+            userId: backendUser.id,
+            entityType: change.entityType,
+            entityId: change.entityId,
+            operation: change.operation,
+            data: change.data,
+            clientUpdatedAt: new Date(change.clientUpdatedAt),
+            baseRevision: change.baseRevision ?? null,
+            changedByDeviceId: deviceId,
+          })
+          .returning();
+        stored.push(mapSyncChangeRow(firebaseUid, row));
+      }
+      return stored;
+    });
+  }
+
+  async pull(
+    firebaseUid: string,
+    afterRevision: number,
+    limit: number,
+  ): Promise<StoredChange[]> {
+    const backendUser = await ensureBackendUser({ firebaseUid });
+    const rows = await this.database
+      .select()
+      .from(syncChanges)
+      .where(
+        and(
+          eq(syncChanges.userId, backendUser.id),
+          gt(syncChanges.serverRevision, afterRevision),
+        ),
+      )
+      .orderBy(asc(syncChanges.serverRevision))
+      .limit(limit);
+
+    return rows.map((row) => mapSyncChangeRow(firebaseUid, row));
+  }
+}
+
+function mapSyncChangeRow(
+  firebaseUid: string,
+  row: typeof syncChanges.$inferSelect,
+): StoredChange {
+  return {
+    userId: firebaseUid,
+    entityType: row.entityType as SyncEntityType,
+    entityId: row.entityId,
+    operation: row.operation as SyncOperation,
+    data: row.data,
+    clientUpdatedAt: (
+      row.clientUpdatedAt ??
+      row.changedAt ??
+      new Date()
+    ).toISOString(),
+    baseRevision: row.baseRevision,
+    serverRevision: row.serverRevision,
+  };
+}
+
+export const defaultSyncService = new DurableSyncService(
+  new PostgresSyncChangeRepository(),
+);

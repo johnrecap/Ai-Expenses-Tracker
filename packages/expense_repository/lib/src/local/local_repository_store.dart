@@ -17,6 +17,8 @@ class LocalRepositoryStore {
   UserSettings settings;
 
   final List<SyncChange> pendingChanges = [];
+  final StreamController<List<SyncChange>> _pendingChangesController =
+      StreamController<List<SyncChange>>.broadcast();
 
   final StreamController<List<Expense>> _expenseController =
       StreamController<List<Expense>>.broadcast();
@@ -249,6 +251,36 @@ class LocalRepositoryStore {
 
   void enqueue(SyncChange change) {
     pendingChanges.add(change);
+    emitPendingChanges();
+  }
+
+  Stream<List<SyncChange>> watchPendingChanges() {
+    scheduleMicrotask(emitPendingChanges);
+    return _pendingChangesController.stream;
+  }
+
+  void markUploadedChanges(Iterable<SyncChange> changes) {
+    var expenseChanged = false;
+    for (final change in changes) {
+      if (change.entityType == SyncEntityType.expense &&
+          change.operation == SyncOperation.upsert) {
+        final expense = expenses[change.entityId];
+        if (expense != null) {
+          expenses[change.entityId] = expense.withSyncStatus(SyncStatus.synced);
+          expenseChanged = true;
+        }
+      }
+    }
+    if (expenseChanged) {
+      emitExpenses();
+    }
+    emitPendingChanges();
+  }
+
+  void emitPendingChanges() {
+    if (!_pendingChangesController.isClosed) {
+      _pendingChangesController.add(List.unmodifiable(pendingChanges));
+    }
   }
 
   SyncChange change({
@@ -280,5 +312,6 @@ class LocalRepositoryStore {
     _savingGoalController.close();
     _walletController.close();
     _transferController.close();
+    _pendingChangesController.close();
   }
 }

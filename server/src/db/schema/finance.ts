@@ -6,6 +6,7 @@ import {
   jsonb,
   numeric,
   pgTable,
+  serial,
   text,
   timestamp,
   uniqueIndex,
@@ -344,16 +345,24 @@ export const syncChanges = pgTable(
     entityType: text("entity_type").notNull(),
     entityId: text("entity_id").notNull(),
     operation: text("operation").notNull(),
-    serverRevision: integer("server_revision").notNull(),
+    data: jsonb("data").$type<Record<string, unknown>>().notNull().default({}),
+    clientUpdatedAt: timestamp("client_updated_at", { withTimezone: true }),
+    baseRevision: integer("base_revision"),
+    serverRevision: serial("server_revision").notNull(),
     changedAt: timestamp("changed_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
-    changedByDeviceId: uuid("changed_by_device_id"),
+    changedByDeviceId: text("changed_by_device_id"),
   },
   (table) => ({
     userRevisionIdx: index("sync_changes_user_revision_idx").on(
       table.userId,
       table.serverRevision,
+    ),
+    userEntityIdx: index("sync_changes_user_entity_idx").on(
+      table.userId,
+      table.entityType,
+      table.entityId,
     ),
     entityIdx: index("sync_changes_entity_idx").on(
       table.entityType,

@@ -4,6 +4,25 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
 void main() {
+  group('VpsApiConfig', () {
+    test('normalizes configured base URL with trailing slash', () {
+      final config = VpsApiConfig.fromEnvironment(
+        value: 'https://api.saeeddev.com',
+      );
+
+      expect(config.baseUri.toString(), 'https://api.saeeddev.com/');
+    });
+
+    test('requires a base URL outside firebase legacy mode', () {
+      final config = VpsApiConfig.fromEnvironment(value: '');
+
+      expect(
+        () => config.requireForMode(RepositoryRuntimeMode.vpsLocalFirst),
+        throwsA(isA<StateError>()),
+      );
+    });
+  });
+
   group('VpsApiClient', () {
     test('sends Firebase bearer token on requests', () async {
       late Map<String, String> headers;

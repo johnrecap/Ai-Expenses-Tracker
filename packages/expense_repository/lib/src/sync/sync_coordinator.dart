@@ -40,6 +40,14 @@ class SyncCoordinator {
     );
   }
 
+  Future<List<Map<String, Object?>>> syncNow({
+    required String deviceId,
+    int limit = 500,
+  }) async {
+    await pushPending(deviceId: deviceId);
+    return pullChanges(limit: limit);
+  }
+
   Future<List<Map<String, Object?>>> pullChanges({
     int limit = 500,
   }) async {

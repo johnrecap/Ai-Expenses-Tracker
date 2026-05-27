@@ -48,6 +48,10 @@ this file and mention the relevant items briefly so they are not forgotten.
   before enabling deletion in VPS production.
 - Run Plan 082 staging migration dry-run against seeded Firebase/PostgreSQL
   environments and store verification reports before any pilot cutover.
+- Wire Flutter `VpsApiClient`, API base URL configuration, Firebase token
+  provider, `SyncCoordinator`, and app lifecycle sync triggers before any
+  `vpsLocalFirst` pilot; the current repository factory is local-first only and
+  does not yet push/pull against the deployed VPS.
 
 ## AI Advanced Reliability
 

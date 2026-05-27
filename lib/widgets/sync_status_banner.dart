@@ -13,30 +13,43 @@ class SyncStatusBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final pendingCount =
         expenses.where((expense) => expense.syncStatus.isPending).length;
-    if (pendingCount == 0) return const SizedBox.shrink();
+    final failedCount =
+        expenses.where((expense) => expense.syncStatus.isFailed).length;
+    if (pendingCount == 0 && failedCount == 0) return const SizedBox.shrink();
 
     final colorScheme = Theme.of(context).colorScheme;
-    final message = pendingCount == 1
-        ? '1 expense is waiting to sync'
-        : '$pendingCount expenses are waiting to sync';
+    final hasFailures = failedCount > 0;
+    final message = hasFailures
+        ? failedCount == 1
+            ? '1 expense could not sync'
+            : '$failedCount expenses could not sync'
+        : pendingCount == 1
+            ? '1 expense is waiting to sync'
+            : '$pendingCount expenses are waiting to sync';
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      color: colorScheme.primaryContainer,
+      color: hasFailures
+          ? colorScheme.errorContainer
+          : colorScheme.primaryContainer,
       child: Row(
         children: [
           Icon(
-            Icons.cloud_sync_outlined,
+            hasFailures ? Icons.cloud_off_outlined : Icons.cloud_sync_outlined,
             size: 18,
-            color: colorScheme.onPrimaryContainer,
+            color: hasFailures
+                ? colorScheme.onErrorContainer
+                : colorScheme.onPrimaryContainer,
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               message,
               style: TextStyle(
-                color: colorScheme.onPrimaryContainer,
+                color: hasFailures
+                    ? colorScheme.onErrorContainer
+                    : colorScheme.onPrimaryContainer,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -57,28 +70,37 @@ class ExpenseSyncBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!expense.syncStatus.isPending) return const SizedBox.shrink();
+    if (!expense.syncStatus.isPending && !expense.syncStatus.isFailed) {
+      return const SizedBox.shrink();
+    }
 
     final colorScheme = Theme.of(context).colorScheme;
+    final failed = expense.syncStatus.isFailed;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: colorScheme.secondaryContainer,
+        color: failed
+            ? colorScheme.errorContainer
+            : colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.schedule,
+            failed ? Icons.cloud_off_outlined : Icons.schedule,
             size: 12,
-            color: colorScheme.onSecondaryContainer,
+            color: failed
+                ? colorScheme.onErrorContainer
+                : colorScheme.onSecondaryContainer,
           ),
           const SizedBox(width: 4),
           Text(
-            'Pending',
+            failed ? 'Sync failed' : 'Pending',
             style: TextStyle(
-              color: colorScheme.onSecondaryContainer,
+              color: failed
+                  ? colorScheme.onErrorContainer
+                  : colorScheme.onSecondaryContainer,
               fontSize: 11,
               fontWeight: FontWeight.w700,
             ),

@@ -27,47 +27,36 @@ class AuthGate extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is AuthAuthenticated) {
+          final repositories = AuthenticatedRepositoryFactory.fromEnvironment()
+              .create(userId: state.user.userId);
           return MultiRepositoryProvider(
             providers: [
               RepositoryProvider<ExpenseRepository>(
-                create: (_) => FirebaseExpenseRepo(userId: state.user.userId),
+                create: (_) => repositories.expenseRepository,
               ),
               RepositoryProvider<CategoryRepository>(
-                create: (_) =>
-                    FirebaseCategoryRepository(userId: state.user.userId),
+                create: (_) => repositories.categoryRepository,
               ),
               RepositoryProvider<CategoryAliasRepository>(
-                create: (_) => FirebaseCategoryAliasRepository(
-                  userId: state.user.userId,
-                ),
+                create: (_) => repositories.categoryAliasRepository,
               ),
               RepositoryProvider<CategoryBudgetRepository>(
-                create: (_) => FirebaseCategoryBudgetRepository(
-                  userId: state.user.userId,
-                ),
+                create: (_) => repositories.categoryBudgetRepository,
               ),
               RepositoryProvider<BudgetRepository>(
-                create: (_) =>
-                    FirebaseBudgetRepository(userId: state.user.userId),
+                create: (_) => repositories.budgetRepository,
               ),
               RepositoryProvider<SettingsRepository>(
-                create: (_) =>
-                    FirebaseSettingsRepository(userId: state.user.userId),
+                create: (_) => repositories.settingsRepository,
               ),
               RepositoryProvider<RecurringExpenseRepository>(
-                create: (_) => FirebaseRecurringExpenseRepository(
-                  userId: state.user.userId,
-                ),
+                create: (_) => repositories.recurringExpenseRepository,
               ),
               RepositoryProvider<SavingGoalRepository>(
-                create: (_) => FirebaseSavingGoalRepository(
-                  userId: state.user.userId,
-                ),
+                create: (_) => repositories.savingGoalRepository,
               ),
               RepositoryProvider<AiActionLogRepository>(
-                create: (_) => FirebaseAiActionLogRepository(
-                  userId: state.user.userId,
-                ),
+                create: (_) => repositories.aiActionLogRepository,
               ),
             ],
             child: Builder(

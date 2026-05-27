@@ -1,0 +1,49 @@
+version: 2
+updates:
+  - package-ecosystem: "pub"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "06:00"
+      timezone: "Africa/Cairo"
+    open-pull-requests-limit: 5
+    groups:
+      flutter-packages:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/functions"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "06:15"
+      timezone: "Africa/Cairo"
+    open-pull-requests-limit: 5
+    groups:
+      firebase-functions-packages:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/workers/ai-gateway"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "06:30"
+      timezone: "Africa/Cairo"
+    open-pull-requests-limit: 5
+    groups:
+      worker-packages:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "06:45"
+      timezone: "Africa/Cairo"
+    open-pull-requests-limit: 5

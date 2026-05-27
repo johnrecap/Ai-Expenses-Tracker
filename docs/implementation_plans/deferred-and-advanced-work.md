@@ -32,6 +32,22 @@ this file and mention the relevant items briefly so they are not forgotten.
   rules, saving goals, settings, and AI action logs.
 - Add App Check when the app is ready for public release.
 - Keep Cloudflare Worker as the AI gateway; do not put provider keys in Flutter.
+- Before replacing Firestore with a VPS backend, create a dedicated Spec Kit
+  migration plan for Flutter local-first storage, PostgreSQL schema, Firebase ID
+  token verification, sync/tombstones, backfill, rollback, and dual-write
+  cutover.
+- Track Firebase Admin transitive `uuid` moderate npm audit findings in the VPS
+  backend and upgrade once upstream packages provide a non-breaking fix.
+- Replace the Plan 082 in-memory sync service with durable PostgreSQL-backed
+  sync persistence before any VPS/local-first pilot or production cutover.
+- Replace the Plan 082 JSON-fixture backfill scaffold with a production
+  Firebase Admin export reader plus PostgreSQL transaction writes before real
+  user migration.
+- Replace the Plan 082 account-deletion recent-auth header contract with a
+  provider-grade recent-login proof or backend-issued one-time deletion token
+  before enabling deletion in VPS production.
+- Run Plan 082 staging migration dry-run against seeded Firebase/PostgreSQL
+  environments and store verification reports before any pilot cutover.
 
 ## AI Advanced Reliability
 
@@ -82,6 +98,14 @@ this file and mention the relevant items briefly so they are not forgotten.
 - Keep telemetry privacy-safe: no descriptions, receipt text/images, auth
   tokens, PIN/biometric data, provider keys, or raw sensitive prompts.
 - Add release runbooks for logs, incident response, rollback, and support.
+- Configure a real off-server encrypted backup destination and alerting for
+  backup/restore-check failures before VPS production cutover.
+- Protect the VPS `/metrics` endpoint behind Nginx allowlists or auth before
+  exposing the API domain publicly.
+- Replace the Plan 082 in-memory metrics collector with a durable monitoring
+  backend or external scraper if production diagnostics need historical trends.
+- Run Plan 082 real-device QA in `vpsLocalFirst` mode against a configured VPS
+  endpoint before building a release artifact for migration testing.
 
 ## Verification Follow-Up
 

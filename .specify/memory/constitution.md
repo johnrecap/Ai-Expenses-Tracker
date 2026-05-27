@@ -1,15 +1,19 @@
 <!--
 Sync Impact Report
-Version change: 1.25.0 -> 1.26.0
-Modified principles: Project Conventions clarified account deletion recent-auth
-ordering and exchange-rate base-currency invalidation/target coverage.
+Version change: 1.30.0 -> 1.31.0
+Modified principles: Current Architecture and Project Conventions now record
+Plan 082 polish additions: local-first/PostgreSQL currency policy, README
+architecture/developer commands, completed backend and Flutter verification
+status, and blocked staging/device cutover checks.
 Added sections: None.
 Removed sections: None.
 Templates/guidance reviewed: .specify/templates/plan-template.md (reviewed, no
 change), .specify/templates/spec-template.md (reviewed, no change),
 .specify/templates/tasks-template.md (reviewed, no change), AGENTS.md
-(reviewed, no change).
-Follow-up TODOs: None.
+(reviewed, current plan points to specs/082-vps-postgres-full-migration).
+Follow-up work: Run seeded staging migration dry-run, real-device VPS QA, and
+release build only after staging/device checks pass; keep replacing temporary
+in-memory sync/import/metrics with durable PostgreSQL-backed services.
 -->
 
 # Expense Tracker Constitution
@@ -71,8 +75,26 @@ work into one vague plan.
 - Framework: Flutter.
 - State management: Bloc and Flutter Bloc.
 - Backend: Firebase Core and Cloud Firestore through a local repository package.
+- VPS backend migration foundation: `server/` contains the Plan 082 TypeScript
+  Fastify API scaffold, Drizzle/PostgreSQL schema, Firebase Admin ID-token
+  verification middleware, `/v1/users/me`, `/v1/sync/pull`,
+  `/v1/sync/push`, `/v1/bootstrap`, `/v1/account`, health route,
+  validation/error helpers, Firestore export mapping/import/verification
+  scripts, backup/restore smoke script, account deletion service boundary,
+  privacy-safe request logging, `/metrics`, and npm verification scripts. The
+  current sync/import/metrics services are in-memory or MVP scaffolds for
+  contracts and must be replaced by PostgreSQL-backed persistence and real
+  monitoring before pilot or production use.
 - Authentication: Firebase Authentication is integrated through `AuthRepository`, `FirebaseAuthRepository`, and `AuthBloc`, including email/password and Google Sign-In provider flows through `google_sign_in`.
 - Repository pattern: `packages/expense_repository` exposes models, entities, auth/settings repositories, `ExpenseRepository`, `FirebaseExpenseRepo`, `CategoryRepository`, `FirebaseCategoryRepository`, and the other feature-specific repository interfaces.
+- Repository runtime mode: `RepositoryRuntimeMode` and
+  `AuthenticatedRepositoryFactory` centralize authenticated repository
+  construction. The default mode is `firebaseLegacy`; `vpsLocalFirst` now
+  provides local settings, categories, aliases, expenses, budgets, category
+  budgets, recurring expenses, saving goals, AI action logs, and local wallet/
+  transfer repository implementations for migration feature parity.
+  `migrationComparison` compares legacy Firebase expenses against migrated local
+  expenses and reports discrepancies without changing user-facing flows.
 - Expense schema: expenses include user ownership, category snapshot fields, description, payment method, currency, timestamps, source, and optional recurring/AI references while keeping legacy embedded category parsing.
 - User settings: `SettingsRepository` and `FirebaseSettingsRepository` store profile settings under `users/{userId}/settings/profile`, including app-local display name, explicit app language preference independent from currency, supported currencies, conversion rates, default payment method, notification settings, onboarding, guided tour fields, and daily cached exchange-rate metadata.
 - Account/profile: `lib/screens/account` and account services provide provider metadata, app-local display name editing independent from Google profile data, provider-aware actions, and in-app account deletion orchestration through repository/auth boundaries.
@@ -99,6 +121,12 @@ work into one vague plan.
 - UI framework/widgets: Flutter Material, Cupertino widgets, Font Awesome icons, custom logo asset, `fl_chart`, and `flutter_colorpicker`.
 - Formatting/localization packages: `intl`, `flutter_localizations`, `l10n.yaml`, and ARB files under `lib/l10n` provide English/Arabic localization for current app-owned UI surfaces, with remaining manual RTL and PDF QA tracked separately.
 - Storage/database: authenticated data uses Firestore user subcollections under `users/{userId}/expenses`, `users/{userId}/categories`, budgets, category budgets, recurring expenses, saving goals, settings, AI action logs, and category aliases; old global `expenses` and `categories` are denied legacy paths only.
+- Local-first migration storage: `packages/expense_repository/lib/src/local`
+  contains the initial Drift table definitions, in-memory local migration store,
+  local settings/category/alias/expense/budget/category-budget/recurring/
+  saving-goal/wallet/transfer/AI-action-log repositories, and schema boundary
+  for the VPS migration. These are a foundation until durable generated Drift
+  database code and PostgreSQL sync persistence replace the in-memory MVPs.
 - Firestore rules: `firestore.rules` validates the current user-owned schema, including settings profile fields, decimal amounts, supported currencies/conversion rates, account display name, notification settings, guided tour state, AI action logs, and category aliases.
 - Verification tooling: `docs/qa/flutter-verification-runbook.md` and `tools/verification/` document safe Windows Flutter/Dart diagnostics and bounded verification commands for local hangs.
 - Build system: Flutter toolchain with Android Gradle, iOS/macOS Xcode projects, CMake for desktop targets, and Flutter web.
@@ -283,6 +311,20 @@ Current known verification baseline:
 - `flutter gen-l10n` and `flutter analyze --no-pub` passed after Plan 061 localization RTL release pass; manual small-screen RTL, keyboard-open, widget-test, and Arabic PDF checks remain open.
 - `flutter gen-l10n` and `flutter analyze --no-pub` passed after Plan 062 account profile management; reauthentication UX and real Firebase deletion validation remain open.
 - `flutter analyze --no-pub` and targeted report/AI/engagement/Home tests passed after Plan 063 reports currency conversion. The targeted tests covered reports, AI assistant/advice/usage/gateway, engagement, and Home conversion paths with 70 passing tests. Manual APK check remains open.
+- Plan 082 Phase 5/6 verification passed with `cd server; npm run typecheck`,
+  `cd server; npm test`, targeted migrated finance/AI/backup/local repository
+  Flutter tests, and `flutter analyze --no-pub`. No release artifact was built.
+- Plan 082 Phase 7 verification passed with `cd server; npm run typecheck` and
+  `cd server; npm test` after adding health smoke tests, backup restore smoke
+  script, privacy-safe logging/metrics hooks, and VPS backup/cutover runbooks.
+- Plan 082 Phase 8 local verification passed with `cd server; npm run
+  typecheck`, `cd server; npm test`, `flutter pub get`, `flutter gen-l10n`,
+  `cd packages/expense_repository; flutter pub get`, `cd
+  packages/expense_repository; dart run build_runner build
+  --delete-conflicting-outputs`, targeted VPS/local/migration Flutter tests,
+  and `flutter analyze --no-pub`. Staging migration dry-run, real-device VPS QA,
+  and release build remain blocked until staging credentials/devices are
+  available and the build is explicitly requested after those checks.
 
 ## Rule 8: Project Setup State
 
@@ -332,6 +374,25 @@ When a setup step fails because a tool, package, or skill cannot be found locall
 - Auth state is owned by `lib/screens/auth/blocs/auth_bloc/`; widgets must not import `firebase_auth` directly.
 - Google Sign-In must also go through `AuthRepository` and `AuthBloc`; widgets must not import `firebase_auth`, `google_sign_in`, or plugin-specific auth types directly.
 - User-scoped Firestore repositories must be created only after `AuthAuthenticated` provides a non-empty `userId`.
+- Authenticated repository construction must go through
+  `AuthenticatedRepositoryFactory`; new authenticated data stores must not be
+  wired directly in `AuthGate`.
+- The `REPOSITORY_RUNTIME_MODE` Dart define defaults to `firebaseLegacy`.
+  `vpsLocalFirst` remains a Plan 082 migration mode and must not be used for
+  production accounts until PostgreSQL sync persistence, production backfill,
+  account deletion orchestration, staging migration verification, backup/restore
+  drill, and rollback verification complete. `migrationComparison` is for pilot
+  diagnostics only and must not surface raw mismatch details to users.
+- Server-side VPS code lives under `server/`; PostgreSQL credentials, Firebase
+  Admin private keys, and service account JSON must stay in ignored environment
+  files or server secret storage and must never be copied into Flutter source,
+  platform folders, or public docs.
+- Plan 082 local-first database work must use the Drift schema boundary under
+  `packages/expense_repository/lib/src/local`; screens and blocs still consume
+  repository interfaces rather than local tables or HTTP clients directly.
+- Flutter calls to the VPS must go through `VpsApiClient`, token providers, and
+  repository/sync services. Widgets must not construct backend HTTP requests or
+  Firebase ID token handling inline.
 - Category reads/writes are owned by `CategoryRepository`; new category work must not add category methods back to `ExpenseRepository`.
 - Category deletion must be implemented as archival with `isArchived = true` unless a future spec explicitly defines a migration-safe hard-delete workflow.
 - Category UI must not build `assets/{category.icon}.png` paths directly. New category pickers must use `CategoryIconRegistry` for icon choices and `CategoryColorPresets` for curated color swatches, with `flutter_colorpicker` available only for custom colors.
@@ -396,4 +457,4 @@ When a setup step fails because a tool, package, or skill cannot be found locall
   be created as Spec Kit artifacts, not as standalone implementation-plan files.
 - Every `tasks.md` must be detailed enough for a new worker: purpose, files, concrete steps, verification, and done criteria for each task.
 
-**Version**: 1.26.0 | **Ratified**: 2026-05-15 | **Last Updated**: 2026-05-21
+**Version**: 1.31.0 | **Ratified**: 2026-05-15 | **Last Updated**: 2026-05-26

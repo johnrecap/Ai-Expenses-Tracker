@@ -33,6 +33,11 @@ migrate_working_dir/
 functions/node_modules/
 functions/lib/
 functions/coverage/
+server/node_modules/
+server/dist/
+server/coverage/
+server/.env
+server/.env.*
 workers/**/node_modules/
 workers/**/.wrangler/
 workers/**/.dev.vars

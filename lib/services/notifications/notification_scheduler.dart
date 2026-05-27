@@ -127,10 +127,12 @@ class NotificationScheduler {
     final previousProgress = BudgetCalculator.calculate(
       budget: budget,
       expenses: previousExpenses,
+      settings: settings,
     );
     final currentProgress = BudgetCalculator.calculate(
       budget: budget,
       expenses: expenses,
+      settings: settings,
     );
 
     if (currentProgress.status == BudgetProgressStatus.exceeded) {

@@ -17,6 +17,21 @@ conversion-aware.
   timestamp are cleared because the app cannot prove that rates fetched for the
   old base still apply to the new base.
 
+## Local-First And VPS Migration
+
+- In `firebaseLegacy` mode, settings and saved rates continue to come from the
+  user-scoped Firestore settings document.
+- In `vpsLocalFirst` mode, screens read the same settings/rate fields through
+  the local repository boundary first. Sync later uploads/downloads the setting
+  document through the VPS API.
+- PostgreSQL is the durable server store after cutover, but Flutter must still
+  calculate from local settings and local expenses. Widgets must not call the
+  VPS for rate conversion during rendering.
+- Backfill/import must preserve `baseCurrency`, `supportedCurrencies`,
+  `conversionRates`, and `exchangeRatesUpdatedAt` exactly enough for migrated
+  Home, Reports, Budget, Export, AI history, and weekly digest totals to match
+  legacy behavior.
+
 ## Conversion Rules
 
 - Same-currency expenses are added directly.
@@ -47,3 +62,18 @@ If immutable historical reporting becomes a product requirement, add
 transaction-date rate snapshots to expenses or a dedicated historical rates
 store, update Firestore rules, and migrate all calculation call sites to prefer
 the stored snapshot for old transactions.
+
+## Future Snapshot Policy
+
+The PostgreSQL schema should keep room for transaction-date rate snapshots, but
+Plan 082 does not turn that on for user-facing reporting. Before enabling
+immutable historical reports:
+
+- Store the original amount/currency on the expense.
+- Store the base currency used at transaction time.
+- Store the source-to-base rate, rate provider, and rate timestamp used for the
+  displayed converted amount.
+- Prefer the expense snapshot for historical reporting and use latest settings
+  rates only for records that do not have a snapshot.
+- Surface missing snapshot/rate metadata instead of silently recalculating old
+  reports with today's rate.

@@ -1,0 +1,318 @@
+openapi: 3.1.0
+info:
+  title: AI Expenses VPS Sync API
+  version: 0.1.0
+  description: Contract for the VPS PostgreSQL backend used by the Flutter app after Firestore migration.
+servers:
+  - url: https://api.example.com
+security:
+  - FirebaseBearer: []
+components:
+  securitySchemes:
+    FirebaseBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Firebase ID Token
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        retryable:
+          type: boolean
+    HealthResponse:
+      type: object
+      required: [status, database, authVerifier]
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded]
+        database:
+          type: string
+          enum: [ok, unavailable]
+        authVerifier:
+          type: string
+          enum: [ok, unavailable]
+        version:
+          type: string
+    BackendUser:
+      type: object
+      required: [id, firebaseUid]
+      properties:
+        id:
+          type: string
+        firebaseUid:
+          type: string
+        email:
+          type: string
+          nullable: true
+        appDisplayName:
+          type: string
+          nullable: true
+    SyncEnvelope:
+      type: object
+      required: [entityType, entityId, operation, data, clientUpdatedAt]
+      properties:
+        entityType:
+          type: string
+          enum:
+            - settings
+            - expense
+            - category
+            - categoryAlias
+            - budget
+            - categoryBudget
+            - recurringExpense
+            - savingGoal
+            - walletAccount
+            - transfer
+            - aiActionLog
+        entityId:
+          type: string
+        operation:
+          type: string
+          enum: [upsert, delete]
+        data:
+          type: object
+          additionalProperties: true
+        clientUpdatedAt:
+          type: string
+          format: date-time
+        baseRevision:
+          type: integer
+          nullable: true
+    SyncPullResponse:
+      type: object
+      required: [changes, nextCursor, hasMore]
+      properties:
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncEnvelope'
+        nextCursor:
+          type: string
+        hasMore:
+          type: boolean
+    SyncPushRequest:
+      type: object
+      required: [deviceId, changes]
+      properties:
+        deviceId:
+          type: string
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncEnvelope'
+    SyncPushResponse:
+      type: object
+      required: [accepted, rejected, nextCursor]
+      properties:
+        accepted:
+          type: array
+          items:
+            type: object
+            required: [entityType, entityId, serverRevision]
+            properties:
+              entityType:
+                type: string
+              entityId:
+                type: string
+              serverRevision:
+                type: integer
+        rejected:
+          type: array
+          items:
+            type: object
+            required: [entityType, entityId, code, message]
+            properties:
+              entityType:
+                type: string
+              entityId:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+        nextCursor:
+          type: string
+    ExchangeRate:
+      type: object
+      required: [baseCurrency, targetCurrency, rate, rateDate, fetchedAt]
+      properties:
+        baseCurrency:
+          type: string
+        targetCurrency:
+          type: string
+        rate:
+          type: number
+        rateDate:
+          type: string
+          format: date
+        fetchedAt:
+          type: string
+          format: date-time
+paths:
+  /health:
+    get:
+      security: []
+      summary: Health check for load balancer and monitoring.
+      responses:
+        '200':
+          description: Backend is healthy or degraded with details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /v1/users/me:
+    get:
+      summary: Return or create the backend user mapped to the Firebase identity.
+      responses:
+        '200':
+          description: Current backend user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackendUser'
+        '401':
+          description: Invalid or missing Firebase token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      summary: Update app-local profile fields owned by the backend.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                appDisplayName:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Updated backend user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackendUser'
+  /v1/devices/register:
+    post:
+      summary: Register or refresh the current device for sync.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [deviceId, platform, appVersion]
+              properties:
+                deviceId:
+                  type: string
+                platform:
+                  type: string
+                appVersion:
+                  type: string
+                deviceLabel:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Device registered.
+  /v1/sync/pull:
+    get:
+      summary: Pull incremental changes for the current user.
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 500
+      responses:
+        '200':
+          description: Incremental changes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncPullResponse'
+  /v1/sync/push:
+    post:
+      summary: Push local changes for the current user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncPushRequest'
+      responses:
+        '200':
+          description: Accepted and rejected changes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncPushResponse'
+  /v1/bootstrap:
+    get:
+      summary: Return first-sync data for a new device.
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: First page of user-owned data and sync cursor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncPullResponse'
+  /v1/exchange-rates/latest:
+    get:
+      summary: Return latest cached exchange rates for supported currencies.
+      parameters:
+        - name: base
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: targets
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Latest rates.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [rates]
+                properties:
+                  rates:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ExchangeRate'
+  /v1/account:
+    delete:
+      summary: Request backend-owned account data deletion after recent auth.
+      responses:
+        '202':
+          description: Deletion accepted and will be completed or retried safely.
+        '401':
+          description: Missing valid auth token.
+        '409':
+          description: Recent authentication is required before deletion.

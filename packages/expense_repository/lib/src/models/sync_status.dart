@@ -10,4 +10,5 @@ enum SyncStatus {
   }
 
   bool get isPending => this == SyncStatus.pending;
+  bool get isFailed => this == SyncStatus.failed;
 }

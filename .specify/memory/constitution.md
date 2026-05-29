@@ -1,17 +1,15 @@
 <!--
 Sync Impact Report
-Version change: 1.31.0 -> 1.32.0
-Modified principles: Current Architecture and Project Conventions now record
-Plan 083 pilot-cutover additions: durable PostgreSQL sync changes,
-VPS_API_BASE_URL wiring, Firebase token-backed Flutter sync coordinator, app
-lifecycle sync triggers, hardened migration verification, and final owner-run
-pilot/rollback commands.
+Version change: 1.31.0 -> 1.33.0
+Modified principles: Rule 1 now adds a mandatory one-pass clarification gate
+before executable Spec Kit artifacts are created or updated; Project
+Conventions now require generated specs/plans/tasks to record clarification
+answers or explicit assumptions.
 Added sections: None.
 Removed sections: None.
-Templates/guidance reviewed: .specify/templates/plan-template.md (reviewed, no
-change), .specify/templates/spec-template.md (reviewed, no change),
-.specify/templates/tasks-template.md (reviewed, no change), AGENTS.md
-(reviewed, current plan points to specs/083-vps-pilot-cutover-readiness).
+Templates/guidance reviewed: .specify/templates/plan-template.md (updated),
+.specify/templates/spec-template.md (updated), .specify/templates/tasks-template.md
+(updated), AGENTS.md (updated with the clarification gate).
 Follow-up work: Run the seeded staging migration dry-run, protect metrics,
 configure PM2 startup/backups, complete real-device VPS QA, apply remote pull
 changes into local repositories, and build only after staging/device checks pass.
@@ -40,14 +38,21 @@ If a requested skill is not installed, the agent must report it and use the clos
 All feature work, bug fixes, refactors, UI changes, Firebase changes, AI Assistant changes, and documentation changes must follow this order:
 
 1. `speckit-constitution` when project principles need to be created or updated.
-2. `speckit-specify` to create or update the feature specification.
-3. `speckit-clarify` when requirements are ambiguous.
-4. `speckit-plan` to create the implementation plan.
-5. `speckit-tasks` to create the task list.
-6. `speckit-analyze` or `speckit-checklist` when consistency or requirements quality needs validation.
-7. `speckit-implement` or the approved local execution workflow to implement the task list.
-8. Verification commands before reporting completion.
-9. Update this constitution if architecture, conventions, packages, or known features changed.
+2. Perform one consolidated clarification pass with the user before creating or
+   updating executable Spec Kit artifacts when scope, defaults, UX behavior,
+   data rules, backend/deployment setup, verification expectations, or feature
+   boundaries are ambiguous. Ask all known questions together, wait for the
+   answer, and then document the answers or explicit assumptions in the
+   artifacts. If there is no ambiguity, state the assumptions briefly before
+   proceeding.
+3. `speckit-specify` to create or update the feature specification.
+4. `speckit-clarify` when requirements are still ambiguous after the one-pass clarification.
+5. `speckit-plan` to create the implementation plan.
+6. `speckit-tasks` to create the task list.
+7. `speckit-analyze` or `speckit-checklist` when consistency or requirements quality needs validation.
+8. `speckit-implement` or the approved local execution workflow to implement the task list.
+9. Verification commands before reporting completion.
+10. Update this constitution if architecture, conventions, packages, or known features changed.
 
 For simple read-only analysis, the agent may create an analysis document instead of implementation artifacts, but must still read this constitution and report the relevant workflow.
 
@@ -84,7 +89,8 @@ work into one vague plan.
   scripts, backup/restore smoke script, account deletion service boundary,
   privacy-safe request logging, `/metrics`, and npm verification scripts.
   Sync changes are now stored durably in PostgreSQL with user-scoped
-  revision/cursor ordering and tombstone support. The remaining import,
+  revision/cursor ordering, tombstone support, and client change id
+  idempotency for safe retry. The remaining import,
   metrics, and remote-pull application pieces are still pilot-readiness work,
   not public-production guarantees.
 - Authentication: Firebase Authentication is integrated through `AuthRepository`, `FirebaseAuthRepository`, and `AuthBloc`, including email/password and Google Sign-In provider flows through `google_sign_in`.
@@ -98,16 +104,17 @@ work into one vague plan.
   `vpsLocalFirst` and `migrationComparison`, `VPS_API_BASE_URL` configures the
   deployed API endpoint, Firebase ID tokens authenticate VPS requests, and the
   `SyncCoordinator` pushes pending local changes after sign-in, local writes,
-  and app resume. `migrationComparison` compares legacy Firebase expenses
-  against migrated local expenses and reports discrepancies without changing
-  user-facing flows.
-- Expense schema: expenses include user ownership, category snapshot fields, description, payment method, currency, timestamps, source, and optional recurring/AI references while keeping legacy embedded category parsing.
+  and app resume while exposing queued/syncing/failed reason state for user
+  feedback. `migrationComparison` compares legacy Firebase expenses against
+  migrated local expenses and reports discrepancies without changing user-facing
+  flows.
+- Expense schema: expenses include user ownership, category snapshot fields, description, payment method, currency, timestamps, source, optional recurring/AI references, and optional transaction-level money conversion snapshots while keeping legacy embedded category parsing.
 - User settings: `SettingsRepository` and `FirebaseSettingsRepository` store profile settings under `users/{userId}/settings/profile`, including app-local display name, explicit app language preference independent from currency, supported currencies, conversion rates, default payment method, notification settings, onboarding, guided tour fields, and daily cached exchange-rate metadata.
 - Account/profile: `lib/screens/account` and account services provide provider metadata, app-local display name editing independent from Google profile data, provider-aware actions, and in-app account deletion orchestration through repository/auth boundaries.
 - Monthly budgets: `BudgetRepository` and `FirebaseBudgetRepository` store deterministic monthly budgets under `users/{userId}/budgets/{yyyy-MM}`.
 - Category budgets: `CategoryBudgetRepository` and `FirebaseCategoryBudgetRepository` store archived/user-owned category monthly limits under `users/{userId}/category_budgets/{yyyy-MM}_{categoryId}_{currency}`.
 - Search and filtering: `ExpenseFilter`, `ExpenseFilterService`, and `ExpenseFilterCubit` provide local deterministic filtering after repository date-scoped reads.
-- Money conversion: `MoneyConversionService`, `ExchangeRateService`, `FrankfurterExchangeRateService`, and `ExchangeRateRefreshService` refresh supported non-base currency rates at most once per local day, persist successful rates in user settings, and keep using last saved rates when the network/provider is unavailable.
+- Money conversion: `MoneyConversionService`, `MoneySnapshotService`, `ExchangeRateService`, `FrankfurterExchangeRateService`, and `ExchangeRateRefreshService` refresh supported non-base currency rates at most once per local day, persist successful rates in user settings, capture transaction-level conversion snapshots at save/edit time, and keep using last saved rates when the network/provider is unavailable.
 - Reports: `ExpenseReport`, `ReportCalculator`, and `ReportCubit` power weekly/monthly stats from real expenses and current `UserSettings`, converting supported mixed currencies into the user's base currency while tracking converted and unconverted currency metadata.
 - Recurring expenses: `RecurringExpenseRepository`, `FirebaseRecurringExpenseRepository`, and `RecurringExpenseScheduler` store client-side recurrence rules and materialize due expenses on app open.
 - Subscription center: `SubscriptionSummaryService` summarizes active recurring expenses into next due dates and estimated monthly impact by currency.
@@ -422,6 +429,7 @@ When a setup step fails because a tool, package, or skill cannot be found locall
 - Wallet accounts and transfers must use their repository boundaries. Wallet and transfer deletion must be archival unless a future spec explicitly defines a migration-safe hard-delete workflow.
 - Transfers must remain separate from expenses and excluded from spending totals; transfer fees must not become categorized spending until a future Spec Kit plan defines that behavior.
 - Mixed-currency calculations must not add incompatible currencies together without a valid saved rate and a documented product surface. Missing or invalid rates must be excluded and surfaced as missing-rate/unconverted status, not silently summed.
+- Financial calculations must prefer expense-level money snapshots over current settings rates when the snapshot target matches the active base currency. Historical expenses must not change converted value after exchange-rate refresh; incompatible or malformed snapshots must be treated as unconverted rather than recalculated silently.
 - Expense list filtering must keep Firestore queries conservative: use date-scoped reads first, then deterministic local filtering via `ExpenseFilterService`.
 - Offline expense sync feedback must use Firestore metadata (`hasPendingWrites` with metadata-change snapshots) before adding reachability packages or custom local databases.
 - Reports must be calculated by `ReportCalculator` from expense lists and `UserSettings`; report widgets should receive prepared report data and avoid recalculating aggregation in UI. `ExpenseReport.convertedCurrencies`, `unconvertedCurrencies`, and `ignoredCurrencyCount` must distinguish included converted expenses from excluded missing-rate expenses.
@@ -462,6 +470,10 @@ When a setup step fails because a tool, package, or skill cannot be found locall
 - Spec Kit feature artifacts live under `specs/<number>-<feature>/` with `spec.md`, `plan.md`, and `tasks.md`.
 - Plans for fixes, additions, code review follow-ups, and roadmap execution must
   be created as Spec Kit artifacts, not as standalone implementation-plan files.
+- Before any new executable Spec Kit artifacts are created, the agent must ask
+  one consolidated set of clarification questions for all unclear requirements
+  discovered from docs, code, specs, deferred work, and the user's request. The
+  final artifacts must include the resolved answers or explicit assumptions.
 - Every `tasks.md` must be detailed enough for a new worker: purpose, files, concrete steps, verification, and done criteria for each task.
 
-**Version**: 1.31.0 | **Ratified**: 2026-05-15 | **Last Updated**: 2026-05-26
+**Version**: 1.33.0 | **Ratified**: 2026-05-15 | **Last Updated**: 2026-05-27

@@ -19,10 +19,10 @@ export function buildExpensePrompt(request: AiGatewayRequestBody): string {
     "When an active category clearly matches, return categoryId, category, categoryConfidence, and categoryReason.",
     "When no active category matches but the category family is clear, return suggestedCategoryName, suggestedCategoryIcon, suggestedCategoryColor, categoryConfidence below 0.75, and categoryReason.",
     "Never say or imply that a suggested category has already been created.",
-    "For add_expense, include amount, date, paymentMethod, currency, description, and category or categoryId whenever they can be inferred.",
-    "For add_expense, if payment is not mentioned, use Cash. If date is not mentioned, use today's date. If currency is not mentioned, use defaultCurrency.",
+    "For add_expense, include amount, date, paymentMethod, currency, merchant, tags, description, and category or categoryId whenever they can be inferred.",
+    "For add_expense, use safe defaults for omitted date, paymentMethod, and currency: today from now, Cash, and defaultCurrency. Do not ask the user for those defaults.",
     "Understand common Arabic expense words: امبارح/أمس means yesterday, جنيه means EGP, كاش/نقدي means Cash, مواصلات/أوبر/تاكسي means transport, أكل/مطاعم means food, فواتير means bills, تسوق means shopping, ترفيه means entertainment, اشتراك/نتفلكس means subscriptions, ايجار means rent, and بنزين/وقود means fuel.",
-    "If add_expense is missing amount or category after inference, keep needsConfirmation true and leave missing fields null or omitted so the client can show an editable draft. Do not ask clarifying questions for draft fields.",
+    "If add_expense is missing amount or category after inference, keep needsConfirmation true, include missingFields, and leave only those missing fields null or omitted so the client can show an editable draft. Do not ask clarifying questions for draft fields.",
     "",
     `now: ${request.now}`,
     `locale: ${request.locale}`,
@@ -39,11 +39,11 @@ export function buildReceiptPrompt(request: AiReceiptRequestBody): string {
   return [
     "Extract one expense from this receipt image.",
     "Return exactly one JSON object matching the schema. Do not return markdown or explanations.",
-    "Use ISO date yyyy-MM-dd. If unsure, use null for the field and lower confidence.",
+    "Use ISO date yyyy-MM-dd. If unsure, use today's date from the request.",
     `Today is ${request.now}. Locale is ${request.locale}.`,
     `Default currency is ${request.defaultCurrency}.`,
     `Known categories: ${JSON.stringify(activeCategories(request.categories))}.`,
-    "Set needsConfirmation to true. Never invent missing amount/date/category.",
+    "Set needsConfirmation to true. Never invent missing amount or category. Use the default currency when currency is not clear.",
     "The image is provided only for this request and must not be treated as stored data.",
   ].join("\n");
 }

@@ -8,8 +8,26 @@ import 'package:expenses_tracker/ai/voice/ai_voice_input_controller.dart';
 import 'package:expenses_tracker/ai/voice/ai_voice_input_service.dart';
 import 'package:expenses_tracker/l10n/l10n.dart';
 import 'package:expenses_tracker/screens/ai_assistant/widgets/ai_text_input.dart';
+import 'package:expenses_tracker/theme/app_design_tokens.dart';
+import 'package:expenses_tracker/widgets/app_status_banner.dart';
+import 'package:expenses_tracker/widgets/finance_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+class AiExpenseCapturePanel extends AiExpenseFormFillCard {
+  const AiExpenseCapturePanel({
+    required super.categories,
+    required super.currencies,
+    required super.defaultCurrency,
+    required super.defaultPaymentMethod,
+    required super.onPreviewReady,
+    required super.onSettingsRetry,
+    super.settingsReady,
+    super.expenses,
+    super.onDraftPreviewReady,
+    super.key,
+  });
+}
 
 class AiExpenseFormFillCard extends StatefulWidget {
   const AiExpenseFormFillCard({
@@ -21,6 +39,7 @@ class AiExpenseFormFillCard extends StatefulWidget {
     required this.onSettingsRetry,
     this.settingsReady = true,
     this.expenses = const [],
+    this.onDraftPreviewReady,
     super.key,
   });
 
@@ -31,6 +50,8 @@ class AiExpenseFormFillCard extends StatefulWidget {
   final bool settingsReady;
   final List<Expense> expenses;
   final ValueChanged<AiActionPreview> onPreviewReady;
+  final void Function(AiExpenseDraft draft, AiActionPreview preview)?
+  onDraftPreviewReady;
   final VoidCallback onSettingsRetry;
 
   @override
@@ -135,7 +156,12 @@ class _AiExpenseFormFillCardState extends State<AiExpenseFormFillCard> {
         listener: (context, state) {
           if (state.status == AiAssistantStatus.previewReady &&
               state.preview != null) {
-            widget.onPreviewReady(state.preview!);
+            final preview = state.preview!;
+            final draft = state.draft ?? AiExpenseDraft.fromPreview(preview);
+            widget.onDraftPreviewReady?.call(draft, preview);
+            if (widget.onDraftPreviewReady == null) {
+              widget.onPreviewReady(preview);
+            }
             _showSnack(context.l10n.aiFormFillApplied);
           }
         },
@@ -149,121 +175,110 @@ class _AiExpenseFormFillCardState extends State<AiExpenseFormFillCard> {
             _ => null,
           };
           final isError = state.status == AiAssistantStatus.failure;
-          return DecoratedBox(
-            decoration: BoxDecoration(
-              color: colorScheme.secondaryContainer.withValues(alpha: 0.45),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-              ),
+          return FinanceCard(
+            leadingAccent: colorScheme.primary,
+            backgroundColor: colorScheme.primaryContainer.withValues(
+              alpha: 0.22,
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.auto_awesome,
-                        color: colorScheme.primary,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          context.l10n.aiFormFillTitle,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                          ),
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.auto_awesome,
+                      color: colorScheme.primary,
+                      size: 20,
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        context.l10n.aiFormFillTitle,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  AiTextInput(
-                    inputKey: const Key('ai-expense-form-fill-input'),
-                    controller: _controller,
-                    onSubmit: _fillForm,
-                    onClear: () {
-                      unawaited(_voiceController.cancelListening());
-                      _controller.clear();
-                      _cubit.reset();
-                    },
-                    isLoading: isLoading,
-                    voiceController: _voiceController,
-                  ),
-                  const SizedBox(height: 8),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final stackAction = constraints.maxWidth < 330;
-                      final helper = Text(
-                        context.l10n.aiFormFillHelper,
-                        style: TextStyle(
-                          color: colorScheme.onSurfaceVariant,
-                          fontSize: 12,
-                        ),
-                      );
-                      final action = FilledButton.icon(
-                        key: const Key('ai-expense-form-fill-button'),
-                        onPressed: isLoading ? null : _fillForm,
-                        icon: isLoading
-                            ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Icon(Icons.auto_fix_high),
-                        label: Text(
-                          context.l10n.aiFormFillAction,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      );
-                      if (stackAction) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            helper,
-                            const SizedBox(height: 8),
-                            action,
-                          ],
-                        );
-                      }
-                      return Row(
-                        children: [
-                          Expanded(child: helper),
-                          const SizedBox(width: 8),
-                          Flexible(child: action),
-                        ],
-                      );
-                    },
-                  ),
-                  if (!widget.settingsReady) ...[
-                    const SizedBox(height: 8),
-                    TextButton.icon(
-                      onPressed: widget.onSettingsRetry,
-                      icon: const Icon(Icons.refresh),
-                      label: Text(context.l10n.retry),
                     ),
                   ],
-                  if (message != null) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      message,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                AiTextInput(
+                  inputKey: const Key('ai-expense-form-fill-input'),
+                  controller: _controller,
+                  onSubmit: _fillForm,
+                  onClear: () {
+                    unawaited(_voiceController.cancelListening());
+                    _controller.clear();
+                    _cubit.reset();
+                  },
+                  isLoading: isLoading,
+                  voiceController: _voiceController,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final stackAction = constraints.maxWidth < 330;
+                    final helper = Text(
+                      context.l10n.aiFormFillHelper,
                       style: TextStyle(
-                        color:
-                            isError ? colorScheme.error : colorScheme.primary,
-                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurfaceVariant,
                         fontSize: 12,
                       ),
-                    ),
-                  ],
+                    );
+                    final action = FilledButton.icon(
+                      key: const Key('ai-expense-form-fill-button'),
+                      onPressed: isLoading ? null : _fillForm,
+                      icon: isLoading
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.auto_fix_high),
+                      label: Text(
+                        context.l10n.aiFormFillAction,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
+                    if (stackAction) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          helper,
+                          const SizedBox(height: AppSpacing.sm),
+                          action,
+                        ],
+                      );
+                    }
+                    return Row(
+                      children: [
+                        Expanded(child: helper),
+                        const SizedBox(width: AppSpacing.sm),
+                        Flexible(child: action),
+                      ],
+                    );
+                  },
+                ),
+                if (!widget.settingsReady) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  TextButton.icon(
+                    onPressed: widget.onSettingsRetry,
+                    icon: const Icon(Icons.refresh),
+                    label: Text(context.l10n.retry),
+                  ),
                 ],
-              ),
+                if (message != null) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  AppStatusBanner(
+                    message: message,
+                    tone: isError ? AppStatusTone.danger : AppStatusTone.info,
+                    icon: isError ? Icons.error_outline : Icons.info_outline,
+                  ),
+                ],
+              ],
             ),
           );
         },

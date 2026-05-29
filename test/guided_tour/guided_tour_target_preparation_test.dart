@@ -27,8 +27,9 @@ UserSettings _settings() {
 }
 
 void main() {
-  testWidgets('scrolls an off-screen target into view before spotlighting',
-      (tester) async {
+  testWidgets('scrolls an off-screen target into view before spotlighting', (
+    tester,
+  ) async {
     await tester.binding.setSurfaceSize(const Size(400, 520));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -80,8 +81,9 @@ void main() {
     await tester.pump();
     await tester.pump();
 
-    final targetTop =
-        tester.getTopLeft(find.byKey(const ValueKey('late-target-child'))).dy;
+    final targetTop = tester
+        .getTopLeft(find.byKey(const ValueKey('late-target-child')))
+        .dy;
     expect(targetTop, inInclusiveRange(0, 520));
     expect(cubit.state.targetAvailable, isTrue);
     expect(

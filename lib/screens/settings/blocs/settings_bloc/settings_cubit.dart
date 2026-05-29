@@ -196,12 +196,11 @@ class SettingsCubit extends Cubit<SettingsState> {
     final supported = supportedCurrencies
         .map((currency) => currency.trim().toUpperCase())
         .toSet();
-    return Map<String, num>.from(conversionRates)
-      ..removeWhere(
-        (currency, rate) =>
-            currency.trim().toUpperCase() == normalizedBase ||
-            !supported.contains(currency.trim().toUpperCase()) ||
-            rate <= 0,
-      );
+    return Map<String, num>.from(conversionRates)..removeWhere(
+      (currency, rate) =>
+          currency.trim().toUpperCase() == normalizedBase ||
+          !supported.contains(currency.trim().toUpperCase()) ||
+          rate <= 0,
+    );
   }
 }

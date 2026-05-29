@@ -45,8 +45,10 @@ class BudgetProgressCard extends StatelessWidget {
               Expanded(
                 child: _Metric(
                   label: l10n.budgetSpentLabel,
-                  value:
-                      formatAmountWithCurrency(progress.spent, budget.currency),
+                  value: formatAmountWithCurrency(
+                    progress.spent,
+                    budget.currency,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -91,18 +93,13 @@ class BudgetProgressCard extends StatelessWidget {
               _warningText(l10n)!,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: statusColor,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(color: statusColor, fontWeight: FontWeight.w600),
             ),
           ],
           if (progress.ignoredCurrencyCount > 0) ...[
             const SizedBox(height: 6),
             Text(
-              l10n.budgetIgnoredCurrencyExpenses(
-                progress.ignoredCurrencyCount,
-              ),
+              l10n.budgetIgnoredCurrencyExpenses(progress.ignoredCurrencyCount),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -183,7 +180,16 @@ class _BudgetCardShell extends StatelessWidget {
               ),
               TextButton(
                 onPressed: onManage,
-                child: Text(actionLabel),
+                style: TextButton.styleFrom(
+                  minimumSize: const Size(0, 40),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                ),
+                child: Text(
+                  actionLabel,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -209,8 +215,9 @@ class _Metric extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: alignEnd
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         Text(
           label,

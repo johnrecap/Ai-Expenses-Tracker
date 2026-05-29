@@ -27,10 +27,7 @@ class FakeBiometricAuthenticator implements BiometricAuthenticator {
   bool supported;
   bool nextResult;
 
-  FakeBiometricAuthenticator({
-    this.supported = false,
-    this.nextResult = false,
-  });
+  FakeBiometricAuthenticator({this.supported = false, this.nextResult = false});
 
   @override
   Future<bool> authenticate() async => nextResult;
@@ -44,10 +41,7 @@ AppLockCubit _cubit({
   FakeBiometricAuthenticator? biometric,
 }) {
   final resolvedStorage = storage ?? MemoryAppLockStorage();
-  final pinService = PinService(
-    storage: resolvedStorage,
-    random: Random(7),
-  );
+  final pinService = PinService(storage: resolvedStorage, random: Random(7));
   return AppLockCubit(
     appLockService: AppLockService(
       storage: resolvedStorage,
@@ -93,7 +87,7 @@ void main() {
 
     expect(await cubit.unlockWithPin('0000'), isFalse);
     expect(cubit.state.status, AppLockStatus.locked);
-    expect(cubit.state.message, 'Incorrect PIN.');
+    expect(cubit.state.messageKey, AppLockMessageKey.incorrectPin);
 
     expect(await cubit.unlockWithPin('1234'), isTrue);
     expect(cubit.state.status, AppLockStatus.unlocked);
@@ -101,24 +95,26 @@ void main() {
     await cubit.close();
   });
 
-  test('biometric fallback leaves PIN unlock available when canceled',
-      () async {
-    final biometric = FakeBiometricAuthenticator(
-      supported: true,
-      nextResult: false,
-    );
-    final storage = MemoryAppLockStorage();
-    final cubit = _cubit(storage: storage, biometric: biometric);
+  test(
+    'biometric fallback leaves PIN unlock available when canceled',
+    () async {
+      final biometric = FakeBiometricAuthenticator(
+        supported: true,
+        nextResult: false,
+      );
+      final storage = MemoryAppLockStorage();
+      final cubit = _cubit(storage: storage, biometric: biometric);
 
-    await cubit.enableLockWithPin('1234');
-    await cubit.setBiometricEnabled(true);
-    await cubit.checkOnResume();
+      await cubit.enableLockWithPin('1234');
+      await cubit.setBiometricEnabled(true);
+      await cubit.checkOnResume();
 
-    expect(cubit.state.biometricEnabled, isTrue);
-    expect(await cubit.unlockWithBiometrics(), isFalse);
-    expect(cubit.state.status, AppLockStatus.locked);
-    expect(await cubit.unlockWithPin('1234'), isTrue);
+      expect(cubit.state.biometricEnabled, isTrue);
+      expect(await cubit.unlockWithBiometrics(), isFalse);
+      expect(cubit.state.status, AppLockStatus.locked);
+      expect(await cubit.unlockWithPin('1234'), isTrue);
 
-    await cubit.close();
-  });
+      await cubit.close();
+    },
+  );
 }

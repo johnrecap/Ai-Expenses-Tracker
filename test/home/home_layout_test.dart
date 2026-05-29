@@ -1,4 +1,5 @@
 import 'package:expense_repository/expense_repository.dart';
+import 'package:expenses_tracker/l10n/app_localizations_ar.dart';
 import 'package:expenses_tracker/l10n/l10n.dart';
 import 'package:expenses_tracker/monetization/monetization.dart';
 import 'package:expenses_tracker/observability/observability.dart';
@@ -13,8 +14,9 @@ import '../helpers/fake_repositories.dart';
 import '../helpers/ui_fixture_data.dart';
 
 void main() {
-  testWidgets('Home finance and transaction cards fit compact stress data',
-      (tester) async {
+  testWidgets('Home finance and transaction cards fit compact stress data', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(360, 640);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -26,6 +28,24 @@ void main() {
     expect(find.text('This Month Spending'), findsOneWidget);
     expect(find.textContaining('987,654,321'), findsWidgets);
     await tester.ensureVisible(find.textContaining('وصف عربي طويل'));
+    expect(tester.takeException(), isNull);
+
+    await fixture.dispose();
+  });
+
+  testWidgets('Arabic RTL Home cards fit compact stress data', (tester) async {
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final fixture = _HomeLayoutFixture();
+    final ar = AppLocalizationsAr();
+    await fixture.pump(tester, locale: const Locale('ar'));
+
+    expect(find.text(ar.thisMonthSpending), findsOneWidget);
+    expect(find.textContaining('987,654,321'), findsWidgets);
+    await tester.ensureVisible(find.text(ar.transactions));
     expect(tester.takeException(), isNull);
 
     await fixture.dispose();
@@ -42,8 +62,9 @@ class _HomeLayoutFixture {
     monetizationCubit = MonetizationCubit(
       entitlementRepository: LocalEntitlementRepository(),
       policyRepository: const LocalMonetizationPolicyRepository(),
-      consentService:
-          FakeAdConsentService(consentState: ConsentState.allowed()),
+      consentService: FakeAdConsentService(
+        consentState: ConsentState.allowed(),
+      ),
       adService: FakeAdService(),
     );
     appLockCubit = AppLockCubit(appLockService: fakeAppLockService());
@@ -57,7 +78,10 @@ class _HomeLayoutFixture {
   late final MonetizationCubit monetizationCubit;
   late final AppLockCubit appLockCubit;
 
-  Future<void> pump(WidgetTester tester) async {
+  Future<void> pump(
+    WidgetTester tester, {
+    Locale locale = const Locale('en'),
+  }) async {
     await monetizationCubit.load();
     await appLockCubit.initialize();
     await tester.pumpWidget(
@@ -96,12 +120,13 @@ class _HomeLayoutFixture {
             BlocProvider<MonetizationCubit>.value(value: monetizationCubit),
             BlocProvider<AppLockCubit>.value(value: appLockCubit),
             BlocProvider<BudgetBloc>(
-              create: (_) => BudgetBloc(budgetRepository)
-                ..add(const BudgetWatchRequested(month: 5, year: 2026)),
+              create: (_) =>
+                  BudgetBloc(budgetRepository)
+                    ..add(const BudgetWatchRequested(month: 5, year: 2026)),
             ),
           ],
           child: MaterialApp(
-            locale: const Locale('en'),
+            locale: locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: MainScreen(

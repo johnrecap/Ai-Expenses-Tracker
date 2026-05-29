@@ -82,6 +82,9 @@ export interface AiStructuredResponse {
   paymentMethod?: string | null | undefined;
   currency?: string | null | undefined;
   description?: string | null | undefined;
+  merchant?: string | null | undefined;
+  tags?: string[] | null | undefined;
+  missingFields?: string[] | null | undefined;
   categoryConfidence?: number | null | undefined;
   categoryReason?: string | null | undefined;
   suggestedCategoryName?: string | null | undefined;

@@ -1,5 +1,6 @@
 import 'package:expenses_tracker/engagement/engagement.dart';
 import 'package:expenses_tracker/engagement/widgets/weekly_digest_screen.dart';
+import 'package:expenses_tracker/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 class EngagementSummaryPanel extends StatelessWidget {
@@ -29,27 +30,29 @@ class EngagementSummaryPanel extends StatelessWidget {
           Expanded(
             child: _MetricTile(
               icon: Icons.local_fire_department_outlined,
-              label: 'Streak',
+              label: context.l10n.streak,
               value: streak.currentStreakDays == 1
-                  ? '1 day'
-                  : '${streak.currentStreakDays} days',
-              helper: streak.hasTrackedToday ? 'Tracked today' : 'Check in',
+                  ? context.l10n.dayCount(1)
+                  : context.l10n.dayCount(streak.currentStreakDays),
+              helper: streak.hasTrackedToday
+                  ? context.l10n.trackedToday
+                  : context.l10n.checkIn,
             ),
           ),
           const SizedBox(width: 10),
           Expanded(
             child: _MetricTile(
               icon: Icons.health_and_safety_outlined,
-              label: 'Health',
+              label: context.l10n.health,
               value: healthScore.label,
               helper: healthScore.hasEnoughData
                   ? '${healthScore.score}/100'
-                  : 'Needs data',
+                  : context.l10n.needsData,
             ),
           ),
           const SizedBox(width: 10),
           IconButton(
-            tooltip: 'Weekly digest',
+            tooltip: context.l10n.weeklyDigest,
             onPressed: () {
               Navigator.push(
                 context,

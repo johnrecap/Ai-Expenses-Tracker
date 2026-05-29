@@ -78,6 +78,7 @@ class LocalExpenses extends Table with SyncedColumns {
   TextColumn get baseCurrencyAtEntry => text().nullable()();
   RealColumn get conversionRateToBase => real().nullable()();
   DateTimeColumn get conversionRateDate => dateTime().nullable()();
+  TextColumn get moneySnapshotJson => text().nullable()();
   TextColumn get description => text().withDefault(const Constant(''))();
   TextColumn get merchant => text().nullable()();
   TextColumn get tagsJson => text().withDefault(const Constant('[]'))();

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add Expense - Receipt Mode</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=IBM+Plex+Sans+Arabic:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#00daf3",
+                        "on-secondary-fixed": "#3f0018",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#004f58",
+                        "on-surface-variant": "#3b494c",
+                        "on-tertiary-fixed": "#20005f",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#9cf0ff",
+                        "on-primary-container": "#00626e",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed-dim": "#cdbdff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#00e5ff",
+                        "secondary-container": "#dd2269",
+                        "tertiary-container": "#d6c9ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline": "#6b7a7d",
+                        "on-primary-fixed": "#001f24",
+                        "tertiary": "#6833ea",
+                        "primary": "#006875",
+                        "on-tertiary-fixed-variant": "#4f00d0",
+                        "on-tertiary-container": "#622be5",
+                        "surface-tint": "#006875",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#bac9cc",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "background": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#8f003f",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#ffb1c1",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed": "#e8deff",
+                        "on-secondary-container": "#fffbff",
+                        "secondary": "#b70052",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffd9df",
+                        "inverse-primary": "#00daf3",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "xl": "32px",
+                        "card-gutter": "12px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "unit": "4px",
+                        "container-padding": "20px"
+                    },
+                    fontFamily: {
+                        "display-lg": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "arabic-body": ["IBM Plex Sans Arabic"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    fontSize: {
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "arabic-body": ["16px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-layer-1 {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(16px);
+        }
+        
+        .shimmer-bg {
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0.4) 50%, 
+                rgba(255,255,255,0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .pulse-glow {
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 229, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-lg min-h-screen relative overflow-x-hidden pt-16 pb-24 selection:bg-primary-container selection:text-on-primary-container">
+<!-- Background Blob Effect -->
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-gradient-to-br from-primary/10 to-primary-container/10 blur-[80px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-to-tl from-secondary-container/10 to-secondary/5 blur-[100px]"></div>
+</div>
+<!-- TopAppBar -->
+<header class="bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/40 dark:border-outline-variant/20 shadow-sm flex items-center justify-between px-container-padding h-16 w-full">
+<button aria-label="Menu" class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface font-extrabold tracking-tight">AI Expenses Tracker</h1>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30 hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200 cursor-pointer">
+<img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVdH92a_Mh7TsigbroHHdKMliv7N0B-nlZWqxlY5p0SxMs3lx75qCrL9qeEHrX4O0xlWJWg-1CHu0A1BDULnwj6GqQiwXNkKUr3744qq_NnrAbwEcUQZTUDmflF3or_oGaLRmFXvMj_Xgq9Su4j3noPg9lEm7sdq1SgnmWZHrOdrYY44zw6ZqsI5CpUn821yjRq0Z9ed-tM4VvhPcGM9wMGZ2YdKVhR4uIayPl3EaEDqOyB_4FXUxEZyx7o2cbDvkX8GcVZn3Saba1"/>
+</div>
+</header>
+<main class="max-w-3xl mx-auto px-container-padding mt-lg">
+<!-- Tabs -->
+<div class="flex p-1 bg-surface-variant/50 rounded-full mb-xl glass-layer-1">
+<button class="flex-1 py-2 px-4 rounded-full font-label-caps text-label-caps text-on-surface-variant hover:bg-white/50 transition-colors">
+                Manual
+            </button>
+<button aria-current="page" class="flex-1 py-2 px-4 rounded-full font-label-caps text-label-caps bg-white text-primary font-bold shadow-sm transition-all">
+                Receipt
+            </button>
+</div>
+<!-- Scanner Area -->
+<div class="relative w-full aspect-[4/3] md:aspect-[16/9] rounded-xl glass-layer-1 flex flex-col items-center justify-center overflow-hidden mb-xl border-2 border-dashed border-primary/30 hover:border-primary/60 transition-colors cursor-pointer group">
+<!-- Scanning Overlay (Simulated) -->
+<div class="absolute inset-0 bg-primary/5 hidden group-hover:block transition-opacity"></div>
+<!-- Scanning Line -->
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-container to-transparent opacity-0 group-hover:opacity-100 transition-opacity" style="animation: scan 2s infinite linear;"></div>
+<span class="material-symbols-outlined text-[64px] text-primary/40 mb-4 group-hover:text-primary transition-colors" data-icon="receipt_long" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<p class="font-headline-md text-headline-md text-primary mb-2">Tap to Scan</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">or drag and drop an image</p>
+<button class="mt-6 px-6 py-3 rounded-full bg-gradient-to-r from-primary-container to-[#00c4dc] text-white font-label-caps text-label-caps shadow-[0_1px_2px_rgba(0,0,0,0.1)] hover:opacity-90 active:scale-95 transition-all pulse-glow flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="photo_camera">photo_camera</span>
+                Scan Receipt
+            </button>
+</div>
+<!-- Populated Fields (Simulated AI parsing) -->
+<div class="space-y-4">
+<div class="flex items-center justify-between mb-2">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container" data-icon="auto_awesome">auto_awesome</span>
+                    Extracted Details
+                </h2>
+<div class="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+</div>
+<div class="glass-layer-1 rounded-xl p-md">
+<div class="space-y-sm">
+<!-- Merchant -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-1">Merchant</label>
+<div class="relative">
+<input class="w-full bg-[#F1F5F9] border-none rounded-full py-2 px-4 font-body-lg text-body-lg text-on-surface focus:bg-white focus:ring-1 focus:ring-primary-container transition-all" type="text" value="Coffee House"/>
+<div class="absolute right-0 top-0 h-full w-24 bg-gradient-to-r from-transparent to-[#F1F5F9] pointer-events-none rounded-r-full overflow-hidden">
+<div class="w-full h-full shimmer-bg"></div>
+</div>
+</div>
+</div>
+<!-- Date & Amount Grid -->
+<div class="grid grid-cols-2 gap-md">
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-1">Date</label>
+<div class="relative">
+<input class="w-full bg-[#F1F5F9] border-none rounded-full py-2 px-4 font-body-lg text-body-lg text-on-surface focus:bg-white focus:ring-1 focus:ring-primary-container transition-all" type="date" value="2023-10-27"/>
+</div>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-1">Total</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 font-body-lg text-on-surface-variant">$</span>
+<input class="w-full bg-[#F1F5F9] border-none rounded-full py-2 pl-8 pr-4 font-body-lg text-body-lg text-on-surface focus:bg-white focus:ring-1 focus:ring-primary-container transition-all" type="number" value="12.50"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-center mt-xl">
+<button class="px-6 py-2 rounded-full bg-[rgba(0,229,255,0.1)] text-primary font-label-caps text-label-caps hover:bg-[rgba(0,229,255,0.2)] transition-colors active:scale-95">
+                    Enter Manually Instead
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-2xl fixed bottom-0 w-full rounded-t-xl z-50 border-t border-white/40 dark:border-outline-variant/10 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:hidden">
+<ul class="flex justify-around items-center h-20 px-4 pb-safe w-full">
+<li>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full p-2 active:scale-90 transition-all duration-300 ease-quintOut" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full p-2 active:scale-90 transition-all duration-300 ease-quintOut" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="query_stats">query_stats</span>
+<span class="font-label-caps text-label-caps">Insights</span>
+</a>
+</li>
+<li class="relative -top-4">
+<a class="flex flex-col items-center justify-center text-primary font-bold active:scale-90 transition-all duration-300 ease-quintOut" href="#">
+<div class="w-14 h-14 bg-gradient-to-br from-primary-container to-[#00c4dc] rounded-full flex items-center justify-center shadow-lg mb-1 relative pulse-glow">
+<span class="material-symbols-outlined text-white text-[28px]" data-icon="add">add</span>
+</div>
+<span class="font-label-caps text-label-caps">Add</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full p-2 active:scale-90 transition-all duration-300 ease-quintOut" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps">Budgets</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full p-2 active:scale-90 transition-all duration-300 ease-quintOut" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</li>
+</ul>
+</nav>
+<style>
+        @keyframes scan {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+    </style>
+</body></html>

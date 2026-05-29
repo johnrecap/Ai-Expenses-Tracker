@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Expenses Tracker - Login</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=IBM+Plex+Sans+Arabic:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#00daf3",
+                        "on-secondary-fixed": "#3f0018",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#004f58",
+                        "on-surface-variant": "#3b494c",
+                        "on-tertiary-fixed": "#20005f",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#9cf0ff",
+                        "on-primary-container": "#00626e",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed-dim": "#cdbdff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#00e5ff",
+                        "secondary-container": "#dd2269",
+                        "tertiary-container": "#d6c9ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline": "#6b7a7d",
+                        "on-primary-fixed": "#001f24",
+                        "tertiary": "#6833ea",
+                        "primary": "#006875",
+                        "on-tertiary-fixed-variant": "#4f00d0",
+                        "on-tertiary-container": "#622be5",
+                        "surface-tint": "#006875",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#bac9cc",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "background": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#8f003f",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#ffb1c1",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed": "#e8deff",
+                        "on-secondary-container": "#fffbff",
+                        "secondary": "#b70052",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffd9df",
+                        "inverse-primary": "#00daf3",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "xl": "32px",
+                        "card-gutter": "12px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "unit": "4px",
+                        "container-padding": "20px"
+                    },
+                    fontFamily: {
+                        "display-lg": ["Inter", "sans-serif"],
+                        "display-lg-mobile": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "arabic-body": ["IBM Plex Sans Arabic", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "body-sm": ["Inter", "sans-serif"],
+                        "label-caps": ["Inter", "sans-serif"]
+                    },
+                    fontSize: {
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "arabic-body": ["16px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        };
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .glass-panel {
+                @apply bg-white/60 backdrop-blur-2xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.05)];
+            }
+            .glass-input {
+                @apply bg-[#F1F5F9] border-none text-on-surface transition-all duration-300 focus:bg-white focus:ring-1 focus:ring-primary-container;
+            }
+            .btn-primary {
+                @apply bg-gradient-to-r from-primary-container to-primary text-on-primary shadow-[0_4px_14px_rgba(0,229,255,0.3)] hover:shadow-[0_6px_20px_rgba(0,229,255,0.4)] hover:-translate-y-0.5 transition-all duration-300;
+            }
+            .btn-secondary {
+                @apply bg-primary-container/10 text-primary-container hover:bg-primary-container/20 transition-all duration-300;
+            }
+            .bg-blob-1 {
+                background: linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, transparent 100%);
+            }
+            .bg-blob-2 {
+                background: linear-gradient(225deg, rgba(183, 0, 82, 0.05) 0%, transparent 100%);
+            }
+        }
+        
+        body {
+            background-color: #F8FAFC;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden flex items-center justify-center p-container-padding text-on-surface font-body-lg">
+<!-- Ambient Background Blobs -->
+<div class="fixed inset-0 pointer-events-none z-0">
+<div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blob-1 blur-[100px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-blob-2 blur-[120px]"></div>
+</div>
+<!-- Main Auth Container -->
+<main class="w-full max-w-[420px] z-10 relative flex flex-col items-center gap-xl">
+<!-- Logo Section -->
+<header class="flex flex-col items-center gap-md text-center">
+<div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border border-white/50 relative">
+<img alt="AI Expenses Tracker Logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD12iNr_kFX-mJNNTgTxxfEi6PYA5CC84hQozQgTFXrbWsNcDmn0RSqLroI8WGW-r69wptGkXhs5spJxZEACVtzv2dWI_o22tUTZt1tch3SjNcl7HvyzMKimGeaHvcvgeNIbkf4ab3OB7d8bQRmv8f-f4znmTB7jH7as0esqGrlissF4Ugb1bJS0cVgufwpycpZogCw1j8E_iX_JWBEJxWnfYqM8HhVqfk3tKZe8fs2Wi5-aSebIZmuEMvgQmczdxgwI3lwD3bwnqqZ"/>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md text-on-surface mb-xs">Welcome Back</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Log in to manage your financial insights.</p>
+</div>
+</header>
+<!-- Glass Auth Panel -->
+<div class="glass-panel w-full rounded-[24px] p-lg flex flex-col gap-lg">
+<!-- Google Sign In -->
+<button class="w-full h-12 rounded-full flex items-center justify-center gap-sm bg-white border border-outline-variant/30 text-on-surface hover:bg-surface-container-low transition-colors shadow-sm">
+<svg fill="none" height="20" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+<span class="font-body-sm text-body-sm font-semibold">Continue with Google</span>
+</button>
+<!-- Divider -->
+<div class="flex items-center gap-md">
+<div class="h-[1px] bg-outline-variant/30 flex-1"></div>
+<span class="font-body-sm text-body-sm text-on-surface-variant uppercase tracking-widest text-[10px]">Or email</span>
+<div class="h-[1px] bg-outline-variant/30 flex-1"></div>
+</div>
+<!-- Form -->
+<form class="flex flex-col gap-md w-full" onsubmit="event.preventDefault();">
+<div class="flex flex-col gap-sm">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">mail</span>
+<input class="glass-input w-full h-12 rounded-full pl-12 pr-4 font-body-sm text-body-sm focus:outline-none" placeholder="Email / البريد الإلكتروني" required="" type="email"/>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">lock</span>
+<input class="glass-input w-full h-12 rounded-full pl-12 pr-12 font-body-sm text-body-sm focus:outline-none" placeholder="Password / كلمة المرور" required="" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility_off</span>
+</button>
+</div>
+<div class="flex justify-end mt-xs">
+<a class="font-body-sm text-body-sm text-primary hover:text-primary-container transition-colors" href="#">Forgot password?</a>
+</div>
+</div>
+<button class="btn-primary w-full h-12 rounded-full mt-sm font-body-lg text-body-lg font-semibold flex items-center justify-center gap-sm" type="submit">
+<span>Log In</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</form>
+<!-- Sign Up Link -->
+<div class="text-center mt-sm">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Don't have an account? 
+                    <a class="text-primary font-semibold hover:underline decoration-primary/50 underline-offset-4 transition-all" href="#">Sign up</a>
+</p>
+</div>
+</div>
+<!-- Trust Note -->
+<div class="flex items-center gap-sm text-on-surface-variant/70 mt-md">
+<span class="material-symbols-outlined text-[16px]">shield_lock</span>
+<span class="font-label-caps text-label-caps">Secure private expense tracking.</span>
+</div>
+</main>
+</body></html>

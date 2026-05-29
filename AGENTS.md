@@ -11,6 +11,14 @@ created as Spec Kit artifacts under `specs/<number>-<feature>/` with at least
 under `docs/`, `docs/superpowers/plans/`, or chat-only form unless the user
 explicitly asks for read-only analysis rather than an implementation plan.
 
+Before creating or updating any executable Spec Kit plan, run one consolidated
+clarification pass with the user whenever scope, defaults, UX behavior, data
+rules, backend/deployment setup, or verification expectations are ambiguous.
+Ask all known questions at once, wait for the user's answer, then document the
+answers or explicit assumptions inside the Spec Kit artifacts. Do not create
+`spec.md`, `plan.md`, or `tasks.md` first and ask piecemeal questions later,
+unless the user explicitly says to proceed with assumptions.
+
 Persistent deferred/future work file: docs/implementation_plans/deferred-and-advanced-work.md
 
 When the user asks to inspect bugs, propose new features, review changes, or
@@ -26,4 +34,15 @@ heading, and avoid duplicating an existing item. This applies whenever creating
 plans, reviewing code, debugging, implementing features, running verification,
 or finding a task that depends on external setup such as Firebase, Cloudflare,
 Play Store, keystores, device QA, billing, ads, or production credentials.
+
+Local Flutter/Dart verification constraint: in this Windows/Codex environment,
+raw sandboxed `C:\flutter\bin\flutter.bat` commands can hang and leave orphaned
+`git.exe` processes because Flutter writes SDK cache/lock state outside the
+workspace. Run Flutter verification/build commands outside the sandbox with the
+approved `C:\flutter\bin\flutter.bat` command path. For direct Dart CLI commands,
+pass the global `--suppress-analytics` option before the Dart subcommand to avoid
+the local telemetry-session access-denied failure. If orphaned Git metadata
+processes remain, clean only `git.exe` processes whose command line contains
+`core.hooksPath=NUL`, `core.fsmonitor=false`, and one of `rev-parse HEAD`,
+`remote -v`, or `status --porcelain`.
 <!-- SPECKIT END -->

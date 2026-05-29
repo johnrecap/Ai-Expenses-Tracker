@@ -1,3 +1,5 @@
+import 'package:expenses_tracker/theme/app_design_tokens.dart';
+import 'package:expenses_tracker/widgets/finance_card.dart';
 import 'package:flutter/material.dart';
 
 class SettingsSection extends StatelessWidget {
@@ -14,36 +16,21 @@ class SettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+    return FinanceCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: AppTextStyles.sectionTitle(context)),
+          if (subtitle != null) ...[
+            const SizedBox(height: 6),
             Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              subtitle!,
+              style: TextStyle(color: Theme.of(context).colorScheme.outline),
             ),
-            if (subtitle != null) ...[
-              const SizedBox(height: 6),
-              Text(
-                subtitle!,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-              ),
-            ],
-            const SizedBox(height: 12),
-            child,
           ],
-        ),
+          const SizedBox(height: 12),
+          child,
+        ],
       ),
     );
   }

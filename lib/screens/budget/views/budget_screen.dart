@@ -33,22 +33,23 @@ class _BudgetScreenState extends State<BudgetScreen> {
   void initState() {
     super.initState();
     final budget = widget.initialBudget;
-    _amountController.text =
-        budget == null || budget.amount == 0 ? '' : budget.amount.toString();
-    _thresholdController.text =
-        (budget?.warningThresholdPercent ?? 80).toString();
+    _amountController.text = budget == null || budget.amount == 0
+        ? ''
+        : budget.amount.toString();
+    _thresholdController.text = (budget?.warningThresholdPercent ?? 80)
+        .toString();
     _currency = budget?.currency ?? 'EGP';
     _currencies = _currencyChoices(widget.settings, _currency);
     final settings = widget.settings;
     if (settings != null) {
       _recommendation = const BudgetRecommendationService()
           .recommendMonthlyBudget(
-        BudgetRecommendationInput(
-          expenses: widget.expenses,
-          settings: settings,
-          existingMonthlyBudget: budget,
-        ),
-      );
+            BudgetRecommendationInput(
+              expenses: widget.expenses,
+              settings: settings,
+              existingMonthlyBudget: budget,
+            ),
+          );
     }
   }
 
@@ -70,11 +71,11 @@ class _BudgetScreenState extends State<BudgetScreen> {
     final threshold = int.tryParse(_thresholdController.text.trim());
 
     if (amount == null || amount <= 0) {
-      _showMessage('Enter a valid budget amount.');
+      _showMessage(context.l10n.enterValidBudgetAmount);
       return;
     }
     if (threshold == null || threshold < 1 || threshold > 100) {
-      _showMessage('Warning threshold must be between 1 and 100.');
+      _showMessage(context.l10n.warningThresholdRange);
       return;
     }
 
@@ -97,9 +98,11 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   void _applyRecommendation(BudgetRecommendation recommendation) {
     setState(() {
-      _amountController.text = recommendation.suggestedAmount.toStringAsFixed(0);
-      _thresholdController.text =
-          recommendation.warningThresholdPercent.toString();
+      _amountController.text = recommendation.suggestedAmount.toStringAsFixed(
+        0,
+      );
+      _thresholdController.text = recommendation.warningThresholdPercent
+          .toString();
       _currency = recommendation.currency;
       _currencies = _currencyChoices(widget.settings, _currency);
     });
@@ -110,7 +113,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
     return BlocListener<BudgetBloc, BudgetState>(
       listener: (context, state) {
         if (state is BudgetFailure) {
-          _showMessage(state.message);
+          _showMessage(_localizedBudgetMessage(state.message));
         } else if (state is BudgetSaved) {
           Navigator.pop(context);
         }
@@ -119,7 +122,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
           backgroundColor: Colors.grey[100],
-          title: const Text('Monthly Budget'),
+          title: Text(context.l10n.monthlyBudgetTitle),
         ),
         body: ListView(
           padding: const EdgeInsets.all(16),
@@ -136,17 +139,17 @@ class _BudgetScreenState extends State<BudgetScreen> {
             TextField(
               controller: _amountController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Budget amount',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: context.l10n.budgetAmount,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               initialValue: _currency,
-              decoration: const InputDecoration(
-                labelText: 'Currency',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: context.l10n.currency,
+                border: const OutlineInputBorder(),
               ),
               items: _currencies
                   .map(
@@ -167,9 +170,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
             TextField(
               controller: _thresholdController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Warning threshold percent',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: context.l10n.warningThresholdPercent,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 24),
@@ -192,7 +195,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                             color: Colors.white,
                           ),
                         )
-                      : const Text('Save Budget'),
+                      : Text(context.l10n.saveBudget),
                 );
               },
             ),
@@ -200,6 +203,21 @@ class _BudgetScreenState extends State<BudgetScreen> {
         ),
       ),
     );
+  }
+
+  String _localizedBudgetMessage(String message) {
+    switch (message) {
+      case 'Failed to load budget.':
+        return context.l10n.failedToLoadBudget;
+      case 'Enter a valid budget amount.':
+        return context.l10n.enterValidBudgetAmount;
+      case 'Warning threshold must be between 1 and 100.':
+        return context.l10n.warningThresholdRange;
+      case 'Failed to save budget.':
+        return context.l10n.failedToSaveBudget;
+      default:
+        return message;
+    }
   }
 }
 
@@ -242,9 +260,9 @@ class _BudgetRecommendationCard extends StatelessWidget {
           children: [
             Text(
               context.l10n.budgetRecommendationTitle,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             Text(
@@ -252,9 +270,9 @@ class _BudgetRecommendationCard extends StatelessWidget {
                 recommendation.suggestedAmount,
                 recommendation.currency,
               ),
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
             Text(

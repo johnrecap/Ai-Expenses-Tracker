@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Expenses Tracker - Loading</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=IBM+Plex+Sans+Arabic:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#00daf3",
+                        "on-secondary-fixed": "#3f0018",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#004f58",
+                        "on-surface-variant": "#3b494c",
+                        "on-tertiary-fixed": "#20005f",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#9cf0ff",
+                        "on-primary-container": "#00626e",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed-dim": "#cdbdff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#00e5ff",
+                        "secondary-container": "#dd2269",
+                        "tertiary-container": "#d6c9ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline": "#6b7a7d",
+                        "on-primary-fixed": "#001f24",
+                        "tertiary": "#6833ea",
+                        "primary": "#006875",
+                        "on-tertiary-fixed-variant": "#4f00d0",
+                        "on-tertiary-container": "#622be5",
+                        "surface-tint": "#006875",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#bac9cc",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "background": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#8f003f",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#ffb1c1",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed": "#e8deff",
+                        "on-secondary-container": "#fffbff",
+                        "secondary": "#b70052",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffd9df",
+                        "inverse-primary": "#00daf3",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "card-gutter": "12px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "unit": "4px",
+                        "container-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "arabic-body": ["IBM Plex Sans Arabic"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "arabic-body": ["16px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    },
+                    "animation": {
+                        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                        "float": "float 6s ease-in-out infinite",
+                    },
+                    "keyframes": {
+                        "float": {
+                            "0%, 100%": { transform: "translateY(0)" },
+                            "50%": { transform: "translateY(-10px)" },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .gradient-blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.15;
+            animation: pulse-slow 4s infinite alternate;
+        }
+        
+        .loading-ring {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 229, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: #00daf3;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface h-screen w-screen overflow-hidden flex flex-col items-center justify-center relative font-body-lg">
+<!-- Background Depth -->
+<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+<div class="gradient-blob bg-primary-container w-[500px] h-[500px] rounded-full top-[-100px] left-[-100px]"></div>
+<div class="gradient-blob bg-secondary-container w-[400px] h-[400px] rounded-full bottom-[-50px] right-[-50px]" style="animation-delay: 1s;"></div>
+</div>
+<!-- Main Content Canvas -->
+<main class="z-10 flex flex-col items-center justify-center flex-1 w-full max-w-md px-container-padding relative">
+<!-- Logo & Branding Cluster -->
+<div class="flex flex-col items-center justify-center space-y-xl animate-float">
+<!-- Glassmorphism Logo Container -->
+<div class="glass-panel w-32 h-32 rounded-xl flex items-center justify-center shadow-lg relative overflow-hidden">
+<!-- Inner glow -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary-container/20 to-transparent z-0"></div>
+<img alt="AI Expenses Tracker Logo" class="w-24 h-24 object-contain z-10 relative drop-shadow-md" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD12iNr_kFX-mJNNTgTxxfEi6PYA5CC84hQozQgTFXrbWsNcDmn0RSqLroI8WGW-r69wptGkXhs5spJxZEACVtzv2dWI_o22tUTZt1tch3SjNcl7HvyzMKimGeaHvcvgeNIbkf4ab3OB7d8bQRmv8f-f4znmTB7jH7as0esqGrlissF4Ugb1bJS0cVgufwpycpZogCw1j8E_iX_JWBEJxWnfYqM8HhVqfk3tKZe8fs2Wi5-aSebIZmuEMvgQmczdxgwI3lwD3bwnqqZ"/>
+</div>
+<!-- Typography -->
+<div class="text-center space-y-sm">
+<h1 class="font-display-lg-mobile text-display-lg-mobile bg-gradient-to-r from-primary to-primary-fixed-dim bg-clip-text text-transparent pb-1">
+                    AI Expenses Tracker
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant/80 tracking-wide">
+                    Intelligent Financial Clarity
+                </p>
+</div>
+</div>
+<!-- Loading Indicator -->
+<div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-md">
+<div class="loading-ring"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant/60 uppercase tracking-widest">Initializing AI Engine</span>
+</div>
+</main>
+<script>
+        // Micro-interaction for subtle entrance animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const logo = document.querySelector('.glass-panel');
+            const text = document.querySelector('h1');
+            const subtext = document.querySelector('p');
+            
+            logo.style.opacity = '0';
+            logo.style.transform = 'scale(0.95) translateY(20px)';
+            logo.style.transition = 'all 1s cubic-bezier(0.16, 1, 0.3, 1)';
+            
+            text.style.opacity = '0';
+            text.style.transform = 'translateY(10px)';
+            text.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s';
+            
+            subtext.style.opacity = '0';
+            subtext.style.transform = 'translateY(10px)';
+            subtext.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s';
+            
+            setTimeout(() => {
+                logo.style.opacity = '1';
+                logo.style.transform = 'scale(1) translateY(0)';
+                
+                text.style.opacity = '1';
+                text.style.transform = 'translateY(0)';
+                
+                subtext.style.opacity = '1';
+                subtext.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body></html>

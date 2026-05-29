@@ -30,8 +30,9 @@ void main() {
     await fixture.dispose();
   });
 
-  testWidgets('settings shortcut opens Settings with required providers',
-      (tester) async {
+  testWidgets('settings shortcut opens Settings with required providers', (
+    tester,
+  ) async {
     final fixture = _HomeFixture();
     await fixture.pumpMainScreen(tester);
 
@@ -45,8 +46,33 @@ void main() {
     await fixture.dispose();
   });
 
-  testWidgets('budget manage action opens Monthly Budget screen',
-      (tester) async {
+  testWidgets('Home transaction edit updates expense through repository', (
+    tester,
+  ) async {
+    final fixture = _HomeFixture();
+    await fixture.pumpMainScreen(tester);
+
+    await tester.ensureVisible(find.byTooltip('Expense actions'));
+    await tester.tap(find.byTooltip('Expense actions'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Edit').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Edit expense'), findsOneWidget);
+
+    await tester.enterText(find.widgetWithText(TextFormField, '150'), '175');
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+
+    expect(fixture.expenseRepository.updatedExpenses, hasLength(1));
+    expect(fixture.expenseRepository.updatedExpenses.single.amount, 175);
+
+    await fixture.dispose();
+  });
+
+  testWidgets('budget manage action opens Monthly Budget screen', (
+    tester,
+  ) async {
     final fixture = _HomeFixture();
     await fixture.pumpMainScreen(tester);
 
@@ -60,8 +86,9 @@ void main() {
     await fixture.dispose();
   });
 
-  testWidgets('Home refreshes daily exchange rates for mixed currencies',
-      (tester) async {
+  testWidgets('Home refreshes daily exchange rates for mixed currencies', (
+    tester,
+  ) async {
     final fixture = _HomeFixture();
     final usdExpense = Expense(
       expenseId: 'usd-expense',
@@ -122,13 +149,13 @@ void main() {
 
 class _HomeFixture {
   _HomeFixture()
-      : user = AppUser(
-          userId: 'user-1',
-          email: 'john@example.com',
-          displayName: 'John Doe',
-          photoUrl: null,
-          createdAt: DateTime(2026, 5, 1),
-        ) {
+    : user = AppUser(
+        userId: 'user-1',
+        email: 'john@example.com',
+        displayName: 'John Doe',
+        photoUrl: null,
+        createdAt: DateTime(2026, 5, 1),
+      ) {
     authRepository = FakeAuthRepository(user);
     expenseRepository = FakeExpenseRepository(expenses);
     categoryRepository = FakeCategoryRepository([category]);
@@ -137,8 +164,9 @@ class _HomeFixture {
     monetizationCubit = MonetizationCubit(
       entitlementRepository: LocalEntitlementRepository(),
       policyRepository: const LocalMonetizationPolicyRepository(),
-      consentService:
-          FakeAdConsentService(consentState: ConsentState.allowed()),
+      consentService: FakeAdConsentService(
+        consentState: ConsentState.allowed(),
+      ),
       adService: FakeAdService(),
     );
     appLockCubit = AppLockCubit(appLockService: fakeAppLockService());
@@ -202,8 +230,9 @@ class _HomeFixture {
     await tester.pumpWidget(
       _withAppProviders(
         BlocProvider<BudgetBloc>(
-          create: (_) => BudgetBloc(budgetRepository)
-            ..add(const BudgetWatchRequested(month: 5, year: 2026)),
+          create: (_) =>
+              BudgetBloc(budgetRepository)
+                ..add(const BudgetWatchRequested(month: 5, year: 2026)),
           child: MainScreen(
             screenExpenses ?? expenses,
             user: user,

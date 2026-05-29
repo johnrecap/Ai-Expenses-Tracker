@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Report Drilldown - Food &amp; Drink</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=IBM+Plex+Sans+Arabic:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface": "#f7f9fb",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#00daf3",
+                      "on-secondary-fixed": "#3f0018",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#004f58",
+                      "on-surface-variant": "#3b494c",
+                      "on-tertiary-fixed": "#20005f",
+                      "on-error-container": "#93000a",
+                      "primary-fixed": "#9cf0ff",
+                      "on-primary-container": "#00626e",
+                      "surface-bright": "#f7f9fb",
+                      "surface-container": "#eceef0",
+                      "tertiary-fixed-dim": "#cdbdff",
+                      "surface-container-low": "#f2f4f6",
+                      "on-background": "#191c1e",
+                      "inverse-surface": "#2d3133",
+                      "primary-container": "#00e5ff",
+                      "secondary-container": "#dd2269",
+                      "tertiary-container": "#d6c9ff",
+                      "inverse-on-surface": "#eff1f3",
+                      "outline": "#6b7a7d",
+                      "on-primary-fixed": "#001f24",
+                      "tertiary": "#6833ea",
+                      "primary": "#006875",
+                      "on-tertiary-fixed-variant": "#4f00d0",
+                      "on-tertiary-container": "#622be5",
+                      "surface-tint": "#006875",
+                      "error": "#ba1a1a",
+                      "on-secondary": "#ffffff",
+                      "outline-variant": "#bac9cc",
+                      "on-surface": "#191c1e",
+                      "surface-dim": "#d8dadc",
+                      "background": "#f7f9fb",
+                      "on-secondary-fixed-variant": "#8f003f",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed-dim": "#ffb1c1",
+                      "surface-variant": "#e0e3e5",
+                      "surface-container-highest": "#e0e3e5",
+                      "surface-container-high": "#e6e8ea",
+                      "tertiary-fixed": "#e8deff",
+                      "on-secondary-container": "#fffbff",
+                      "secondary": "#b70052",
+                      "on-error": "#ffffff",
+                      "secondary-fixed": "#ffd9df",
+                      "inverse-primary": "#00daf3",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xl": "32px",
+                      "card-gutter": "12px",
+                      "sm": "8px",
+                      "lg": "24px",
+                      "md": "16px",
+                      "xs": "4px",
+                      "unit": "4px",
+                      "container-padding": "20px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "display-lg-mobile": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "arabic-body": [
+                              "IBM Plex Sans Arabic"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "arabic-body": [
+                              "16px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #F8FAFC; /* Fallback */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 104, 117, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(183, 0, 82, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+        .animate-slide-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface antialiased pb-24 md:pb-0 md:pl-80">
+<!-- TopAppBar (Mobile & Web) -->
+<header class="fixed top-0 w-full md:w-[calc(100%-20rem)] md:ml-80 z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-b border-white/40 dark:border-outline-variant/20 shadow-sm flex items-center justify-between px-container-padding h-16 w-full">
+<div class="flex items-center gap-sm">
+<button class="md:hidden text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200 p-2 rounded-full">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Back Button for Drilldown context -->
+<button class="hidden md:flex text-on-surface-variant hover:bg-surface-variant/50 p-2 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md dark:text-on-surface">Food &amp; Drink</h1>
+</div>
+<div>
+<img alt="User profile avatar" class="w-8 h-8 rounded-full border border-white/40 shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCliqXtm_PnesW_YztPw9Xt-3zJ-DwY4g8BmxPhtVmQ4xV21lA8bB1fvNyMHfCE1XRB5-SPF0uPQ3Z9tvOam6qmF5hOA45-qwvodiY_MgSNMlhVfx61rqYRuuYA-X7AqL8GD29A_z3N5xJgcp5eeY4-YX6EEguzjSnLI-pvyg68AWUn5B6MAnh5MQO8tkWPDluDz9uG7iFbPX1eQ3V5iYnZKqbiP4d_IEaCqhRtmHVe98q2bTw9X02gnKi7koFlOXc9ukeVWfwofq3D"/>
+</div>
+</header>
+<!-- NavigationDrawer (Web Only) -->
+<aside class="hidden md:flex flex-col h-full py-lg fixed top-0 left-0 z-40 bg-surface dark:bg-surface-container-low h-full w-80 rounded-r-xl rtl:rounded-l-xl rtl:rounded-r-none divide-y divide-outline-variant/20 shadow-xl">
+<div class="px-lg pb-md flex items-center gap-md">
+<img alt="User profile" class="w-12 h-12 rounded-full border-2 border-primary-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFj1ok_Sdm9c_EeklgER5rqC9E6PZ3cHCMJMF9LFH7duD8BrKtdwc9jkatc5hymMLN_q76wdzAb4c0_gVUla_jP3PQzgykXwiqHIXEBInLp_kTWVQHvzmViTmwtmiJhD7rcMPXW0ca1KzVLLjPQGtl7RAnXwlhQYzrp410R8HEMXNR4asxYRUF6XAY2TWPZnnwk5G_ztq5TArZcjlIxkppM1u5l1YbXClb7iQskXWs1DpnH1KxxYoaXy6y1aAu_kn-fpOyXzExW_jL"/>
+<div>
+<div class="font-headline-md text-headline-md text-primary">Premium User</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">ai.tracker@example.com</div>
+<div class="font-label-caps text-label-caps text-outline mt-1">v2.1.0</div>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-md flex flex-col gap-sm">
+<a class="flex items-center gap-md px-lg py-3 font-body-lg text-body-lg text-on-surface-variant hover:bg-surface-variant/50 mx-2 rounded-full transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+                Personal
+            </a>
+<a class="flex items-center gap-md px-lg py-3 font-body-lg text-body-lg text-on-surface-variant hover:bg-surface-variant/50 mx-2 rounded-full transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">business_center</span>
+                Business
+            </a>
+<a class="flex items-center gap-md px-lg py-3 font-body-lg text-body-lg text-on-surface-variant hover:bg-surface-variant/50 mx-2 rounded-full transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+                Shared
+            </a>
+<a class="flex items-center gap-md px-lg py-3 font-body-lg text-body-lg text-on-surface-variant hover:bg-surface-variant/50 mx-2 rounded-full transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">archive</span>
+                Archived
+            </a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-20 px-container-padding max-w-4xl mx-auto space-y-xl">
+<!-- Context & Breadcrumbs -->
+<div class="flex items-center gap-sm overflow-x-auto pb-2 scrollbar-hide animate-slide-up">
+<span class="px-3 py-1 bg-surface-variant/50 rounded-full font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">Q3 Report</span>
+<span class="material-symbols-outlined text-outline text-sm">chevron_right</span>
+<span class="px-3 py-1 bg-primary-container/20 border border-primary-container/50 text-on-primary-container rounded-full font-label-caps text-label-caps whitespace-nowrap flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">restaurant</span>
+                Food &amp; Drink
+            </span>
+</div>
+<!-- Hero Summary Card -->
+<div class="glass-card rounded-xl p-lg animate-slide-up delay-100 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]">restaurant</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg relative z-10">
+<div>
+<h2 class="font-body-sm text-body-sm text-on-surface-variant mb-1">Total Spent</h2>
+<div class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary counter-val" data-target="1245.50">$0.00</div>
+<div class="text-secondary font-body-sm text-body-sm flex items-center mt-1">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_up</span>
+                        +12% vs last month
+                    </div>
+</div>
+<div class="md:border-l border-white/40 pl-0 md:pl-lg flex flex-row md:flex-col gap-lg md:gap-4 justify-between md:justify-start">
+<div>
+<h3 class="font-body-sm text-body-sm text-on-surface-variant">Transactions</h3>
+<div class="font-headline-md text-headline-md text-on-surface counter-val-int" data-target="42">0</div>
+</div>
+<div>
+<h3 class="font-body-sm text-body-sm text-on-surface-variant">Avg. Order</h3>
+<div class="font-headline-md text-headline-md text-on-surface counter-val" data-target="29.65">$0.00</div>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Insight Note -->
+<div class="glass-card rounded-lg p-md flex items-start gap-md border border-primary/20 bg-primary/5 animate-slide-up delay-200">
+<div class="p-2 bg-gradient-to-br from-primary-container to-tertiary-container rounded-full shadow-sm flex-shrink-0">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-semibold text-on-surface mb-1">Spending Anomaly Detected</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Your weekend dining expenses are unusually high this month, primarily driven by 3 visits to "Steakhouse Prime". Consider adjusting weekend budgets.</p>
+</div>
+</div>
+<!-- Transaction List -->
+<section class="space-y-md animate-slide-up delay-300">
+<div class="flex items-center justify-between border-b border-outline-variant/20 pb-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface">Recent Transactions</h3>
+<button class="text-primary hover:bg-primary/5 px-3 py-1 rounded-full font-label-caps text-label-caps transition-colors">FILTER</button>
+</div>
+<div class="space-y-2">
+<!-- Row 1 -->
+<div class="glass-card rounded-lg p-md flex items-center justify-between hover:bg-white/40 transition-colors cursor-pointer group">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">restaurant_menu</span>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-semibold text-on-surface">Steakhouse Prime</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Oct 24 • Dinner</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-body-lg text-body-lg font-semibold text-on-surface">-$185.00</div>
+<div class="font-label-caps text-label-caps text-outline">Cleared</div>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="glass-card rounded-lg p-md flex items-center justify-between hover:bg-white/40 transition-colors cursor-pointer group">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">local_cafe</span>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-semibold text-on-surface">Downtown Roasters</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Oct 23 • Coffee</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-body-lg text-body-lg font-semibold text-on-surface">-$6.50</div>
+<div class="font-label-caps text-label-caps text-outline">Cleared</div>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="glass-card rounded-lg p-md flex items-center justify-between hover:bg-white/40 transition-colors cursor-pointer group">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">shopping_basket</span>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-semibold text-on-surface">Whole Foods Market</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Oct 21 • Groceries</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-body-lg text-body-lg font-semibold text-on-surface">-$142.30</div>
+<div class="font-label-caps text-label-caps text-outline">Cleared</div>
+</div>
+</div>
+</div>
+<button class="w-full py-3 mt-4 border border-outline-variant/30 rounded-full font-label-caps text-label-caps text-primary hover:bg-primary/5 transition-colors">
+                LOAD MORE TRANSACTIONS
+            </button>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<!-- Suppressed: This is a task-focused drilldown sub-page. Users need to focus on the report details. They can navigate back using the TopAppBar. -->
+<script>
+        // Simple counter animation
+        function animateValue(obj, start, end, duration, isInt) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // quintOut easing
+                const easeProgress = 1 - Math.pow(1 - progress, 5);
+                const currentVal = start + (end - start) * easeProgress;
+                
+                if (isInt) {
+                    obj.innerHTML = Math.floor(currentVal);
+                } else {
+                    obj.innerHTML = '$' + currentVal.toFixed(2);
+                }
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const countersFloat = document.querySelectorAll('.counter-val');
+            countersFloat.forEach(el => {
+                const target = parseFloat(el.getAttribute('data-target'));
+                animateValue(el, 0, target, 1200, false);
+            });
+
+            const countersInt = document.querySelectorAll('.counter-val-int');
+            countersInt.forEach(el => {
+                const target = parseInt(el.getAttribute('data-target'));
+                animateValue(el, 0, target, 1200, true);
+            });
+        });
+    </script>
+</body></html>

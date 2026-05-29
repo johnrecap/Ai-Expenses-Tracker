@@ -42,10 +42,7 @@ class _RetentionPromptTile extends StatelessWidget {
   final RetentionPrompt prompt;
   final VoidCallback onTap;
 
-  const _RetentionPromptTile({
-    required this.prompt,
-    required this.onTap,
-  });
+  const _RetentionPromptTile({required this.prompt, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +72,19 @@ class _RetentionPromptTile extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(width: 8),
         TextButton(
           onPressed: onTap,
-          child: Text(prompt.actionLabel),
+          style: TextButton.styleFrom(
+            minimumSize: const Size(0, 40),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+          ),
+          child: Text(
+            prompt.actionLabel,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );

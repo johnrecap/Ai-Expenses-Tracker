@@ -1,5 +1,6 @@
 import 'package:expenses_tracker/l10n/l10n.dart';
 import 'package:expenses_tracker/screens/app_lock/cubit/app_lock_cubit.dart';
+import 'package:expenses_tracker/screens/app_lock/utils/app_lock_message_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,9 +46,12 @@ class _CreatePinScreenState extends State<CreatePinScreen> {
       ),
       body: BlocConsumer<AppLockCubit, AppLockState>(
         listener: (context, state) {
-          if (state.message != null && state.message!.isNotEmpty) {
+          final messageKey = state.messageKey;
+          if (messageKey != null) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message!)),
+              SnackBar(
+                content: Text(localizedAppLockMessage(context, messageKey)),
+              ),
             );
           }
         },

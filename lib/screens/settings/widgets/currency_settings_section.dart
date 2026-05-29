@@ -53,13 +53,11 @@ class _CurrencySettingsSectionState extends State<CurrencySettingsSection> {
       ...widget.availableCurrencies.map((currency) => currency.toUpperCase()),
       ...supported,
       widget.settings.baseCurrency.toUpperCase(),
-    }.toList()
-      ..sort();
+    }.toList()..sort();
     final baseCurrency = widget.settings.baseCurrency.trim().toUpperCase();
-    final rateCurrencies = supported
-        .where((currency) => currency != baseCurrency)
-        .toList()
-      ..sort();
+    final rateCurrencies =
+        supported.where((currency) => currency != baseCurrency).toList()
+          ..sort();
     _ensureRateControllers(rateCurrencies);
 
     return SettingsSection(
@@ -77,10 +75,8 @@ class _CurrencySettingsSectionState extends State<CurrencySettingsSection> {
             ),
             items: options
                 .map(
-                  (currency) => DropdownMenuItem(
-                    value: currency,
-                    child: Text(currency),
-                  ),
+                  (currency) =>
+                      DropdownMenuItem(value: currency, child: Text(currency)),
                 )
                 .toList(),
             onChanged: widget.isSaving
@@ -116,9 +112,9 @@ class _CurrencySettingsSectionState extends State<CurrencySettingsSection> {
                           } else if (currency != widget.settings.baseCurrency) {
                             next.remove(currency);
                           }
-                          context
-                              .read<SettingsCubit>()
-                              .saveSupportedCurrencies(next.toList());
+                          context.read<SettingsCubit>().saveSupportedCurrencies(
+                            next.toList(),
+                          );
                         },
                 ),
             ],
@@ -209,9 +205,7 @@ class _ExchangeRateField extends StatelessWidget {
             key: ValueKey('conversion-rate-$currency'),
             controller: controller,
             enabled: !isSaving,
-            keyboardType: const TextInputType.numberWithOptions(
-              decimal: true,
-            ),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               labelText: context.l10n.exchangeRateInputLabel(currency),
               suffixText: baseCurrency,
@@ -228,9 +222,10 @@ class _ExchangeRateField extends StatelessWidget {
           onPressed: isSaving
               ? null
               : () {
-                  context
-                      .read<SettingsCubit>()
-                      .saveConversionRate(currency, controller.text);
+                  context.read<SettingsCubit>().saveConversionRate(
+                    currency,
+                    controller.text,
+                  );
                 },
           icon: const Icon(Icons.save_outlined),
         ),

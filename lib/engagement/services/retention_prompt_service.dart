@@ -1,5 +1,6 @@
 import 'package:expense_repository/expense_repository.dart';
 import 'package:expenses_tracker/engagement/engagement.dart';
+import 'package:expenses_tracker/l10n/l10n.dart';
 import 'package:expenses_tracker/services/budget_calculator.dart';
 
 class RetentionPromptService {
@@ -10,14 +11,15 @@ class RetentionPromptService {
     required BudgetProgress budgetProgress,
     required TrackingStreak streak,
     required WeeklyDigest digest,
+    required AppLocalizations l10n,
   }) {
     if (expenses.isEmpty) {
-      return const [
+      return [
         RetentionPrompt(
           kind: RetentionPromptKind.onboarding,
-          title: 'Start your setup',
-          message: 'Add one expense, create categories, then set a budget.',
-          actionLabel: 'Add expense',
+          title: l10n.retentionStartSetupTitle,
+          message: l10n.retentionStartSetupMessage,
+          actionLabel: l10n.addExpense,
         ),
       ];
     }
@@ -28,11 +30,11 @@ class RetentionPromptService {
       prompts.add(
         RetentionPrompt(
           kind: RetentionPromptKind.streak,
-          title: 'Keep your streak',
+          title: l10n.retentionKeepStreakTitle,
           message: streak.currentStreakDays == 0
-              ? 'Log today once to start a tracking streak.'
-              : 'Log today to keep your ${streak.currentStreakDays}-day streak.',
-          actionLabel: 'Log expense',
+              ? l10n.retentionStartStreakMessage
+              : l10n.retentionKeepStreakMessage(streak.currentStreakDays),
+          actionLabel: l10n.retentionLogExpenseAction,
         ),
       );
     }
@@ -41,10 +43,11 @@ class RetentionPromptService {
       prompts.add(
         RetentionPrompt(
           kind: RetentionPromptKind.weeklySummary,
-          title: 'Weekly check-in',
-          message:
-              '${digest.topCategory!.categoryName} is your top category this week.',
-          actionLabel: 'View digest',
+          title: l10n.weeklyCheckIn,
+          message: l10n.weeklyInsightTopCategory(
+            digest.topCategory!.categoryName,
+          ),
+          actionLabel: l10n.viewDigest,
         ),
       );
     }
@@ -52,42 +55,42 @@ class RetentionPromptService {
     switch (budgetProgress.status) {
       case BudgetProgressStatus.exceeded:
         prompts.add(
-          const RetentionPrompt(
+          RetentionPrompt(
             kind: RetentionPromptKind.budgetNudge,
-            title: 'Budget review',
-            message: 'Your monthly budget is over target. Review recent spend.',
-            actionLabel: 'Review budget',
+            title: l10n.retentionBudgetReviewTitle,
+            message: l10n.retentionBudgetExceededMessage,
+            actionLabel: l10n.retentionReviewBudgetAction,
           ),
         );
         break;
       case BudgetProgressStatus.nearLimit:
         prompts.add(
-          const RetentionPrompt(
+          RetentionPrompt(
             kind: RetentionPromptKind.budgetNudge,
-            title: 'Budget nudge',
-            message: 'You are near your budget limit. Check your top category.',
-            actionLabel: 'Open budget',
+            title: l10n.retentionBudgetNudgeTitle,
+            message: l10n.retentionBudgetNearLimitMessage,
+            actionLabel: l10n.retentionOpenBudgetAction,
           ),
         );
         break;
       case BudgetProgressStatus.none:
         prompts.add(
-          const RetentionPrompt(
+          RetentionPrompt(
             kind: RetentionPromptKind.spendingChallenge,
-            title: 'Set a simple target',
-            message: 'Add a monthly budget to make progress easier to track.',
-            actionLabel: 'Set budget',
+            title: l10n.retentionSetTargetTitle,
+            message: l10n.retentionSetTargetMessage,
+            actionLabel: l10n.retentionSetBudgetAction,
           ),
         );
         break;
       case BudgetProgressStatus.normal:
         if (streak.currentStreakDays >= 3) {
           prompts.add(
-            const RetentionPrompt(
+            RetentionPrompt(
               kind: RetentionPromptKind.spendingChallenge,
-              title: 'Three-day challenge',
-              message: 'Keep tracking for the rest of the week.',
-              actionLabel: 'Continue',
+              title: l10n.retentionThreeDayChallengeTitle,
+              message: l10n.retentionThreeDayChallengeMessage,
+              actionLabel: l10n.continueAction,
             ),
           );
         }

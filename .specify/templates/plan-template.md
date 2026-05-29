@@ -39,6 +39,11 @@ work.
 
 [Gates determined based on constitution file]
 
+- Clarification gate: Confirm that ambiguous scope, defaults, UX behavior, data
+  rules, backend/deployment setup, verification expectations, and feature
+  boundaries were asked in one consolidated pass before this plan was written,
+  or record that the user explicitly approved proceeding with assumptions.
+
 ## Project Structure
 
 ### Documentation (this feature)

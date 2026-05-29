@@ -6,6 +6,7 @@ export 'category.dart';
 export 'category_alias.dart';
 export 'expense.dart';
 export 'language_preference.dart';
+export 'money_snapshot.dart';
 export 'payment_method.dart';
 export 'notification_settings.dart';
 export 'recurring_expense.dart';

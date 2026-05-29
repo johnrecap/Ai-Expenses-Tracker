@@ -97,6 +97,31 @@ describe('Firestore security rules', () => {
     );
   });
 
+  it('allows valid expense money snapshots and rejects invalid rates', async () => {
+    const db = testEnv.authenticatedContext('user-a').firestore();
+
+    await assertSucceeds(
+      setDoc(
+        doc(db, 'users/user-a/expenses/expense-snapshot'),
+        validExpense({
+          expenseId: 'expense-snapshot',
+          currency: 'USD',
+          moneySnapshot: validMoneySnapshot(),
+        }),
+      ),
+    );
+    await assertFails(
+      setDoc(
+        doc(db, 'users/user-a/expenses/expense-bad-snapshot'),
+        validExpense({
+          expenseId: 'expense-bad-snapshot',
+          currency: 'USD',
+          moneySnapshot: validMoneySnapshot({ conversionRate: 0 }),
+        }),
+      ),
+    );
+  });
+
   it('denies cross-user and unauthenticated expense access', async () => {
     const ownerDb = testEnv.authenticatedContext('user-a').firestore();
     const otherDb = testEnv.authenticatedContext('user-b').firestore();
@@ -376,6 +401,22 @@ function baseExpense() {
     source: 'manual',
     recurringExpenseId: null,
     aiActionId: null,
+    moneySnapshot: null,
+  };
+}
+
+function validMoneySnapshot(overrides: Record<string, unknown> = {}) {
+  return {
+    sourceAmount: 10,
+    sourceCurrency: 'USD',
+    targetCurrency: 'EGP',
+    conversionRate: 50,
+    convertedAmount: 500,
+    capturedAt: now(),
+    rateUpdatedAt: now(),
+    rateSource: 'settings',
+    rateFreshness: 'saved',
+    ...overrides,
   };
 }
 

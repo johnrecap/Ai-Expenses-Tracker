@@ -50,6 +50,7 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
         state.copyWith(
           status: AiAssistantStatus.needsClarification,
           input: trimmed,
+          clearDraft: true,
           clearPreview: true,
           clearCommandData: true,
           clarifyingQuestion: 'Please describe the expense.',
@@ -74,6 +75,7 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
           historyAnswer: historyAnswer,
           resultMessage: historyAnswer.message,
           pendingIntent: AiIntent.searchExpenses,
+          clearDraft: true,
           clearPreview: true,
           clearCommandData: true,
           clearClarifyingQuestion: true,
@@ -90,6 +92,7 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
       state.copyWith(
         status: AiAssistantStatus.parsing,
         input: trimmed,
+        clearDraft: true,
         clearPreview: true,
         clearCommandData: true,
         clearClarifyingQuestion: true,
@@ -139,6 +142,7 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
           state.copyWith(
             status: AiAssistantStatus.needsClarification,
             clarifyingQuestion: _parserClarification(error),
+            clearDraft: true,
             clearPreview: true,
             clearCommandData: true,
             clearErrorMessage: true,
@@ -154,6 +158,7 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
               : error.toString(),
           usageStatus: error is AiGatewayException ? error.usageStatus : null,
           quotaError: error is AiGatewayException ? error.quotaError : null,
+          clearDraft: true,
           clearPreview: true,
           clearCommandData: true,
         ),
@@ -177,9 +182,16 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
       return;
     }
 
-    final payload = _payloadWithResolvedCategory(
-      rawPayload,
+    final payload = _payloadWithDefaultExpenseFields(
+      _payloadWithResolvedCategory(
+        rawPayload,
+        context,
+      ),
       context,
+    );
+    final draft = AiExpenseDraft.fromPayload(
+      payload,
+      confidence: response.confidence,
     );
     final preview = AiActionPreview.fromPayload(
       payload,
@@ -188,11 +200,13 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
       defaultPaymentMethod: context.defaultPaymentMethod,
       confidence: response.confidence,
     );
+    final previewWithDraftErrors = _previewWithDraftErrors(preview, draft);
 
     emit(
       state.copyWith(
         status: AiAssistantStatus.previewReady,
-        preview: preview,
+        draft: draft,
+        preview: previewWithDraftErrors,
         lastResponse: response,
         usageStatus: response.usageStatus,
         staleUsageRequestType: _staleUsageRequestType(response),
@@ -211,16 +225,23 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
     required String? actionLogId,
     required String description,
   }) {
-    final payload = _payloadWithResolvedCategory(
-      AiExpensePayload(
-        amount: _amountFromText(description),
-        currency: _currencyFromText(description),
-        date: _dateFromText(description, context.now),
-        paymentMethod: _paymentMethodFromText(description),
-        description: description.trim().isEmpty ? 'AI expense' : description,
+    final payload = _payloadWithDefaultExpenseFields(
+      _payloadWithResolvedCategory(
+        AiExpensePayload(
+          amount: _amountFromText(description),
+          currency: _currencyFromText(description),
+          date: _dateFromText(description, context.now),
+          paymentMethod: _paymentMethodFromText(description),
+          description: description.trim().isEmpty ? 'AI expense' : description,
+        ),
+        context,
+        inputText: description,
       ),
       context,
-      inputText: description,
+    );
+    final draft = AiExpenseDraft.fromPayload(
+      payload,
+      confidence: response.confidence,
     );
     final preview = AiActionPreview.fromPayload(
       payload,
@@ -229,10 +250,12 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
       defaultPaymentMethod: context.defaultPaymentMethod,
       confidence: response.confidence,
     );
+    final previewWithDraftErrors = _previewWithDraftErrors(preview, draft);
     emit(
       state.copyWith(
         status: AiAssistantStatus.previewReady,
-        preview: preview,
+        draft: draft,
+        preview: previewWithDraftErrors,
         lastResponse: response,
         usageStatus: response.usageStatus,
         staleUsageRequestType: _staleUsageRequestType(response),
@@ -341,6 +364,40 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
       clearCategoryName: payload.categoryName?.trim().isEmpty ?? true,
       categoryResolution: resolution,
     );
+  }
+
+  AiExpensePayload _payloadWithDefaultExpenseFields(
+    AiExpensePayload payload,
+    AiContext context,
+  ) {
+    return payload.copyWith(
+      date: payload.date ?? context.now,
+      paymentMethod: payload.paymentMethod ?? context.defaultPaymentMethod,
+      currency: payload.currency?.trim().isNotEmpty == true
+          ? payload.currency!.trim().toUpperCase()
+          : context.defaultCurrency,
+      missingFields: payload.missingFields
+          .where(
+            (field) => !{
+              'date',
+              'payment method',
+              'currency',
+            }.contains(field.trim().toLowerCase()),
+          )
+          .toList(growable: false),
+    );
+  }
+
+  AiActionPreview _previewWithDraftErrors(
+    AiActionPreview preview,
+    AiExpenseDraft draft,
+  ) {
+    if (draft.missingFields.isEmpty) return preview;
+    final errors = <String>{
+      ...preview.validationErrors,
+      'Complete missing fields: ${draft.missingFields.join(', ')}.',
+    }.toList(growable: false);
+    return preview.copyWith(validationErrors: errors);
   }
 
   void _handleSearchResponse(
@@ -557,6 +614,7 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
     emit(
       state.copyWith(
         status: AiAssistantStatus.previewReady,
+        draft: AiExpenseDraft.fromPreview(preview),
         preview: preview.copyWith(validationErrors: preview.validate()),
         clearClarifyingQuestion: true,
         clearErrorMessage: true,
@@ -569,17 +627,22 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
     required AiContext context,
     AiUsageStatus? usageStatus,
   }) {
-    final expensePayload = AiExpensePayload(
-      amount: payload.amount,
-      categoryId: payload.categoryId,
-      categoryName: payload.categoryName,
-      date: payload.date,
-      paymentMethod: context.defaultPaymentMethod,
-      currency: payload.currency ?? context.defaultCurrency,
-      description: payload.description ??
-          (payload.merchant?.trim().isNotEmpty == true
-              ? 'Receipt from ${payload.merchant!.trim()}'
-              : 'Receipt expense'),
+    final expensePayload = _payloadWithDefaultExpenseFields(
+      AiExpensePayload(
+        amount: payload.amount,
+        categoryId: payload.categoryId,
+        categoryName: payload.categoryName,
+        date: payload.date,
+        paymentMethod: context.defaultPaymentMethod,
+        currency: payload.currency ?? context.defaultCurrency,
+        description: payload.description ??
+            (payload.merchant?.trim().isNotEmpty == true
+                ? 'Receipt from ${payload.merchant!.trim()}'
+                : 'Receipt expense'),
+        merchant: payload.merchant,
+        missingFields: payload.missingFields(),
+      ),
+      context,
     );
     final preview = AiActionPreview.fromPayload(
       _payloadWithResolvedCategory(
@@ -610,6 +673,10 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
         status: errors.isEmpty
             ? AiAssistantStatus.previewReady
             : AiAssistantStatus.needsClarification,
+        draft: AiExpenseDraft.fromPayload(
+          expensePayload,
+          confidence: payload.confidence,
+        ),
         preview: preview.copyWith(validationErrors: errors),
         pendingIntent: AiIntent.addExpense,
         clarifyingQuestion: errors.isEmpty ? null : errors.join(' '),
@@ -623,6 +690,7 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
     emit(
       state.copyWith(
         status: AiAssistantStatus.previewReady,
+        draft: AiExpenseDraft.fromPreview(preview),
         preview: preview.copyWith(validationErrors: preview.validate()),
         clearClarifyingQuestion: true,
         clearErrorMessage: true,
@@ -899,7 +967,18 @@ class AiAssistantCubit extends Cubit<AiAssistantState> {
       source: expense.source,
       recurringExpenseId: expense.recurringExpenseId,
       aiActionId: state.actionLogId,
+      moneySnapshot: _preservedSnapshotForPayload(expense, payload),
     );
+  }
+
+  MoneySnapshot? _preservedSnapshotForPayload(
+    Expense expense,
+    AiExpensePayload payload,
+  ) {
+    final changesMoney = payload.amount != null ||
+        payload.currency != null ||
+        payload.date != null;
+    return changesMoney ? null : expense.moneySnapshot;
   }
 
   Category _categoryFromPayload(Category fallback, AiExpensePayload payload) {

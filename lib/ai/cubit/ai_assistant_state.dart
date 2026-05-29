@@ -20,6 +20,7 @@ class AiAssistantState extends Equatable {
   const AiAssistantState({
     this.status = AiAssistantStatus.initial,
     this.input = '',
+    this.draft,
     this.preview,
     this.lastResponse,
     this.searchFilter,
@@ -41,6 +42,7 @@ class AiAssistantState extends Equatable {
 
   final AiAssistantStatus status;
   final String input;
+  final AiExpenseDraft? draft;
   final AiActionPreview? preview;
   final AiResponse? lastResponse;
   final ExpenseFilter? searchFilter;
@@ -62,6 +64,8 @@ class AiAssistantState extends Equatable {
   AiAssistantState copyWith({
     AiAssistantStatus? status,
     String? input,
+    AiExpenseDraft? draft,
+    bool clearDraft = false,
     AiActionPreview? preview,
     bool clearPreview = false,
     AiResponse? lastResponse,
@@ -90,6 +94,7 @@ class AiAssistantState extends Equatable {
     return AiAssistantState(
       status: status ?? this.status,
       input: input ?? this.input,
+      draft: clearDraft ? null : draft ?? this.draft,
       preview: clearPreview ? null : preview ?? this.preview,
       lastResponse:
           lastResponse ?? (clearCommandData ? null : this.lastResponse),
@@ -128,6 +133,7 @@ class AiAssistantState extends Equatable {
   List<Object?> get props => [
         status,
         input,
+        draft,
         preview,
         lastResponse,
         searchFilter,

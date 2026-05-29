@@ -15,6 +15,7 @@ import 'package:expenses_tracker/screens/auth/views/login_screen.dart';
 import 'package:expenses_tracker/screens/home/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 import 'package:expenses_tracker/screens/home/views/home_screen.dart';
 import 'package:expenses_tracker/screens/onboarding/onboarding.dart';
+import 'package:expenses_tracker/services/sync_retry_service.dart';
 import 'package:expenses_tracker/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,6 +63,14 @@ class AuthGate extends StatelessWidget {
               RepositoryProvider<AiActionLogRepository>(
                 create: (_) => repositories.aiActionLogRepository,
               ),
+              if (repositories.syncCoordinator != null &&
+                  repositories.syncDeviceId != null)
+                RepositoryProvider<SyncRetryService>(
+                  create: (_) => SyncRetryService(
+                    coordinator: repositories.syncCoordinator!,
+                    deviceId: repositories.syncDeviceId!,
+                  ),
+                ),
             ],
             child: Builder(
               builder: (context) {
@@ -397,6 +406,7 @@ class _AuthenticatedHomeState extends State<_AuthenticatedHome> {
       final generatedCount = await RecurringExpenseScheduler(
         expenseRepository: widget.expenseRepository,
         recurringExpenseRepository: widget.recurringExpenseRepository,
+        settingsRepository: widget.settingsRepository,
       ).processDueRecurringExpenses();
       if (!mounted || generatedCount == 0) return;
       context.read<GetExpensesBloc>().add(const GetExpenses());

@@ -18,6 +18,7 @@ import 'package:expenses_tracker/screens/expenses/views/expenses_screen.dart';
 import 'package:expenses_tracker/screens/recurring_expenses/widgets/recurring_expense_form.dart';
 import 'package:expenses_tracker/screens/settings/utils/currency_formatter.dart';
 import 'package:expenses_tracker/services/finance/duplicate_expense_detector.dart';
+import 'package:expenses_tracker/services/finance/money_snapshot_service.dart';
 import 'package:expenses_tracker/utils/amount_parser.dart';
 import 'package:expenses_tracker/widgets/settings_load_guard_card.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode;
@@ -310,6 +311,32 @@ class _AiAssistantSheetState extends State<AiAssistantSheet> {
       locale: _localeTag,
     );
     if (expense == null) return;
+    final settings = _settings;
+    if (settings == null) {
+      _showSettingsRequiredMessage(context);
+      return;
+    }
+    final snapshotResult = const MoneySnapshotService().snapshotForExpense(
+      expense: expense,
+      settings: settings,
+    );
+    if (!snapshotResult.hasSnapshot) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              context.l10n.unconvertedCurrenciesStatus(
+                1,
+                snapshotResult.missingCurrency ?? expense.currency,
+              ),
+            ),
+          ),
+        );
+      return;
+    }
+    expense.moneySnapshot = snapshotResult.snapshot;
     _pendingAiExpenseId = expense.expenseId;
     context.read<CreateExpenseBloc>().add(CreateExpense(expense));
   }

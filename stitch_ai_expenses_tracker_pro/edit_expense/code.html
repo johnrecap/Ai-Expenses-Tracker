@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Expense</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#00daf3",
+                        "on-secondary-fixed": "#3f0018",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#004f58",
+                        "on-surface-variant": "#3b494c",
+                        "on-tertiary-fixed": "#20005f",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#9cf0ff",
+                        "on-primary-container": "#00626e",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed-dim": "#cdbdff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#00e5ff",
+                        "secondary-container": "#dd2269",
+                        "tertiary-container": "#d6c9ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline": "#6b7a7d",
+                        "on-primary-fixed": "#001f24",
+                        "tertiary": "#6833ea",
+                        "primary": "#006875",
+                        "on-tertiary-fixed-variant": "#4f00d0",
+                        "on-tertiary-container": "#622be5",
+                        "surface-tint": "#006875",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#bac9cc",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "background": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#8f003f",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#ffb1c1",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed": "#e8deff",
+                        "on-secondary-container": "#fffbff",
+                        "secondary": "#b70052",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffd9df",
+                        "inverse-primary": "#00daf3",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "card-gutter": "12px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "unit": "4px",
+                        "container-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "arabic-body": ["IBM Plex Sans Arabic"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "arabic-body": ["16px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.surface'); }
+        /* Glassmorphism effects */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        .btn-gradient {
+            background: linear-gradient(90deg, #00daf3, #006875);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        /* Custom Input Styling */
+        .custom-input {
+            background-color: #F1F5F9;
+            transition: all 0.3s ease;
+        }
+        .custom-input:focus {
+            background-color: #ffffff;
+            box-shadow: 0 0 0 1px theme('colors.primary-container');
+            border-color: transparent;
+            outline: none;
+        }
+        /* Sync animation */
+        @keyframes sync-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .sync-icon { animation: sync-spin 2s linear infinite; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface font-body-lg antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/40 dark:border-outline-variant/20 shadow-sm flex items-center justify-between px-container-padding h-16 w-full">
+<button aria-label="Close" class="text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-on-surface">Edit Expense</h1>
+<div class="w-6"></div> <!-- Spacer for center alignment -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 mt-16 px-container-padding py-lg pb-32 max-w-2xl mx-auto w-full flex flex-col gap-xl">
+<!-- Background Ambient Blobs (Layer 0) -->
+<div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary rounded-full mix-blend-multiply filter blur-[100px] opacity-10"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-secondary rounded-full mix-blend-multiply filter blur-[100px] opacity-10"></div>
+</div>
+<!-- Amount & AI Snapshot Card -->
+<section class="glass-card rounded-xl p-md flex flex-col items-center justify-center relative overflow-hidden group">
+<!-- AI Sparkle indicator -->
+<div class="absolute top-sm right-sm text-secondary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Converted Amount</span>
+<div class="flex items-baseline gap-xs">
+<span class="font-display-lg-mobile text-display-lg-mobile text-on-surface">85.00</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant">EGP</span>
+</div>
+<div class="bg-surface-variant/50 rounded-full px-3 py-1 mt-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-outline" data-icon="swap_horiz">swap_horiz</span>
+<span class="font-body-sm text-body-sm text-outline">Orig: $2.75 USD</span>
+</div>
+</div>
+</section>
+<!-- Form Section -->
+<form class="flex flex-col gap-lg">
+<!-- Category & Date Row -->
+<div class="grid grid-cols-2 gap-md">
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Category</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="coffee">coffee</span>
+<select class="custom-input w-full rounded-full border-none py-3 pl-10 pr-4 font-body-lg text-body-lg appearance-none cursor-pointer">
+<option value="food">Food &amp; Drink</option>
+<option value="transport">Transport</option>
+<option value="shopping">Shopping</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Date</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="calendar_today">calendar_today</span>
+<input class="custom-input w-full rounded-full border-none py-3 pl-10 pr-4 font-body-lg text-body-lg" type="date" value="2023-10-24"/>
+</div>
+</div>
+</div>
+<!-- Merchant Input -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Merchant</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="storefront">storefront</span>
+<input class="custom-input w-full rounded-full border-none py-3 pl-10 pr-4 font-body-lg text-body-lg" placeholder="Where did you spend?" type="text" value="Starbucks"/>
+</div>
+</div>
+<!-- Notes Input -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Notes</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-3 text-on-surface-variant" data-icon="edit_note">edit_note</span>
+<textarea class="custom-input w-full rounded-xl border-none py-3 pl-10 pr-4 font-body-lg text-body-lg resize-none h-24" placeholder="Add a note... (Optional)">Morning coffee</textarea>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-md mt-md">
+<button class="btn-gradient w-full rounded-full py-4 text-on-primary font-body-lg text-body-lg font-semibold hover:opacity-90 active:scale-95 transition-all duration-200 shadow-md" type="button">
+                    Save Changes
+                </button>
+<button class="w-full rounded-full py-4 text-error bg-error-container/30 font-body-lg text-body-lg font-semibold hover:bg-error-container/50 active:scale-95 transition-all duration-200" type="button">
+                    Delete Expense
+                </button>
+</div>
+<!-- Sync Status -->
+<div class="flex items-center justify-center gap-xs mt-sm opacity-60">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant sync-icon" data-icon="sync">sync</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Last synced just now</span>
+</div>
+</form>
+</main>
+</body></html>

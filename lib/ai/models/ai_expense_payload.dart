@@ -11,6 +11,9 @@ class AiExpensePayload {
     this.paymentMethod,
     this.currency,
     this.description,
+    this.merchant,
+    this.tags = const [],
+    this.missingFields = const [],
     this.categoryResolution,
   });
 
@@ -21,6 +24,9 @@ class AiExpensePayload {
   final PaymentMethod? paymentMethod;
   final String? currency;
   final String? description;
+  final String? merchant;
+  final List<String> tags;
+  final List<String> missingFields;
   final AiCategoryResolution? categoryResolution;
 
   bool get hasRequiredAddExpenseFields {
@@ -40,6 +46,10 @@ class AiExpensePayload {
     PaymentMethod? paymentMethod,
     String? currency,
     String? description,
+    String? merchant,
+    bool clearMerchant = false,
+    List<String>? tags,
+    List<String>? missingFields,
     AiCategoryResolution? categoryResolution,
     bool clearCategoryResolution = false,
   }) {
@@ -52,6 +62,9 @@ class AiExpensePayload {
       paymentMethod: paymentMethod ?? this.paymentMethod,
       currency: currency ?? this.currency,
       description: description ?? this.description,
+      merchant: clearMerchant ? null : merchant ?? this.merchant,
+      tags: tags ?? this.tags,
+      missingFields: missingFields ?? this.missingFields,
       categoryResolution: clearCategoryResolution
           ? null
           : categoryResolution ?? this.categoryResolution,

@@ -66,14 +66,15 @@ class SecuritySettingsSection extends StatelessWidget {
                         : l10n.biometricUnlockUnavailableDescription,
                   ),
                   value: state.biometricEnabled,
-                  onChanged: isSaving ||
+                  onChanged:
+                      isSaving ||
                           !state.appLockEnabled ||
                           !state.hasPin ||
                           !state.biometricAvailable
                       ? null
                       : (value) => context
-                          .read<AppLockCubit>()
-                          .setBiometricEnabled(value),
+                            .read<AppLockCubit>()
+                            .setBiometricEnabled(value),
                 ),
               ],
             ),

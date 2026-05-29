@@ -22,10 +22,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SettingsScreen extends StatelessWidget {
   final List<Expense> expenses;
 
-  const SettingsScreen({
-    this.expenses = const [],
-    super.key,
-  });
+  const SettingsScreen({this.expenses = const [], super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,15 +43,15 @@ class SettingsScreen extends StatelessWidget {
         body: BlocConsumer<SettingsCubit, SettingsState>(
           listener: (context, state) {
             if (state is SettingsFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
             }
             if (state is SettingsSuccess) {
               try {
-                context
-                    .read<AppLanguageCubit>()
-                    .setPreference(state.settings.languagePreference);
+                context.read<AppLanguageCubit>().setPreference(
+                  state.settings.languagePreference,
+                );
               } catch (_) {}
             }
           },
@@ -64,9 +61,7 @@ class SettingsScreen extends StatelessWidget {
             }
 
             if (state is SettingsFailure) {
-              return _SettingsError(
-                message: state.message,
-              );
+              return _SettingsError(message: state.message);
             }
 
             if (state is SettingsSuccess) {
@@ -105,14 +100,9 @@ class _SettingsForm extends StatelessWidget {
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         padding: EdgeInsets.fromLTRB(16, 16, 16, bottomPadding),
         children: [
-          ProfileIdentitySection(
-            fallbackAccountId: settings.userId,
-          ),
+          ProfileIdentitySection(fallbackAccountId: settings.userId),
           const SizedBox(height: 16),
-          LanguageSettingsSection(
-            settings: settings,
-            isSaving: isSaving,
-          ),
+          LanguageSettingsSection(settings: settings, isSaving: isSaving),
           const SizedBox(height: 16),
           SettingsSection(
             title: context.l10n.guidedTourSettingsSectionTitle,
@@ -127,23 +117,17 @@ class _SettingsForm extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          CurrencySettingsSection(
-            settings: settings,
-            isSaving: isSaving,
-          ),
+          CurrencySettingsSection(settings: settings, isSaving: isSaving),
           const SizedBox(height: 16),
-          PaymentSettingsSection(
-            settings: settings,
-            isSaving: isSaving,
-          ),
+          PaymentSettingsSection(settings: settings, isSaving: isSaving),
           const SizedBox(height: 16),
           NotificationSettingsSection(
             settings: settings.notificationSettings,
             isSaving: isSaving,
             onChanged: (notificationSettings) async {
-              context
-                  .read<SettingsCubit>()
-                  .saveNotificationSettings(notificationSettings);
+              context.read<SettingsCubit>().saveNotificationSettings(
+                notificationSettings,
+              );
               await NotificationScheduler.instance.syncDailyReminder(
                 settings: settings.copyWith(
                   notificationSettings: notificationSettings,
@@ -242,9 +226,7 @@ class _SettingsError extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.outline,
-              ),
+              style: TextStyle(color: Theme.of(context).colorScheme.outline),
             ),
             const SizedBox(height: 16),
             TextButton(

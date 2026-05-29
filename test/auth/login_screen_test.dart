@@ -8,7 +8,7 @@ void main() {
       'lib/screens/auth/views/login_screen.dart',
     ).readAsStringSync();
 
-    expect(source, contains('Continue with Google'));
+    expect(source, contains('context.l10n.continueWithGoogle'));
     expect(source, contains('AuthGoogleSignInRequested'));
     expect(source, contains('_submitGoogleSignIn'));
   });

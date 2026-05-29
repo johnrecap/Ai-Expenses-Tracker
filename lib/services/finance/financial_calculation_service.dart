@@ -35,9 +35,10 @@ class FinancialCalculationService {
       }
 
       final sourceCurrency = conversion.sourceCurrency;
-      final rate = sourceCurrency == baseCurrency
-          ? 1.0
-          : _validRate(settings.conversionRates[sourceCurrency]);
+      final rate = conversion.rate ??
+          (sourceCurrency == baseCurrency
+              ? 1.0
+              : _validRate(settings.conversionRates[sourceCurrency]));
       if (rate == null) {
         unconvertedExpenses.add(expense);
         unconvertedCurrencies.add(sourceCurrency);
@@ -55,7 +56,8 @@ class FinancialCalculationService {
           baseCurrency: baseCurrency,
           convertedAmount: conversion.convertedAmount,
           rate: rate,
-          rateUpdatedAt: settings.exchangeRatesUpdatedAt,
+          rateUpdatedAt:
+              conversion.rateUpdatedAt ?? settings.exchangeRatesUpdatedAt,
         ),
       );
     }

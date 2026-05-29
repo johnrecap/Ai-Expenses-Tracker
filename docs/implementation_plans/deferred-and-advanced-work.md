@@ -13,6 +13,10 @@ this file and mention the relevant items briefly so they are not forgotten.
 - Run production-device QA on a clean Android device.
 - Deploy Firestore rules/indexes and run a Firebase smoke test with a real user.
 - Rotate any previously exposed Gemini/provider keys before public release.
+- Upgrade Android build tooling for Flutter 3.44+ compatibility: Gradle wrapper
+  8.14+, Android Gradle Plugin 8.11.1+, Kotlin Gradle Plugin 2.2.20+, and
+  migrate the app/plugin setup toward Flutter built-in Kotlin before those
+  warnings become build failures.
 
 ## Firebase And Backend-Like Setup
 
@@ -48,8 +52,9 @@ this file and mention the relevant items briefly so they are not forgotten.
   environments and store verification reports before any pilot cutover.
 - Apply pulled VPS sync changes back into local repositories, not just push
   pending local writes, before multi-device pilot testing.
-- Add explicit VPS sync UI states for syncing and failed retry conditions beyond
-  the current pending/synced expense status.
+- Persist the VPS local sync queue across app process restarts with durable
+  Drift-backed status metadata; Plan 086 added reasoned in-memory status but
+  restart recovery still depends on the broader local database cutover.
 
 ## AI Advanced Reliability
 
@@ -57,6 +62,9 @@ this file and mention the relevant items briefly so they are not forgotten.
 - Test Arabic parse, receipt extraction, advice quota, provider failure, and
   manual fallback on device.
 - Add end-to-end widget/repository coverage for AI suggested category creation.
+- Keep receipt/Home/Add Expense AI preview defaults aligned so unclear
+  date/payment/currency use the user's safe defaults consistently, while amount
+  and category still require review when not inferable.
 - Create a dedicated attachment storage plan for receipt history, searchable
   attachments, cloud upload policy, Firestore rules, and device QA.
 - Add monitoring/alerts for Worker quota, provider errors, and malformed output.
@@ -91,6 +99,10 @@ this file and mention the relevant items briefly so they are not forgotten.
   Export, Saving Goals, AI Assistant, and Free/Premium, but `flutter gen-l10n`,
   widget tests, small-screen RTL device QA, and Arabic PDF visual inspection
   remain blocked for the parent verification pass.
+- Plan 088 completed another P1 localization pass for Auth, Budget, App Lock,
+  Home/Engagement prompts, and rewarded AI credit copy. Still run device RTL QA
+  and continue lower-priority localization for any provider/service messages
+  that are intentionally preserved until they reach a UI mapping boundary.
 
 ## Observability And Operations
 
@@ -122,12 +134,14 @@ this file and mention the relevant items briefly so they are not forgotten.
   Keep future guided-tour regressions in a new Spec Kit plan.
 - Fix local Dart telemetry file permissions if formatter/analyzer commands keep
   exiting after successful work with
-  `AppData\Roaming\.dart-tool\dart-flutter-telemetry-session.json` access denied.
-- Resolve the local Flutter SDK cache write restriction before relying on
-  unrestricted sandbox verification commands. In this environment,
-  `C:\flutter\bin\cache\flutter.bat.lock` and `lockfile` are not writable from
-  the sandbox, so raw `flutter.bat`/`dart.bat` commands can hang unless run
-  through an approved shell or after an explicitly approved machine ACL repair.
+  `AppData\Roaming\.dart-tool\dart-flutter-telemetry-session.json` access denied;
+  direct Dart CLI commands should use `dart --suppress-analytics <command>` until
+  the local telemetry files are repaired.
+- Keep Flutter verification/build commands running outside the Codex sandbox via
+  the approved `C:\flutter\bin\flutter.bat` command path. Sandboxed Flutter
+  commands can hang while writing SDK cache/lock state and leave orphaned
+  `git.exe` processes, while the same command outside the sandbox completes
+  normally.
 - When isolating a single Flutter test from PowerShell, pass long `--plain-name`
   values with safe argument quoting; otherwise `flutter.bat` can treat each word
   as a separate test file and leave misleading hanging runner processes.
@@ -152,6 +166,8 @@ this file and mention the relevant items briefly so they are not forgotten.
 - Run manual real-device QA for the guided product tour on Android after a clean
   install, including skip, complete, replay from Settings, back button, target
   scrolling after Plan 048, and Arabic RTL small-screen placement.
+- Capture Plan 089 guided-tour visual QA screenshots in Arabic and English on a
+  real Android device after the connector/card polish is installed.
 - Add deterministic local nudges and challenges without consuming AI quota.
 - Add a safe in-app feedback/support destination before public launch.
 - Execute expense list scaling from `specs/051-expense-list-scaling` after
@@ -163,6 +179,11 @@ this file and mention the relevant items briefly so they are not forgotten.
 - Add exchange-rate provider selection, refresh cadence controls, transaction-
   date historical rates, and offline freshness indicators after the live-rate
   MVP is stable.
+- Add an explicit legacy expense snapshot backfill/migration flow so pre-Plan
+  084 mixed-currency expenses can be converted with auditable historical
+  evidence instead of runtime fallback rates.
+- Recompute AI command money-edit snapshots with loaded settings before
+  allowing AI amount/currency/date updates to persist.
 - Complete wallet and transfer UI surfaces before treating Plan 075 as a
   user-facing feature: wallets list, Add/Edit Expense wallet selector, transfer
   form, Expenses wallet filter, and Reports transfer exclusion fixtures.

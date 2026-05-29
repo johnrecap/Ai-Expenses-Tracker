@@ -33,6 +33,15 @@ export const geminiResponseSchema = {
     paymentMethod: { type: "STRING", enum: [...paymentMethods] },
     currency: { type: "STRING" },
     description: { type: "STRING" },
+    merchant: { type: "STRING" },
+    tags: {
+      type: "ARRAY",
+      items: { type: "STRING" },
+    },
+    missingFields: {
+      type: "ARRAY",
+      items: { type: "STRING" },
+    },
     categoryConfidence: { type: "NUMBER" },
     categoryReason: { type: "STRING" },
     suggestedCategoryName: { type: "STRING" },
@@ -258,9 +267,10 @@ function normalizeAddExpenseResponse(
 
   normalized.amount = normalizeAmount(normalized.amount) ?? inferAmount(input);
 
-  const normalizedDate =
-    normalizeDate(normalized.date, context.now) ?? inferDate(input, context.now);
-  if (normalizedDate) normalized.date = normalizedDate;
+  normalized.date =
+    normalizeDate(normalized.date, context.now) ??
+    inferDate(input, context.now) ??
+    formatDate(parseNow(context.now));
 
   normalized.paymentMethod =
     normalizePaymentMethod(normalized.paymentMethod) ??
@@ -271,7 +281,7 @@ function normalizeAddExpenseResponse(
     normalizeCurrency(normalized.currency) ??
     inferCurrency(input) ??
     normalizeCurrency(context.defaultCurrency) ??
-    context.defaultCurrency;
+    "EGP";
 
   const category = resolveCategory(normalized, input, context.categories ?? []);
   if (category.categoryId) normalized.categoryId = category.categoryId;
@@ -294,17 +304,15 @@ function normalizeAddExpenseResponse(
     normalized.suggestedCategoryColor = categoryColor(category.key);
   }
 
-  if (!normalized.description || normalized.description.trim() === "") {
-    normalized.description = buildDescription(normalized.category, context.locale);
-  }
-
   const missing = missingAddExpenseFields(normalized);
+  normalized.missingFields = missing;
   if (missing.length > 0) {
     normalized.confidence = Math.min(normalized.confidence, 0.5);
-    normalized.clarifyingQuestion =
-      normalized.clarifyingQuestion ?? buildClarifyingQuestion(missing, context.locale);
+    normalized.clarifyingQuestion = undefined;
   }
 
+  void buildDescription;
+  void buildClarifyingQuestion;
   return normalized;
 }
 
@@ -367,7 +375,7 @@ function normalizeDate(
   return formatDate(parsed);
 }
 
-function inferDate(input: string, nowValue: string | undefined): string {
+function inferDate(input: string, nowValue: string | undefined): string | undefined {
   const text = normalizeText(input);
   const now = parseNow(nowValue);
   if (containsAny(text, ["امبارح", "امس", "أمس", "yesterday"])) {
@@ -382,7 +390,7 @@ function inferDate(input: string, nowValue: string | undefined): string {
   }
   const isoMatch = normalizeDigits(input).match(/\b\d{4}-\d{2}-\d{2}\b/);
   if (isoMatch?.[0]) return isoMatch[0];
-  return formatDate(now);
+  return undefined;
 }
 
 function parseNow(value: string | undefined): Date {
@@ -618,8 +626,17 @@ function categoryColor(key: string | undefined): string {
 }
 
 function missingAddExpenseFields(response: AiStructuredResponse): string[] {
-  void response;
-  return [];
+  const missing: string[] = [];
+  if (typeof response.amount !== "number" || response.amount <= 0) {
+    missing.push("amount");
+  }
+  if (!safeString(response.categoryId) && !safeString(response.category)) {
+    missing.push("category");
+  }
+  if (!safeString(response.date)) missing.push("date");
+  if (!safeString(response.paymentMethod)) missing.push("payment method");
+  if (!safeString(response.currency)) missing.push("currency");
+  return missing;
 }
 
 function buildDescription(

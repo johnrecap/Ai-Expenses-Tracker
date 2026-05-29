@@ -18,6 +18,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
+  String get send => 'Send';
+
+  @override
   String get delete => 'Delete';
 
   @override
@@ -28,6 +31,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get syncQueued => 'Waiting to sync';
+
+  @override
+  String get syncSyncing => 'Syncing';
+
+  @override
+  String get syncFailed => 'Sync failed';
+
+  @override
+  String get syncPendingOffline => 'Will sync when internet returns.';
+
+  @override
+  String get syncPendingAuth => 'Sign in again to finish syncing.';
+
+  @override
+  String get syncPendingServer =>
+      'Server sync is unavailable. Retry when it recovers.';
+
+  @override
+  String get syncPendingValidation =>
+      'Some changes need review before they can sync.';
+
+  @override
+  String get syncPendingQueued => 'Queued for sync.';
+
+  @override
+  String get syncPendingUnknown => 'Sync is waiting. Retry in a moment.';
+
+  @override
+  String syncPendingCount(int count, String status) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count expenses are $status',
+      one: '1 expense is $status',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get reset => 'Reset';
@@ -87,6 +130,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editExpense => 'Edit expense';
+
+  @override
+  String get quickAmountAdjustment => 'Quick amount adjustment';
+
+  @override
+  String get adjustmentAmount => 'Adjustment amount';
+
+  @override
+  String get addToAmount => 'Add';
+
+  @override
+  String get subtractFromAmount => 'Subtract';
+
+  @override
+  String get invalidExpenseAdjustment =>
+      'Enter an adjustment that keeps the final amount greater than zero.';
 
   @override
   String get expenseUpdated => 'Expense updated';
@@ -258,8 +317,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get possibleDuplicateExpense => 'Possible duplicate expense';
 
   @override
-  String possibleDuplicateExpenseMessage(String amount, String currency,
-      String category, String date, String reasons) {
+  String possibleDuplicateExpenseMessage(
+    String amount,
+    String currency,
+    String category,
+    String date,
+    String reasons,
+  ) {
     return 'A similar expense already exists: $amount $currency, $category, $date. Reasons: $reasons. Save anyway?';
   }
 
@@ -433,6 +497,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountEmailInvalid => 'Enter a valid email address.';
+
+  @override
+  String get emailLabel => 'Email';
+
+  @override
+  String get passwordLabel => 'Password';
+
+  @override
+  String get confirmPasswordLabel => 'Confirm password';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get createAccount => 'Create account';
+
+  @override
+  String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get enterEmailAddress => 'Enter your email address.';
+
+  @override
+  String get enterPassword => 'Enter your password.';
+
+  @override
+  String get passwordMinLength => 'Password must be at least 6 characters.';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match.';
 
   @override
   String get accountEmailUpdated => 'Email updated.';
@@ -834,6 +934,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get useBiometrics => 'Use biometrics';
 
   @override
+  String get failedToSavePin => 'Failed to save PIN.';
+
+  @override
+  String get failedToChangePin => 'Failed to change PIN.';
+
+  @override
+  String get failedToDisableAppLock => 'Failed to disable app lock.';
+
+  @override
+  String get biometricAuthenticationUnavailable =>
+      'Biometric authentication is not available.';
+
+  @override
+  String get failedToUpdateBiometricSetting =>
+      'Failed to update biometric setting.';
+
+  @override
+  String get incorrectPin => 'Incorrect PIN.';
+
+  @override
+  String get failedToUnlock => 'Failed to unlock.';
+
+  @override
+  String get usePinToUnlock => 'Use PIN to unlock.';
+
+  @override
+  String get failedToLoadAppLockSettings => 'Failed to load app lock settings.';
+
+  @override
   String get biometricUnlock => 'Biometric unlock';
 
   @override
@@ -843,6 +972,109 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get biometricUnlockUnavailableDescription =>
       'Not available on this device.';
+
+  @override
+  String get watchAdForExtraAiUse => 'Watch ad for one extra AI use';
+
+  @override
+  String get rewardUnavailable => 'Reward is unavailable right now.';
+
+  @override
+  String get extraAiUseAdded => 'One extra AI use was added.';
+
+  @override
+  String get retentionStartSetupTitle => 'Start your setup';
+
+  @override
+  String get retentionStartSetupMessage =>
+      'Add one expense, create categories, then set a budget.';
+
+  @override
+  String get retentionKeepStreakTitle => 'Keep your streak';
+
+  @override
+  String get retentionStartStreakMessage =>
+      'Log today once to start a tracking streak.';
+
+  @override
+  String retentionKeepStreakMessage(int days) {
+    return 'Log today to keep your $days-day streak.';
+  }
+
+  @override
+  String get retentionLogExpenseAction => 'Log expense';
+
+  @override
+  String get weeklyCheckIn => 'Weekly check-in';
+
+  @override
+  String get viewDigest => 'View digest';
+
+  @override
+  String get retentionBudgetReviewTitle => 'Budget review';
+
+  @override
+  String get retentionBudgetExceededMessage =>
+      'Your monthly budget is over target. Review recent spend.';
+
+  @override
+  String get retentionReviewBudgetAction => 'Review budget';
+
+  @override
+  String get retentionBudgetNudgeTitle => 'Budget nudge';
+
+  @override
+  String get retentionBudgetNearLimitMessage =>
+      'You are near your budget limit. Check your top category.';
+
+  @override
+  String get retentionOpenBudgetAction => 'Open budget';
+
+  @override
+  String get retentionSetTargetTitle => 'Set a simple target';
+
+  @override
+  String get retentionSetTargetMessage =>
+      'Add a monthly budget to make progress easier to track.';
+
+  @override
+  String get retentionSetBudgetAction => 'Set budget';
+
+  @override
+  String get retentionThreeDayChallengeTitle => 'Three-day challenge';
+
+  @override
+  String get retentionThreeDayChallengeMessage =>
+      'Keep tracking for the rest of the week.';
+
+  @override
+  String get continueAction => 'Continue';
+
+  @override
+  String get streak => 'Streak';
+
+  @override
+  String get health => 'Health';
+
+  @override
+  String get trackedToday => 'Tracked today';
+
+  @override
+  String get checkIn => 'Check in';
+
+  @override
+  String get needsData => 'Needs data';
+
+  @override
+  String dayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get aiUsageSettingsTitle => 'AI Usage';
@@ -1786,7 +2018,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String aiAdviceEvidenceTopCategory(
-      String category, String amount, String currency) {
+    String category,
+    String amount,
+    String currency,
+  ) {
     return 'Top category: $category ($amount $currency)';
   }
 
@@ -1997,6 +2232,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get monthlyBudgetTitle => 'Monthly Budget';
 
   @override
+  String get budgetAmount => 'Budget amount';
+
+  @override
+  String get saveBudget => 'Save Budget';
+
+  @override
+  String get enterValidBudgetAmount => 'Enter a valid budget amount.';
+
+  @override
+  String get warningThresholdRange =>
+      'Warning threshold must be between 1 and 100.';
+
+  @override
+  String get failedToLoadBudget => 'Failed to load budget.';
+
+  @override
+  String get failedToSaveBudget => 'Failed to save budget.';
+
+  @override
   String get budgetSetAction => 'Set';
 
   @override
@@ -2110,7 +2364,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String categoryBudgetRecommendationSubtitle(
-      String amount, String confidence) {
+    String amount,
+    String confidence,
+  ) {
     return '$amount - $confidence confidence';
   }
 
@@ -2173,10 +2429,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterValidBudgetLimit => 'Enter a valid budget limit.';
 
   @override
-  String get warningThresholdRange =>
-      'Warning threshold must be between 1 and 100.';
-
-  @override
   String get manageRecurringExpenses => 'Manage recurring expenses';
 
   @override
@@ -2221,7 +2473,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String subscriptionNextDue(
-      String frequency, String paymentMethod, String date) {
+    String frequency,
+    String paymentMethod,
+    String date,
+  ) {
     return '$frequency - $paymentMethod - Next $date';
   }
 

@@ -48,10 +48,7 @@ class AiSettingsSection extends StatelessWidget {
 }
 
 class _UsageTile extends StatelessWidget {
-  const _UsageTile({
-    required this.label,
-    required this.usage,
-  });
+  const _UsageTile({required this.label, required this.usage});
 
   final String label;
   final AiQuotaUsage usage;

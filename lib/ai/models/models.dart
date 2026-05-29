@@ -1,6 +1,7 @@
 export 'ai_action_preview.dart';
 export 'ai_advice_payload.dart';
 export 'ai_category_resolution.dart';
+export 'ai_expense_draft.dart';
 export 'ai_financial_advice_payload.dart';
 export 'ai_expense_payload.dart';
 export 'ai_intent.dart';

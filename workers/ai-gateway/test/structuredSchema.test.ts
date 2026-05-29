@@ -29,6 +29,7 @@ describe("structured schema normalization", () => {
     expect(result.categoryConfidence).toBeGreaterThan(0.9);
     expect(result.categoryReason).toContain("Matched");
     expect(result.confidence).toBe(0.92);
+    expect(result.missingFields).toEqual([]);
     expect(result.needsConfirmation).toBe(true);
   });
 
@@ -76,10 +77,14 @@ describe("structured schema normalization", () => {
       },
     );
 
-    expect(result.confidence).toBe(0.91);
+    expect(result.confidence).toBe(0.5);
     expect(result.clarifyingQuestion).toBeUndefined();
     expect(result.paymentMethod).toBe("Cash");
     expect(result.date).toBe("2026-05-17");
+    expect(result.currency).toBe("EGP");
+    expect(result.missingFields).toEqual(
+      expect.arrayContaining(["category"]),
+    );
   });
 
   test("infers reported English expense sentence with safe defaults", () => {
@@ -107,6 +112,8 @@ describe("structured schema normalization", () => {
     expect(result.categoryId).toBe("food");
     expect(result.category).toBe("Food");
     expect(result.clarifyingQuestion).toBeUndefined();
+    expect(result.confidence).toBe(0.92);
+    expect(result.missingFields).toEqual([]);
   });
 
   test("does not ask for omitted payment date or currency", () => {
@@ -132,6 +139,7 @@ describe("structured schema normalization", () => {
     expect(result.paymentMethod).toBe("Cash");
     expect(result.currency).toBe("EGP");
     expect(result.clarifyingQuestion).toBeUndefined();
+    expect(result.missingFields).toEqual([]);
   });
 
   test("does not ask when amount is missing from an editable draft", () => {
@@ -151,8 +159,11 @@ describe("structured schema normalization", () => {
     );
 
     expect(result.amount).toBeUndefined();
-    expect(result.confidence).toBe(0.91);
+    expect(result.confidence).toBe(0.5);
     expect(result.clarifyingQuestion).toBeUndefined();
+    expect(result.missingFields).toEqual(
+      expect.arrayContaining(["amount"]),
+    );
   });
 
   test("does not ask when category is missing from an editable draft", () => {
@@ -173,7 +184,13 @@ describe("structured schema normalization", () => {
     );
 
     expect(result.category).toBeUndefined();
-    expect(result.confidence).toBe(0.91);
+    expect(result.confidence).toBe(0.5);
     expect(result.clarifyingQuestion).toBeUndefined();
+    expect(result.date).toBe("2026-05-18");
+    expect(result.paymentMethod).toBe("Cash");
+    expect(result.currency).toBe("EGP");
+    expect(result.missingFields).toEqual(
+      expect.arrayContaining(["category"]),
+    );
   });
 });

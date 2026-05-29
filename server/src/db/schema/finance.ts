@@ -193,6 +193,7 @@ export const expenses = pgTable(
       scale: 10,
     }),
     conversionRateDate: date("conversion_rate_date"),
+    moneySnapshot: jsonb("money_snapshot").$type<Record<string, unknown>>(),
     description: text("description").notNull().default(""),
     merchant: text("merchant"),
     tags: jsonb("tags").$type<string[]>().notNull().default([]),
@@ -344,6 +345,7 @@ export const syncChanges = pgTable(
     userId: userReference(),
     entityType: text("entity_type").notNull(),
     entityId: text("entity_id").notNull(),
+    clientChangeId: text("client_change_id"),
     operation: text("operation").notNull(),
     data: jsonb("data").$type<Record<string, unknown>>().notNull().default({}),
     clientUpdatedAt: timestamp("client_updated_at", { withTimezone: true }),
@@ -368,5 +370,7 @@ export const syncChanges = pgTable(
       table.entityType,
       table.entityId,
     ),
+    clientChangeUnique: uniqueIndex("sync_changes_user_client_change_unique")
+      .on(table.userId, table.changedByDeviceId, table.clientChangeId),
   }),
 );

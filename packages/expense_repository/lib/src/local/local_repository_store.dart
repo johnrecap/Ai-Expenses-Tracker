@@ -277,6 +277,27 @@ class LocalRepositoryStore {
     emitPendingChanges();
   }
 
+  void markSyncChangesUpdated(Iterable<SyncChange> changes) {
+    var expenseChanged = false;
+    for (final change in changes) {
+      if (change.entityType != SyncEntityType.expense ||
+          change.operation != SyncOperation.upsert) {
+        continue;
+      }
+      final expense = expenses[change.entityId];
+      if (expense == null) continue;
+      expenses[change.entityId] = expense.withSyncStatus(
+        change.status,
+        reason: change.reason,
+      );
+      expenseChanged = true;
+    }
+    if (expenseChanged) {
+      emitExpenses();
+    }
+    emitPendingChanges();
+  }
+
   void emitPendingChanges() {
     if (!_pendingChangesController.isClosed) {
       _pendingChangesController.add(List.unmodifiable(pendingChanges));

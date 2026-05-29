@@ -96,6 +96,9 @@ class AiResponseParser {
       paymentMethod: _parsePaymentMethod(_readString(json['paymentMethod'])),
       currency: _parseCurrency(_readString(json['currency'])),
       description: _readString(json['description']),
+      merchant: _readString(json['merchant']),
+      tags: _parseTags(json['tags']),
+      missingFields: _parseStringList(json['missingFields']),
       categoryResolution: _parseCategoryResolution(json),
     );
   }
@@ -113,6 +116,9 @@ class AiResponseParser {
       currency: _parseCurrency(_readString(json['currency'])),
       description:
           _readString(json['description']) ?? _readString(json['query']),
+      merchant: _readString(json['merchant']),
+      tags: _parseTags(json['tags']),
+      missingFields: _parseStringList(json['missingFields']),
       categoryResolution: _parseCategoryResolution(json),
     );
   }
@@ -187,6 +193,32 @@ class AiResponseParser {
     if (value == null) return null;
     final text = value.toString().trim();
     return text.isEmpty ? null : text;
+  }
+
+  static List<String> _parseTags(dynamic value) {
+    final rawTags = _parseStringList(value);
+    final seen = <String>{};
+    final tags = <String>[];
+    for (final rawTag in rawTags) {
+      for (final part in rawTag.split(',')) {
+        final tag = part.trim();
+        if (tag.isEmpty) continue;
+        if (seen.add(tag.toLowerCase())) tags.add(tag);
+      }
+    }
+    return tags;
+  }
+
+  static List<String> _parseStringList(dynamic value) {
+    if (value is List) {
+      return value
+          .map(_readString)
+          .whereType<String>()
+          .where((text) => text.trim().isNotEmpty)
+          .toList(growable: false);
+    }
+    final text = _readString(value);
+    return text == null ? const [] : [text];
   }
 
   static DateTime? _parseDate(String? value, {required DateTime now}) {

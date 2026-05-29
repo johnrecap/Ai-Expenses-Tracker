@@ -4,6 +4,7 @@ export 'category_budget_entity.dart';
 export 'category_alias_entity.dart';
 export 'category_entity.dart';
 export 'expense_entity.dart';
+export 'money_snapshot_entity.dart';
 export 'recurring_expense_entity.dart';
 export 'saving_goal_entity.dart';
 export 'transfer_entity.dart';

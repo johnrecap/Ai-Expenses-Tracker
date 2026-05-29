@@ -15,10 +15,7 @@ final class ReportLoaded extends ReportState {
   final ExpenseReport report;
   final ReportRangeType selectedRange;
 
-  const ReportLoaded({
-    required this.report,
-    required this.selectedRange,
-  });
+  const ReportLoaded({required this.report, required this.selectedRange});
 
   @override
   List<Object?> get props => [report, selectedRange];
@@ -28,10 +25,7 @@ final class ReportEmpty extends ReportState {
   final ExpenseReport report;
   final ReportRangeType selectedRange;
 
-  const ReportEmpty({
-    required this.report,
-    required this.selectedRange,
-  });
+  const ReportEmpty({required this.report, required this.selectedRange});
 
   @override
   List<Object?> get props => [report, selectedRange];

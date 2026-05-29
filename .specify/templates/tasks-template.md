@@ -6,7 +6,8 @@ description: "Task list template for feature implementation"
 # Tasks: [FEATURE NAME]
 
 **Input**: Design documents from `/specs/[###-feature-name]/`
-**Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
+**Prerequisites**: plan.md (required), spec.md (required for user stories),
+completed clarification gate in spec.md, research.md, data-model.md, contracts/
 
 **Constitution Requirement**: Tasks for executable work MUST be generated from
 the Spec Kit artifacts in `/specs/[###-feature-name]/`. Do not use standalone

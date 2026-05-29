@@ -8,6 +8,7 @@ import 'package:expenses_tracker/screens/expenses/widgets/expense_filter_sheet.d
 import 'package:expenses_tracker/screens/expenses/widgets/expense_search_bar.dart';
 import 'package:expenses_tracker/screens/home/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 import 'package:expenses_tracker/screens/settings/utils/currency_formatter.dart';
+import 'package:expenses_tracker/widgets/design_system.dart';
 import 'package:expenses_tracker/widgets/sync_status_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -117,8 +118,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     children: [
                       ExpenseSearchBar(
                         controller: _searchController,
-                        onChanged:
-                            context.read<ExpenseFilterCubit>().updateQuery,
+                        onChanged: context
+                            .read<ExpenseFilterCubit>()
+                            .updateQuery,
                         onClear: () {
                           _searchController.clear();
                           context.read<ExpenseFilterCubit>().updateQuery('');
@@ -130,8 +132,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            context.l10n
-                                .resultsCount(state.filteredExpenses.length),
+                            context.l10n.resultsCount(
+                              state.filteredExpenses.length,
+                            ),
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.outline,
                               fontWeight: FontWeight.w600,
@@ -172,10 +175,10 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                           child: Text(
                             state.filter.startDate == null &&
                                     state.filter.endDate == null
-                                ? context.l10n
-                                    .expenseResultsLimitedToLoadedHistory
-                                : context.l10n
-                                    .expenseResultsLimitedToDateRange,
+                                ? context
+                                      .l10n
+                                      .expenseResultsLimitedToLoadedHistory
+                                : context.l10n.expenseResultsLimitedToDateRange,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.outline,
                               fontSize: 12,
@@ -213,13 +216,11 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                               )
                             : ListView.separated(
                                 controller: _scrollController,
-                                itemCount:
-                                    state.filteredExpenses.length + 1,
+                                itemCount: state.filteredExpenses.length + 1,
                                 separatorBuilder: (_, __) =>
                                     const SizedBox(height: 12),
                                 itemBuilder: (context, index) {
-                                  if (index ==
-                                      state.filteredExpenses.length) {
+                                  if (index == state.filteredExpenses.length) {
                                     return _LoadMoreFooter(
                                       hasMore: _hasMore,
                                       isLoading: _isLoadingMore,
@@ -259,10 +260,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     final updatedFilter = await showModalBottomSheet<ExpenseFilter>(
       context: context,
       isScrollControlled: true,
-      builder: (_) => ExpenseFilterSheet(
-        initialFilter: filter,
-        categories: categories,
-      ),
+      builder: (_) =>
+          ExpenseFilterSheet(initialFilter: filter, categories: categories),
     );
 
     if (updatedFilter == null || !context.mounted) return;
@@ -284,17 +283,14 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     final cubit = context.read<ExpenseFilterCubit>();
     try {
       final page = await context.read<ExpenseRepository>().getExpensePage(
-            filter: filter,
-          );
+        filter: filter,
+      );
       if (!context.mounted) return;
       _nextCursor = page.nextCursor;
       _hasMore = page.hasMore;
       _loadMoreFailed = false;
       cubit
-        ..replaceExpenses(
-          page.expenses,
-          hasMoreLoadedScope: page.hasMore,
-        )
+        ..replaceExpenses(page.expenses, hasMoreLoadedScope: page.hasMore)
         ..updateFilter(filter);
     } catch (_) {
       cubit.updateFilter(filter);
@@ -320,19 +316,16 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     final cubit = context.read<ExpenseFilterCubit>();
     try {
       final page = await context.read<ExpenseRepository>().getExpensePage(
-            startAfter: _nextCursor,
-            filter: cubit.state.filter,
-          );
+        startAfter: _nextCursor,
+        filter: cubit.state.filter,
+      );
       if (!context.mounted) return;
       setState(() {
         _nextCursor = page.nextCursor;
         _hasMore = page.hasMore;
         _isLoadingMore = false;
       });
-      cubit.appendExpenses(
-        page.expenses,
-        hasMoreLoadedScope: page.hasMore,
-      );
+      cubit.appendExpenses(page.expenses, hasMoreLoadedScope: page.hasMore);
     } catch (_) {
       if (!context.mounted) return;
       setState(() {
@@ -361,8 +354,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
       final id = expense.categoryId.isNotEmpty
           ? expense.categoryId
           : category.categoryId.isNotEmpty
-              ? category.categoryId
-              : expense.categoryName;
+          ? category.categoryId
+          : expense.categoryName;
       if (id.isEmpty || categoriesById.containsKey(id)) continue;
       categoriesById[id] = Category(
         categoryId: id,
@@ -373,8 +366,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
         icon: expense.categoryIcon.isNotEmpty
             ? expense.categoryIcon
             : category.icon,
-        color:
-            expense.categoryColor != 0 ? expense.categoryColor : category.color,
+        color: expense.categoryColor != 0
+            ? expense.categoryColor
+            : category.color,
       );
     }
     return categoriesById.values.toList()
@@ -492,8 +486,8 @@ class _LoadMoreFooter extends StatelessWidget {
             hasError
                 ? context.l10n.retry
                 : isLoading
-                    ? context.l10n.loadingMoreExpenses
-                    : context.l10n.loadMoreExpenses,
+                ? context.l10n.loadingMoreExpenses
+                : context.l10n.loadMoreExpenses,
           ),
         ),
       ),
@@ -524,118 +518,68 @@ class _ExpenseTile extends StatelessWidget {
         ? expense.categoryColor
         : expense.category.color;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+    return TransactionRow(
+      title: categoryName,
+      subtitle: _subtitle(context),
+      amount: '',
+      currencyCode: '',
+      leading: CategoryIconView(
+        iconKey: categoryIcon,
+        backgroundColor: Color(categoryColor),
+        size: 44,
       ),
-      child: Row(
-        children: [
-          CategoryIconView(
-            iconKey: categoryIcon,
-            backgroundColor: Color(categoryColor),
-            size: 44,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  categoryName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: FontWeight.w700),
-                ),
-                if (expense.description.isNotEmpty)
-                  Text(
-                    expense.description,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
-                  ),
-                if (expense.merchant?.isNotEmpty == true)
-                  Text(
-                    expense.merchant!,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.outline,
-                      fontSize: 12,
-                    ),
-                  ),
-                if (expense.tags.isNotEmpty)
-                  Text(
-                    expense.tags.map((tag) => '#$tag').join(' '),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.outline,
-                      fontSize: 12,
-                    ),
-                  ),
-                Text(
-                  '${localizedPaymentMethod(context.l10n, expense.paymentMethod)} '
-                  '${context.l10n.expenseDetailsSeparator} '
-                  '${DateFormat('dd/MM/yyyy', Localizations.localeOf(context).toLanguageTag()).format(expense.date)}',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.outline,
-                    fontSize: 12,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                ExpenseSyncBadge(expense: expense),
-              ],
+      status: ExpenseSyncBadge(expense: expense),
+      trailing: MoneyAmountText(
+        formattedAmount: formatAmountWithCurrency(
+          expense.amount,
+          expense.currency,
+        ),
+        textAlign: TextAlign.end,
+      ),
+      action: PopupMenuButton<_ExpenseAction>(
+        tooltip: context.l10n.expenseActions,
+        onSelected: (action) {
+          switch (action) {
+            case _ExpenseAction.edit:
+              onEdit();
+              break;
+            case _ExpenseAction.delete:
+              onDelete();
+              break;
+          }
+        },
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: _ExpenseAction.edit,
+            child: ListTile(
+              leading: const Icon(Icons.edit),
+              title: Text(context.l10n.edit),
+              contentPadding: EdgeInsets.zero,
             ),
           ),
-          const SizedBox(width: 12),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 112),
-            child: Text(
-              formatAmountWithCurrency(expense.amount, expense.currency),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-              style: const TextStyle(fontWeight: FontWeight.w700),
+          PopupMenuItem(
+            value: _ExpenseAction.delete,
+            child: ListTile(
+              leading: const Icon(Icons.delete_outline),
+              title: Text(context.l10n.delete),
+              contentPadding: EdgeInsets.zero,
             ),
-          ),
-          PopupMenuButton<_ExpenseAction>(
-            tooltip: context.l10n.expenseActions,
-            onSelected: (action) {
-              switch (action) {
-                case _ExpenseAction.edit:
-                  onEdit();
-                  break;
-                case _ExpenseAction.delete:
-                  onDelete();
-                  break;
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: _ExpenseAction.edit,
-                child: ListTile(
-                  leading: const Icon(Icons.edit),
-                  title: Text(context.l10n.edit),
-                  contentPadding: EdgeInsets.zero,
-                ),
-              ),
-              PopupMenuItem(
-                value: _ExpenseAction.delete,
-                child: ListTile(
-                  leading: const Icon(Icons.delete_outline),
-                  title: Text(context.l10n.delete),
-                  contentPadding: EdgeInsets.zero,
-                ),
-              ),
-            ],
           ),
         ],
       ),
     );
+  }
+
+  String _subtitle(BuildContext context) {
+    final parts = <String>[
+      if (expense.description.isNotEmpty) expense.description,
+      if (expense.merchant?.isNotEmpty == true) expense.merchant!,
+      if (expense.tags.isNotEmpty) expense.tags.map((tag) => '#$tag').join(' '),
+      '${localizedPaymentMethod(context.l10n, expense.paymentMethod)} '
+          '${context.l10n.expenseDetailsSeparator} '
+          '${DateFormat('dd/MM/yyyy', Localizations.localeOf(context).toLanguageTag()).format(expense.date)}',
+    ];
+    return parts.join('\n');
   }
 }
 

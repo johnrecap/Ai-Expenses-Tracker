@@ -1,4 +1,5 @@
 import 'package:expenses_tracker/ai/models/models.dart';
+import 'package:expenses_tracker/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../cubit/monetization_cubit.dart';
@@ -7,13 +8,13 @@ class RewardedAiCreditButton extends StatefulWidget {
   const RewardedAiCreditButton({
     required this.cubit,
     required this.requestType,
-    this.label = 'Watch ad for one extra AI use',
+    this.label,
     super.key,
   });
 
   final MonetizationCubit cubit;
   final AiUsageRequestType requestType;
-  final String label;
+  final String? label;
 
   @override
   State<RewardedAiCreditButton> createState() => _RewardedAiCreditButtonState();
@@ -29,17 +30,17 @@ class _RewardedAiCreditButtonState extends State<RewardedAiCreditButton> {
           ? null
           : () async {
               setState(() => _loading = true);
+              final l10n = context.l10n;
               final messenger = ScaffoldMessenger.of(context);
-              final credit =
-                  await widget.cubit.requestRewardedCredit(widget.requestType);
+              final credit = await widget.cubit.requestRewardedCredit(
+                widget.requestType,
+              );
               if (!mounted) return;
               setState(() => _loading = false);
               final message = credit == null
-                  ? 'Reward is unavailable right now.'
-                  : 'One extra AI use was added.';
-              messenger.showSnackBar(
-                SnackBar(content: Text(message)),
-              );
+                  ? l10n.rewardUnavailable
+                  : l10n.extraAiUseAdded;
+              messenger.showSnackBar(SnackBar(content: Text(message)));
             },
       icon: _loading
           ? const SizedBox.square(
@@ -47,7 +48,7 @@ class _RewardedAiCreditButtonState extends State<RewardedAiCreditButton> {
               child: CircularProgressIndicator(strokeWidth: 2),
             )
           : const Icon(Icons.play_circle_outline),
-      label: Text(widget.label),
+      label: Text(widget.label ?? context.l10n.watchAdForExtraAiUse),
     );
   }
 }

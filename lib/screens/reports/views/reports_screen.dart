@@ -10,6 +10,8 @@ import 'package:expenses_tracker/screens/reports/widgets/category_breakdown_char
 import 'package:expenses_tracker/screens/reports/widgets/month_comparison_card.dart';
 import 'package:expenses_tracker/screens/reports/widgets/spending_bar_chart.dart';
 import 'package:expenses_tracker/screens/settings/utils/currency_formatter.dart';
+import 'package:expenses_tracker/theme/app_design_tokens.dart';
+import 'package:expenses_tracker/widgets/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,20 +19,13 @@ class ReportsScreen extends StatelessWidget {
   final List<Expense> expenses;
   final UserSettings? settings;
 
-  const ReportsScreen({
-    super.key,
-    required this.expenses,
-    this.settings,
-  });
+  const ReportsScreen({super.key, required this.expenses, this.settings});
 
   @override
   Widget build(BuildContext context) {
     final providedSettings = settings;
     if (providedSettings != null) {
-      return _ReportsScope(
-        expenses: expenses,
-        settings: providedSettings,
-      );
+      return _ReportsScope(expenses: expenses, settings: providedSettings);
     }
 
     try {
@@ -55,10 +50,7 @@ class ReportsScreen extends StatelessWidget {
 }
 
 class _ReportsScope extends StatelessWidget {
-  const _ReportsScope({
-    required this.expenses,
-    required this.settings,
-  });
+  const _ReportsScope({required this.expenses, required this.settings});
 
   final List<Expense> expenses;
   final UserSettings settings;
@@ -66,23 +58,15 @@ class _ReportsScope extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ReportCubit(
-        expenses: expenses,
-        settings: settings,
-      )..loadWeekly(),
-      child: _ReportsView(
-        expenses: expenses,
-        settings: settings,
-      ),
+      create: (_) =>
+          ReportCubit(expenses: expenses, settings: settings)..loadWeekly(),
+      child: _ReportsView(expenses: expenses, settings: settings),
     );
   }
 }
 
 class _ReportsView extends StatelessWidget {
-  const _ReportsView({
-    required this.expenses,
-    required this.settings,
-  });
+  const _ReportsView({required this.expenses, required this.settings});
 
   final List<Expense> expenses;
   final UserSettings settings;
@@ -97,8 +81,8 @@ class _ReportsView extends StatelessWidget {
             final selectedRange = state is ReportLoaded
                 ? state.selectedRange
                 : state is ReportEmpty
-                    ? state.selectedRange
-                    : ReportRangeType.weekly;
+                ? state.selectedRange
+                : ReportRangeType.weekly;
 
             return ListView(
               children: [
@@ -111,6 +95,7 @@ class _ReportsView extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 SegmentedButton<ReportRangeType>(
+                  style: _segmentedStyle(context),
                   segments: [
                     ButtonSegment(
                       value: ReportRangeType.weekly,
@@ -156,6 +141,24 @@ class _ReportsView extends StatelessWidget {
       ),
     );
   }
+
+  ButtonStyle _segmentedStyle(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return ButtonStyle(
+      side: const WidgetStatePropertyAll(BorderSide.none),
+      shape: const WidgetStatePropertyAll(
+        RoundedRectangleBorder(borderRadius: AppRadii.pill),
+      ),
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) return colorScheme.primary;
+        return colorScheme.surfaceContainerHighest;
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) return colorScheme.onPrimary;
+        return colorScheme.onSurface;
+      }),
+    );
+  }
 }
 
 class _ReportContent extends StatelessWidget {
@@ -182,25 +185,25 @@ class _ReportContent extends StatelessWidget {
           placementKey: AdPlacementKey.reportsBanner,
         ),
         const SizedBox(height: 16),
-        Container(
-          height: 260,
+        FinanceCard(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: isEmpty
-              ? Center(child: Text(context.l10n.noSpendingInThisPeriod))
-              : SpendingBarChart(
-                  buckets: report.buckets,
-                  onBucketTap: (bucket) => _openDrilldown(
-                    context,
-                    ReportDrilldownTarget.bucket(
-                      range: report.range,
-                      bucket: bucket,
+          child: SizedBox(
+            height: isEmpty ? 190 : 260,
+            child: isEmpty
+                ? _EmptyReportPlaceholder(
+                    message: context.l10n.noSpendingInThisPeriod,
+                  )
+                : SpendingBarChart(
+                    buckets: report.buckets,
+                    onBucketTap: (bucket) => _openDrilldown(
+                      context,
+                      ReportDrilldownTarget.bucket(
+                        range: report.range,
+                        bucket: bucket,
+                      ),
                     ),
                   ),
-                ),
+          ),
         ),
         const SizedBox(height: 16),
         MonthComparisonCard(report: report),
@@ -215,13 +218,9 @@ class _ReportContent extends StatelessWidget {
           ),
         ],
         const SizedBox(height: 16),
-        Container(
+        FinanceCard(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -247,16 +246,48 @@ class _ReportContent extends StatelessWidget {
     );
   }
 
-  void _openDrilldown(
-    BuildContext context,
-    ReportDrilldownTarget target,
-  ) {
+  void _openDrilldown(BuildContext context, ReportDrilldownTarget target) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => ExpensesScreen(
-          expenses: expenses,
-          initialFilter: target.filter,
-        ),
+        builder: (_) =>
+            ExpensesScreen(expenses: expenses, initialFilter: target.filter),
+      ),
+    );
+  }
+}
+
+class _EmptyReportPlaceholder extends StatelessWidget {
+  const _EmptyReportPlaceholder({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withValues(alpha: 0.10),
+              borderRadius: AppRadii.pill,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Icon(Icons.insights, color: colorScheme.primary, size: 30),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -270,21 +301,17 @@ class _SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topCategory = report.topCategory?.categoryName ?? context.l10n.none;
-    return Container(
+    return FinanceCard(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            formatAmountWithCurrency(report.total, report.currency),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          MoneyAmountText(
+            formattedAmount: formatAmountWithCurrency(
+              report.total,
+              report.currency,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -316,23 +343,16 @@ class _SummaryCard extends StatelessWidget {
 }
 
 class MonthlyStoryCard extends StatelessWidget {
-  const MonthlyStoryCard({
-    super.key,
-    required this.story,
-  });
+  const MonthlyStoryCard({super.key, required this.story});
 
   final MonthlyFinancialStory story;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Container(
+    return FinanceCard(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -391,9 +411,14 @@ class MonthlyStoryCard extends StatelessWidget {
   }
 
   String _summaryText(BuildContext context) {
-    final current = formatAmountWithCurrency(story.currentTotal, story.currency);
-    final previous =
-        formatAmountWithCurrency(story.previousTotal, story.currency);
+    final current = formatAmountWithCurrency(
+      story.currentTotal,
+      story.currency,
+    );
+    final previous = formatAmountWithCurrency(
+      story.previousTotal,
+      story.currency,
+    );
     switch (story.trend) {
       case MonthlyStoryTrend.empty:
         return context.l10n.monthlyStoryEmpty;

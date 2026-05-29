@@ -63,7 +63,7 @@ import 'app_localizations_en.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -86,16 +86,16 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ar'),
-    Locale('en')
+    Locale('en'),
   ];
 
   /// Application title shown to the platform and app shell.
@@ -115,6 +115,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
 
   /// No description provided for @delete.
   ///
@@ -139,6 +145,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// No description provided for @syncQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to sync'**
+  String get syncQueued;
+
+  /// No description provided for @syncSyncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing'**
+  String get syncSyncing;
+
+  /// No description provided for @syncFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed'**
+  String get syncFailed;
+
+  /// No description provided for @syncPendingOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Will sync when internet returns.'**
+  String get syncPendingOffline;
+
+  /// No description provided for @syncPendingAuth.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in again to finish syncing.'**
+  String get syncPendingAuth;
+
+  /// No description provided for @syncPendingServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Server sync is unavailable. Retry when it recovers.'**
+  String get syncPendingServer;
+
+  /// No description provided for @syncPendingValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Some changes need review before they can sync.'**
+  String get syncPendingValidation;
+
+  /// No description provided for @syncPendingQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued for sync.'**
+  String get syncPendingQueued;
+
+  /// No description provided for @syncPendingUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync is waiting. Retry in a moment.'**
+  String get syncPendingUnknown;
+
+  /// No description provided for @syncPendingCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 expense is {status}} other{{count} expenses are {status}}}'**
+  String syncPendingCount(int count, String status);
 
   /// No description provided for @reset.
   ///
@@ -235,6 +301,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit expense'**
   String get editExpense;
+
+  /// No description provided for @quickAmountAdjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick amount adjustment'**
+  String get quickAmountAdjustment;
+
+  /// No description provided for @adjustmentAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjustment amount'**
+  String get adjustmentAmount;
+
+  /// No description provided for @addToAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addToAmount;
+
+  /// No description provided for @subtractFromAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtract'**
+  String get subtractFromAmount;
+
+  /// No description provided for @invalidExpenseAdjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an adjustment that keeps the final amount greater than zero.'**
+  String get invalidExpenseAdjustment;
 
   /// No description provided for @expenseUpdated.
   ///
@@ -558,8 +654,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'A similar expense already exists: {amount} {currency}, {category}, {date}. Reasons: {reasons}. Save anyway?'**
-  String possibleDuplicateExpenseMessage(String amount, String currency,
-      String category, String date, String reasons);
+  String possibleDuplicateExpenseMessage(
+    String amount,
+    String currency,
+    String category,
+    String date,
+    String reasons,
+  );
 
   /// No description provided for @saveAnyway.
   ///
@@ -884,6 +985,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter a valid email address.'**
   String get accountEmailInvalid;
+
+  /// No description provided for @emailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailLabel;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get passwordLabel;
+
+  /// No description provided for @confirmPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get confirmPasswordLabel;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// No description provided for @register.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get register;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get createAccount;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPassword;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @enterEmailAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email address.'**
+  String get enterEmailAddress;
+
+  /// No description provided for @enterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password.'**
+  String get enterPassword;
+
+  /// No description provided for @passwordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters.'**
+  String get passwordMinLength;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match.'**
+  String get passwordsDoNotMatch;
 
   /// No description provided for @accountEmailUpdated.
   ///
@@ -1551,6 +1724,60 @@ abstract class AppLocalizations {
   /// **'Use biometrics'**
   String get useBiometrics;
 
+  /// No description provided for @failedToSavePin.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save PIN.'**
+  String get failedToSavePin;
+
+  /// No description provided for @failedToChangePin.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to change PIN.'**
+  String get failedToChangePin;
+
+  /// No description provided for @failedToDisableAppLock.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to disable app lock.'**
+  String get failedToDisableAppLock;
+
+  /// No description provided for @biometricAuthenticationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric authentication is not available.'**
+  String get biometricAuthenticationUnavailable;
+
+  /// No description provided for @failedToUpdateBiometricSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update biometric setting.'**
+  String get failedToUpdateBiometricSetting;
+
+  /// No description provided for @incorrectPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect PIN.'**
+  String get incorrectPin;
+
+  /// No description provided for @failedToUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to unlock.'**
+  String get failedToUnlock;
+
+  /// No description provided for @usePinToUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Use PIN to unlock.'**
+  String get usePinToUnlock;
+
+  /// No description provided for @failedToLoadAppLockSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load app lock settings.'**
+  String get failedToLoadAppLockSettings;
+
   /// No description provided for @biometricUnlock.
   ///
   /// In en, this message translates to:
@@ -1568,6 +1795,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not available on this device.'**
   String get biometricUnlockUnavailableDescription;
+
+  /// No description provided for @watchAdForExtraAiUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch ad for one extra AI use'**
+  String get watchAdForExtraAiUse;
+
+  /// No description provided for @rewardUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward is unavailable right now.'**
+  String get rewardUnavailable;
+
+  /// No description provided for @extraAiUseAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'One extra AI use was added.'**
+  String get extraAiUseAdded;
+
+  /// No description provided for @retentionStartSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your setup'**
+  String get retentionStartSetupTitle;
+
+  /// No description provided for @retentionStartSetupMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add one expense, create categories, then set a budget.'**
+  String get retentionStartSetupMessage;
+
+  /// No description provided for @retentionKeepStreakTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your streak'**
+  String get retentionKeepStreakTitle;
+
+  /// No description provided for @retentionStartStreakMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Log today once to start a tracking streak.'**
+  String get retentionStartStreakMessage;
+
+  /// No description provided for @retentionKeepStreakMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Log today to keep your {days}-day streak.'**
+  String retentionKeepStreakMessage(int days);
+
+  /// No description provided for @retentionLogExpenseAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Log expense'**
+  String get retentionLogExpenseAction;
+
+  /// No description provided for @weeklyCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly check-in'**
+  String get weeklyCheckIn;
+
+  /// No description provided for @viewDigest.
+  ///
+  /// In en, this message translates to:
+  /// **'View digest'**
+  String get viewDigest;
+
+  /// No description provided for @retentionBudgetReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget review'**
+  String get retentionBudgetReviewTitle;
+
+  /// No description provided for @retentionBudgetExceededMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your monthly budget is over target. Review recent spend.'**
+  String get retentionBudgetExceededMessage;
+
+  /// No description provided for @retentionReviewBudgetAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Review budget'**
+  String get retentionReviewBudgetAction;
+
+  /// No description provided for @retentionBudgetNudgeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget nudge'**
+  String get retentionBudgetNudgeTitle;
+
+  /// No description provided for @retentionBudgetNearLimitMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You are near your budget limit. Check your top category.'**
+  String get retentionBudgetNearLimitMessage;
+
+  /// No description provided for @retentionOpenBudgetAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Open budget'**
+  String get retentionOpenBudgetAction;
+
+  /// No description provided for @retentionSetTargetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a simple target'**
+  String get retentionSetTargetTitle;
+
+  /// No description provided for @retentionSetTargetMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a monthly budget to make progress easier to track.'**
+  String get retentionSetTargetMessage;
+
+  /// No description provided for @retentionSetBudgetAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Set budget'**
+  String get retentionSetBudgetAction;
+
+  /// No description provided for @retentionThreeDayChallengeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Three-day challenge'**
+  String get retentionThreeDayChallengeTitle;
+
+  /// No description provided for @retentionThreeDayChallengeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep tracking for the rest of the week.'**
+  String get retentionThreeDayChallengeMessage;
+
+  /// No description provided for @continueAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueAction;
+
+  /// No description provided for @streak.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get streak;
+
+  /// No description provided for @health.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get health;
+
+  /// No description provided for @trackedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracked today'**
+  String get trackedToday;
+
+  /// No description provided for @checkIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Check in'**
+  String get checkIn;
+
+  /// No description provided for @needsData.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs data'**
+  String get needsData;
+
+  /// No description provided for @dayCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String dayCount(int count);
 
   /// No description provided for @aiUsageSettingsTitle.
   ///
@@ -3134,7 +3535,10 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Top category: {category} ({amount} {currency})'**
   String aiAdviceEvidenceTopCategory(
-      String category, String amount, String currency);
+    String category,
+    String amount,
+    String currency,
+  );
 
   /// No description provided for @aiAdviceEvidenceBudgetUsed.
   ///
@@ -3448,6 +3852,42 @@ abstract class AppLocalizations {
   /// **'Monthly Budget'**
   String get monthlyBudgetTitle;
 
+  /// No description provided for @budgetAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget amount'**
+  String get budgetAmount;
+
+  /// No description provided for @saveBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Budget'**
+  String get saveBudget;
+
+  /// No description provided for @enterValidBudgetAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid budget amount.'**
+  String get enterValidBudgetAmount;
+
+  /// No description provided for @warningThresholdRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning threshold must be between 1 and 100.'**
+  String get warningThresholdRange;
+
+  /// No description provided for @failedToLoadBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load budget.'**
+  String get failedToLoadBudget;
+
+  /// No description provided for @failedToSaveBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save budget.'**
+  String get failedToSaveBudget;
+
   /// No description provided for @budgetSetAction.
   ///
   /// In en, this message translates to:
@@ -3718,12 +4158,6 @@ abstract class AppLocalizations {
   /// **'Enter a valid budget limit.'**
   String get enterValidBudgetLimit;
 
-  /// No description provided for @warningThresholdRange.
-  ///
-  /// In en, this message translates to:
-  /// **'Warning threshold must be between 1 and 100.'**
-  String get warningThresholdRange;
-
   /// No description provided for @manageRecurringExpenses.
   ///
   /// In en, this message translates to:
@@ -3801,7 +4235,10 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{frequency} - {paymentMethod} - Next {date}'**
   String subscriptionNextDue(
-      String frequency, String paymentMethod, String date);
+    String frequency,
+    String paymentMethod,
+    String date,
+  );
 
   /// No description provided for @monthlyImpactSuffix.
   ///
@@ -4041,8 +4478,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

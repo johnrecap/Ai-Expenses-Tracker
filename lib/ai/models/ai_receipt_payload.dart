@@ -28,7 +28,6 @@ class AiReceiptPayload {
   List<String> missingFields() {
     return [
       if (amount == null || amount! <= 0) 'amount',
-      if (date == null) 'date',
       if ((categoryId?.trim().isEmpty ?? true) &&
           (categoryName?.trim().isEmpty ?? true))
         'category',

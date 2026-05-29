@@ -14,6 +14,8 @@ class AiActionPreview {
     required this.currency,
     required this.description,
     required this.confidence,
+    this.merchant,
+    this.tags = const [],
     this.categoryResolution,
     this.validationErrors = const [],
   });
@@ -26,6 +28,8 @@ class AiActionPreview {
   final String currency;
   final String description;
   final double confidence;
+  final String? merchant;
+  final List<String> tags;
   final AiCategoryResolution? categoryResolution;
   final List<String> validationErrors;
 
@@ -55,6 +59,8 @@ class AiActionPreview {
           ? payload.description!.trim()
           : 'AI expense',
       confidence: confidence,
+      merchant: payload.merchant,
+      tags: payload.tags,
       categoryResolution: payload.categoryResolution,
     );
     return preview.copyWith(validationErrors: preview.validate());
@@ -70,6 +76,9 @@ class AiActionPreview {
     String? currency,
     String? description,
     double? confidence,
+    String? merchant,
+    bool clearMerchant = false,
+    List<String>? tags,
     AiCategoryResolution? categoryResolution,
     bool clearCategoryResolution = false,
     List<String>? validationErrors,
@@ -83,6 +92,8 @@ class AiActionPreview {
       currency: currency ?? this.currency,
       description: description ?? this.description,
       confidence: confidence ?? this.confidence,
+      merchant: clearMerchant ? null : merchant ?? this.merchant,
+      tags: tags ?? this.tags,
       categoryResolution: clearCategoryResolution
           ? null
           : categoryResolution ?? this.categoryResolution,
@@ -120,6 +131,8 @@ class AiActionPreview {
       date: date,
       amount: amount,
       description: description.trim(),
+      merchant: merchant?.trim() ?? '',
+      tags: tags,
       paymentMethod: paymentMethod,
       currency: currency.trim().toUpperCase(),
       createdAt: now,

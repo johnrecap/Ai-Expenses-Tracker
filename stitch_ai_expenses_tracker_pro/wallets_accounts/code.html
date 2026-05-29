@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wallets / Accounts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#00daf3",
+                        "on-secondary-fixed": "#3f0018",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#004f58",
+                        "on-surface-variant": "#3b494c",
+                        "on-tertiary-fixed": "#20005f",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#9cf0ff",
+                        "on-primary-container": "#00626e",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed-dim": "#cdbdff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#00e5ff",
+                        "secondary-container": "#dd2269",
+                        "tertiary-container": "#d6c9ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline": "#6b7a7d",
+                        "on-primary-fixed": "#001f24",
+                        "tertiary": "#6833ea",
+                        "primary": "#006875",
+                        "on-tertiary-fixed-variant": "#4f00d0",
+                        "on-tertiary-container": "#622be5",
+                        "surface-tint": "#006875",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#bac9cc",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "background": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#8f003f",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#ffb1c1",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed": "#e8deff",
+                        "on-secondary-container": "#fffbff",
+                        "secondary": "#b70052",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffd9df",
+                        "inverse-primary": "#00daf3",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "card-gutter": "12px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "unit": "4px",
+                        "container-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "arabic-body": ["IBM Plex Sans Arabic"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "arabic-body": ["16px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        .bg-blob-primary {
+            background: radial-gradient(circle, rgba(0,229,255,0.1) 0%, rgba(247,249,251,0) 70%);
+        }
+        .bg-blob-secondary {
+            background: radial-gradient(circle, rgba(221,34,105,0.05) 0%, rgba(247,249,251,0) 70%);
+        }
+        .ease-quintOut {
+            transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-lg min-h-screen relative overflow-x-hidden antialiased">
+<!-- Background Blobs -->
+<div class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-blob-primary rounded-full blur-[80px] pointer-events-none z-0"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-blob-secondary rounded-full blur-[80px] pointer-events-none z-0"></div>
+<!-- TopAppBar -->
+<header class="bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl text-primary dark:text-primary-fixed-dim font-headline-md text-headline-md dark:text-on-surface fixed top-0 w-full z-50 border-b border-white/40 dark:border-outline-variant/20 shadow-sm flex items-center justify-between px-container-padding h-16 w-full">
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="font-display-lg-mobile text-display-lg-mobile bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent font-bold">AI Expenses Tracker</span>
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-[88px] pb-[100px] px-container-padding max-w-7xl mx-auto relative z-10">
+<!-- Total Balance Header -->
+<section class="mb-xl flex flex-col items-center justify-center pt-md">
+<p class="font-body-sm text-body-sm text-outline mb-xs">Total Balance</p>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-on-surface tracking-tight" id="total-balance">$0.00</h1>
+</section>
+<!-- Bento Grid Wallets -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md mb-xl">
+<!-- Main Bank Account -->
+<div class="glass-card rounded-xl p-lg relative overflow-hidden group cursor-pointer hover:-translate-y-1 transition-all duration-300">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-container"></div>
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+</div>
+<div>
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface">Chase Checking</h2>
+<p class="font-body-sm text-body-sm text-outline">Bank Account</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">more_horiz</span>
+</div>
+<div class="mt-lg">
+<p class="font-headline-md text-headline-md text-on-surface" id="balance-bank">$4,250.00</p>
+<div class="flex items-center gap-xs mt-xs text-primary">
+<span class="material-symbols-outlined" style="font-size: 16px;">arrow_upward</span>
+<span class="font-label-caps text-label-caps">+$120 this week</span>
+</div>
+</div>
+</div>
+<!-- Credit Card -->
+<div class="glass-card rounded-xl p-lg relative overflow-hidden group cursor-pointer hover:-translate-y-1 transition-all duration-300">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-secondary to-secondary-container"></div>
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">credit_card</span>
+</div>
+<div>
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface">Amex Gold</h2>
+<p class="font-body-sm text-body-sm text-outline">Credit Card</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors">more_horiz</span>
+</div>
+<div class="mt-lg">
+<p class="font-headline-md text-headline-md text-on-surface" id="balance-card">-$1,120.50</p>
+<div class="flex items-center gap-xs mt-xs text-error">
+<span class="material-symbols-outlined" style="font-size: 16px;">arrow_downward</span>
+<span class="font-label-caps text-label-caps">Payment due in 5 days</span>
+</div>
+</div>
+</div>
+<!-- Cash Wallet -->
+<div class="glass-card rounded-xl p-lg relative overflow-hidden group cursor-pointer hover:-translate-y-1 transition-all duration-300">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-tertiary to-tertiary-container"></div>
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">payments</span>
+</div>
+<div>
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface">Cash Wallet</h2>
+<p class="font-body-sm text-body-sm text-outline">Physical Cash</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-tertiary transition-colors">more_horiz</span>
+</div>
+<div class="mt-lg">
+<p class="font-headline-md text-headline-md text-on-surface" id="balance-cash">$350.00</p>
+<div class="flex items-center gap-xs mt-xs text-outline">
+<span class="material-symbols-outlined" style="font-size: 16px;">sync</span>
+<span class="font-label-caps text-label-caps">Last updated 2 days ago</span>
+</div>
+</div>
+</div>
+<!-- Add Wallet Button Card -->
+<button class="glass-card rounded-xl p-lg flex flex-col items-center justify-center min-h-[160px] border-dashed border-2 border-outline-variant/50 hover:bg-surface-variant/20 transition-colors group">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center mb-sm group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-primary">add</span>
+</div>
+<span class="font-body-lg text-body-lg font-medium text-on-surface-variant">Add new wallet</span>
+</button>
+</section>
+<!-- Recent Transfers -->
+<section class="glass-card rounded-xl p-md">
+<div class="flex justify-between items-center mb-md px-xs">
+<h3 class="font-headline-md text-headline-md text-on-surface text-lg">Recent Transfers</h3>
+<button class="font-body-sm text-body-sm text-primary hover:underline">View All</button>
+</div>
+<div class="space-y-sm">
+<!-- Transfer Item 1 -->
+<div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-variant/30 transition-colors">
+<div class="flex items-center gap-md">
+<div class="relative w-10 h-10">
+<div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center absolute top-0 left-0 border-2 border-surface">
+<span class="material-symbols-outlined text-primary" style="font-size: 14px;">account_balance</span>
+</div>
+<div class="w-7 h-7 rounded-full bg-secondary/10 flex items-center justify-center absolute bottom-0 right-0 border-2 border-surface z-10">
+<span class="material-symbols-outlined text-secondary" style="font-size: 14px;">credit_card</span>
+</div>
+</div>
+<div>
+<p class="font-body-sm text-body-sm font-medium text-on-surface">Checking to Amex</p>
+<p class="font-label-caps text-label-caps text-outline">Today, 10:45 AM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-sm text-body-sm font-semibold text-on-surface">$500.00</p>
+<p class="font-label-caps text-label-caps text-primary">Completed</p>
+</div>
+</div>
+<!-- Transfer Item 2 -->
+<div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-variant/30 transition-colors">
+<div class="flex items-center gap-md">
+<div class="relative w-10 h-10">
+<div class="w-7 h-7 rounded-full bg-tertiary/10 flex items-center justify-center absolute top-0 left-0 border-2 border-surface">
+<span class="material-symbols-outlined text-tertiary" style="font-size: 14px;">payments</span>
+</div>
+<div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center absolute bottom-0 right-0 border-2 border-surface z-10">
+<span class="material-symbols-outlined text-primary" style="font-size: 14px;">account_balance</span>
+</div>
+</div>
+<div>
+<p class="font-body-sm text-body-sm font-medium text-on-surface">ATM Deposit</p>
+<p class="font-label-caps text-label-caps text-outline">Yesterday, 3:15 PM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-sm text-body-sm font-semibold text-on-surface">$150.00</p>
+<p class="font-label-caps text-label-caps text-primary">Completed</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-2xl text-primary dark:text-primary-fixed-dim font-label-caps text-label-caps fixed bottom-0 w-full rounded-t-xl z-50 border-t border-white/40 dark:border-outline-variant/10 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex justify-around items-center h-20 px-4 pb-safe w-full md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full active:scale-90 transition-all duration-300 ease-quintOut p-2" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span>Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full active:scale-90 transition-all duration-300 ease-quintOut p-2" href="#">
+<span class="material-symbols-outlined mb-1">query_stats</span>
+<span>Insights</span>
+</a>
+<!-- FAB Center -->
+<a class="flex flex-col items-center justify-center -mt-8" href="#">
+<div class="w-14 h-14 rounded-full bg-gradient-to-r from-secondary-container to-tertiary-container flex items-center justify-center shadow-lg active:scale-90 transition-transform duration-300 pulse-glow">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">add</span>
+</div>
+</a>
+<!-- Active Tab -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full active:scale-90 transition-all duration-300 ease-quintOut p-2" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span>Budgets</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full active:scale-90 transition-all duration-300 ease-quintOut p-2" href="#">
+<span class="material-symbols-outlined mb-1">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<script>
+        // Simple animation for numbers
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // quintOut easing
+                const easeProgress = 1 - Math.pow(1 - progress, 5);
+                
+                const current = start + easeProgress * (end - start);
+                
+                // Format as currency
+                const formatted = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(current);
+                
+                obj.innerHTML = formatted;
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const totalBalanceEl = document.getElementById('total-balance');
+            // Mock total balance calculation (4250 + 350 - 1120.50)
+            animateValue(totalBalanceEl, 0, 3479.50, 800);
+        });
+    </script>
+</body></html>

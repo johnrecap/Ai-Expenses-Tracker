@@ -33,6 +33,8 @@ class MockAiService implements AiService {
         _detectPaymentMethod(text) ?? context.defaultPaymentMethod.label;
     final currency = _detectCurrency(text, context.defaultCurrency);
     final date = _detectDate(text, context.now);
+    final merchant = _detectMerchant(text);
+    final tags = _detectTags(text, category);
     final confidence = amount != null && category != null ? 0.92 : 0.55;
     final missing = [
       if (amount == null) 'amount',
@@ -48,6 +50,9 @@ class MockAiService implements AiService {
         'paymentMethod': paymentMethod,
         'currency': currency,
         'description': category == null ? text : 'AI $category expense',
+        'merchant': merchant,
+        'tags': tags,
+        'missingFields': missing,
         'confidence': confidence,
         'needsConfirmation': true,
         if (confidence < 0.75)
@@ -179,6 +184,28 @@ class MockAiService implements AiService {
       return 'Bank Transfer';
     }
     return null;
+  }
+
+  String? _detectMerchant(String text) {
+    final match = RegExp(
+      r'(?:at|from|@|عند)\s+([^,.;،؛!?؟#]{2,40})',
+      caseSensitive: false,
+    ).firstMatch(text);
+    return match?.group(1)?.trim();
+  }
+
+  List<String> _detectTags(String text, String? category) {
+    final tags = <String>[
+      if (category != null) category.toLowerCase(),
+    ];
+    final hashtagMatches = RegExp(r'#([^\s#,.;،؛!?؟]+)')
+        .allMatches(text)
+        .map((match) => match.group(1)?.trim())
+        .whereType<String>();
+    for (final tag in hashtagMatches) {
+      if (!tags.contains(tag.toLowerCase())) tags.add(tag);
+    }
+    return tags;
   }
 
   String _detectCurrency(String text, String fallback) {

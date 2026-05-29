@@ -1,3 +1,4 @@
+import 'package:expenses_tracker/l10n/l10n.dart';
 import 'package:expenses_tracker/screens/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:expenses_tracker/screens/auth/views/register_screen.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class LoginScreen extends StatefulWidget {
   final String? initialMessage;
 
-  const LoginScreen({
-    super.key,
-    this.initialMessage,
-  });
+  const LoginScreen({super.key, this.initialMessage});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -49,20 +47,17 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = _passwordController.text;
 
     if (email.isEmpty) {
-      _showMessage('Enter your email address.');
+      _showMessage(context.l10n.enterEmailAddress);
       return;
     }
     if (password.isEmpty) {
-      _showMessage('Enter your password.');
+      _showMessage(context.l10n.enterPassword);
       return;
     }
 
     context.read<AuthBloc>().add(
-          AuthSignInRequested(
-            email: email,
-            password: password,
-          ),
-        );
+      AuthSignInRequested(email: email, password: password),
+    );
   }
 
   void _submitGoogleSignIn() {
@@ -75,25 +70,21 @@ class _LoginScreenState extends State<LoginScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Reset password'),
+          title: Text(context.l10n.accountPasswordReset),
           content: TextField(
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-            ),
+            decoration: InputDecoration(labelText: context.l10n.emailLabel),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(context.l10n.cancel),
             ),
             TextButton(
-              onPressed: () => Navigator.pop(
-                context,
-                emailController.text.trim(),
-              ),
-              child: const Text('Send'),
+              onPressed: () =>
+                  Navigator.pop(context, emailController.text.trim()),
+              child: Text(context.l10n.send),
             ),
           ],
         );
@@ -103,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!mounted || email == null) return;
     if (email.isEmpty) {
-      _showMessage('Enter your email address.');
+      _showMessage(context.l10n.enterEmailAddress);
       return;
     }
     context.read<AuthBloc>().add(AuthPasswordResetRequested(email));
@@ -116,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state is AuthFailure) {
           _showMessage(state.message);
         } else if (state is AuthPasswordResetSent) {
-          _showMessage('Password reset email sent.');
+          _showMessage(context.l10n.accountPasswordResetSent);
         }
       },
       child: Scaffold(
@@ -130,13 +121,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Image.asset(
-                      'assets/logo.png',
-                      height: 140,
-                    ),
+                    Image.asset('assets/logo.png', height: 140),
                     const SizedBox(height: 24),
                     Text(
-                      'Expense Tracker',
+                      context.l10n.appTitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
@@ -148,18 +136,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.emailLabel,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.passwordLabel,
+                        border: const OutlineInputBorder(),
                       ),
                       onSubmitted: (_) => _submit(),
                     ),
@@ -168,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: _showResetPasswordDialog,
-                        child: const Text('Forgot password?'),
+                        child: Text(context.l10n.forgotPassword),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -183,8 +171,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
                                 foregroundColor: Colors.white,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                               ),
                               child: isLoading
                                   ? const SizedBox(
@@ -195,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         color: Colors.white,
                                       ),
                                     )
-                                  : const Text('Login'),
+                                  : Text(context.l10n.login),
                             ),
                             const SizedBox(height: 12),
                             OutlinedButton.icon(
@@ -204,14 +193,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 FontAwesomeIcons.google,
                                 size: 18,
                               ),
-                              label: const Text('Continue with Google'),
+                              label: Text(context.l10n.continueWithGoogle),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: Colors.black87,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                side: BorderSide(
-                                  color: Colors.grey.shade400,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
                                 ),
+                                side: BorderSide(color: Colors.grey.shade400),
                               ),
                             ),
                           ],
@@ -228,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         );
                       },
-                      child: const Text('Create an account'),
+                      child: Text(context.l10n.createAccount),
                     ),
                   ],
                 ),

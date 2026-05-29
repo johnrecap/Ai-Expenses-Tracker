@@ -1,4 +1,6 @@
 import 'package:expenses_tracker/guided_tour/guided_tour.dart';
+import 'package:expenses_tracker/guided_tour/widgets/tour_connector_painter.dart';
+import 'package:expenses_tracker/l10n/app_localizations_ar.dart';
 import 'package:expenses_tracker/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,8 +37,9 @@ GuidedTourState _state({
 }
 
 void main() {
-  testWidgets('renders dim overlay, highlighted target, and controls',
-      (tester) async {
+  testWidgets('renders dim overlay, highlighted target, and controls', (
+    tester,
+  ) async {
     var nextCalls = 0;
     var skipCalls = 0;
     await tester.pumpWidget(
@@ -58,13 +61,11 @@ void main() {
     expect(nextCalls, 0);
   });
 
-  testWidgets('renders without animation when reduced motion is requested',
-      (tester) async {
+  testWidgets('renders without animation when reduced motion is requested', (
+    tester,
+  ) async {
     await tester.pumpWidget(
-      _OverlayHarness(
-        state: _state(),
-        disableAnimations: true,
-      ),
+      _OverlayHarness(state: _state(), disableAnimations: true),
     );
 
     expect(find.text('Meet the AI Assistant'), findsOneWidget);
@@ -75,16 +76,17 @@ void main() {
   testWidgets('manual expense tour copy explains AI form fill', (tester) async {
     await tester.pumpWidget(
       _OverlayHarness(
-        state: GuidedTourState.idle(
-          currentVersion: guidedTourVersion,
-          steps: [_manualStep()],
-        ).copyWith(
-          status: GuidedTourStatus.active,
-          activeIndex: 0,
-          targetRect: const Rect.fromLTWH(160, 680, 56, 56),
-          targetAvailable: true,
-          targetShape: SpotlightShape.circle,
-        ),
+        state:
+            GuidedTourState.idle(
+              currentVersion: guidedTourVersion,
+              steps: [_manualStep()],
+            ).copyWith(
+              status: GuidedTourStatus.active,
+              activeIndex: 0,
+              targetRect: const Rect.fromLTWH(160, 680, 56, 56),
+              targetAvailable: true,
+              targetShape: SpotlightShape.circle,
+            ),
       ),
     );
 
@@ -109,8 +111,39 @@ void main() {
       ),
     );
 
-    expect(find.text('تعرف على المساعد الذكي'), findsOneWidget);
-    expect(find.text('تم'), findsOneWidget);
+    expect(find.text(AppLocalizationsAr().guidedTourAiTitle), findsOneWidget);
+    expect(find.text(AppLocalizationsAr().guidedTourDone), findsOneWidget);
+  });
+
+  testWidgets('draws connector after card layout is measured', (tester) async {
+    await tester.pumpWidget(
+      _OverlayHarness(
+        state: _state(targetRect: const Rect.fromLTWH(280, 32, 48, 48)),
+      ),
+    );
+    await tester.pump();
+
+    expect(_connectorPaintFinder(), findsOneWidget);
+  });
+
+  testWidgets('keeps action buttons visible on compact RTL viewport', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(320, 560));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      _OverlayHarness(
+        state: _state(targetRect: const Rect.fromLTWH(250, 24, 48, 48)),
+        locale: const Locale('ar'),
+        textDirection: TextDirection.rtl,
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text(AppLocalizationsAr().guidedTourSkip), findsOneWidget);
+    expect(find.text(AppLocalizationsAr().guidedTourDone), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('absorbs target taps behind the overlay', (tester) async {
@@ -144,6 +177,12 @@ Finder _spotlightPaintFinder() {
     (widget) =>
         widget is CustomPaint &&
         widget.painter?.runtimeType.toString() == '_SpotlightPainter',
+  );
+}
+
+Finder _connectorPaintFinder() {
+  return find.byWidgetPredicate(
+    (widget) => widget is CustomPaint && widget.painter is TourConnectorPainter,
   );
 }
 

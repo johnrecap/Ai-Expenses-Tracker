@@ -17,9 +17,9 @@ class ExpenseFilterState extends Equatable {
 
   @override
   List<Object?> get props => [
-        allExpenses,
-        filteredExpenses,
-        filter,
-        hasMoreLoadedScope,
-      ];
+    allExpenses,
+    filteredExpenses,
+    filter,
+    hasMoreLoadedScope,
+  ];
 }

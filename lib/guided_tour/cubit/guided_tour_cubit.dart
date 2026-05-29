@@ -12,14 +12,14 @@ class GuidedTourCubit extends Cubit<GuidedTourState> {
     required SettingsRepository settingsRepository,
     List<GuidedTourStep>? steps,
     int currentVersion = guidedTourVersion,
-  })  : _settingsRepository = settingsRepository,
-        _steps = steps ?? guidedTourSteps,
-        super(
-          GuidedTourState.idle(
-            currentVersion: currentVersion,
-            steps: steps ?? guidedTourSteps,
-          ),
-        );
+  }) : _settingsRepository = settingsRepository,
+       _steps = steps ?? guidedTourSteps,
+       super(
+         GuidedTourState.idle(
+           currentVersion: currentVersion,
+           steps: steps ?? guidedTourSteps,
+         ),
+       );
 
   final SettingsRepository _settingsRepository;
   final List<GuidedTourStep> _steps;
@@ -146,10 +146,7 @@ class GuidedTourCubit extends Cubit<GuidedTourState> {
     _prepareAndRefreshActiveTarget();
   }
 
-  void _activateFromIndex({
-    required int from,
-    required int direction,
-  }) {
+  void _activateFromIndex({required int from, required int direction}) {
     if (isClosed) return;
     final skipped = Set<String>.from(state.skippedMissingStepIds);
     final nextIndex = _nextAvailableIndex(
@@ -198,12 +195,7 @@ class GuidedTourCubit extends Cubit<GuidedTourState> {
     final target = _targets[step.targetId];
     if (target == null) {
       if (!state.targetAvailable && state.targetRect == null) return;
-      emit(
-        state.copyWith(
-          clearTargetRect: true,
-          targetAvailable: false,
-        ),
-      );
+      emit(state.copyWith(clearTargetRect: true, targetAvailable: false));
       return;
     }
 

@@ -1,14 +1,18 @@
 import 'package:expense_repository/expense_repository.dart';
+import 'package:expenses_tracker/services/finance/money_snapshot_service.dart';
 
 class RecurringExpenseScheduler {
   final ExpenseRepository _expenseRepository;
   final RecurringExpenseRepository _recurringExpenseRepository;
+  final SettingsRepository? _settingsRepository;
 
   const RecurringExpenseScheduler({
     required ExpenseRepository expenseRepository,
     required RecurringExpenseRepository recurringExpenseRepository,
+    SettingsRepository? settingsRepository,
   })  : _expenseRepository = expenseRepository,
-        _recurringExpenseRepository = recurringExpenseRepository;
+        _recurringExpenseRepository = recurringExpenseRepository,
+        _settingsRepository = settingsRepository;
 
   static String generatedExpenseId({
     required String recurringExpenseId,
@@ -114,16 +118,29 @@ class RecurringExpenseScheduler {
     final dueRules = await _recurringExpenseRepository.getDueRecurringExpenses(
       effectiveNow,
     );
+    final settings = await _loadSettings();
     var generatedCount = 0;
 
     for (final rule in dueRules) {
       final occurrences = dueOccurrences(rule, effectiveNow);
+      var blockedByMissingSnapshot = false;
       for (final occurrence in occurrences) {
+        final expense = expenseForOccurrence(rule, occurrence);
+        final snapshot = settings == null
+            ? null
+            : const MoneySnapshotService()
+                .snapshotForExpense(expense: expense, settings: settings)
+                .snapshot;
+        if (snapshot == null) {
+          blockedByMissingSnapshot = true;
+          break;
+        }
         await _expenseRepository.createExpense(
-          expenseForOccurrence(rule, occurrence),
+          expense.withMoneySnapshot(snapshot),
         );
         generatedCount++;
       }
+      if (blockedByMissingSnapshot) continue;
 
       final nextRunDate = nextRunAfterProcessing(rule, effectiveNow);
       await _recurringExpenseRepository.updateRecurringExpense(
@@ -135,6 +152,14 @@ class RecurringExpenseScheduler {
     }
 
     return generatedCount;
+  }
+
+  Future<UserSettings?> _loadSettings() async {
+    try {
+      return await _settingsRepository?.getSettings();
+    } catch (_) {
+      return null;
+    }
   }
 
   static bool _isAfterEndDate(DateTime scheduledDate, DateTime? endDate) {

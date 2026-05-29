@@ -12,7 +12,11 @@ import 'package:expenses_tracker/screens/add_expense/views/category_creation.dar
 import 'package:expenses_tracker/screens/add_expense/widgets/ai_expense_form_fill_card.dart';
 import 'package:expenses_tracker/screens/ai_assistant/widgets/receipt_capture_button.dart';
 import 'package:expenses_tracker/services/finance/duplicate_expense_detector.dart';
+import 'package:expenses_tracker/services/finance/money_snapshot_service.dart';
 import 'package:expenses_tracker/utils/amount_parser.dart';
+import 'package:expenses_tracker/theme/app_design_tokens.dart';
+import 'package:expenses_tracker/widgets/app_status_banner.dart';
+import 'package:expenses_tracker/widgets/finance_card.dart';
 import 'package:expenses_tracker/widgets/settings_load_guard_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,6 +58,7 @@ class _AddExpenseState extends State<AddExpense> {
   CaptureMode _captureMode = CaptureMode.quickManual;
   bool _showAdvancedFields = false;
   ExpenseDraft? _currentDraft;
+  AiCategoryResolution? _pendingAiCategoryResolution;
   String? _confirmedDuplicateExpenseId;
 
   @override
@@ -97,17 +102,14 @@ class _AddExpenseState extends State<AddExpense> {
   void _showError(String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-        ),
-      );
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _selectCategory(Category category) {
     setState(() {
       expense.category = category;
       categoryController.text = category.name;
+      _pendingAiCategoryResolution = null;
       _syncDraft(
         sourceStatus: _currentDraft?.sourceStatus ?? DraftSourceStatus.manual,
         statusMessage: _currentDraft?.statusMessage,
@@ -117,43 +119,76 @@ class _AddExpenseState extends State<AddExpense> {
   }
 
   void _applyAiPreviewToForm(AiActionPreview preview) {
+    _applyAiDraftPreviewToForm(AiExpenseDraft.fromPreview(preview), preview);
+  }
+
+  void _applyAiDraftPreviewToForm(
+    AiExpenseDraft draft,
+    AiActionPreview preview,
+  ) {
     setState(() {
-      if (preview.amount > 0) {
-        expenseController.text = formatAmountInput(preview.amount);
+      if (draft.amount != null && draft.amount! > 0) {
+        expenseController.text = formatAmountInput(draft.amount!);
       } else {
         expenseController.clear();
       }
 
-      final description = preview.description.trim();
-      descriptionController.text =
-          description == 'AI expense' ? '' : description;
-      merchantController.clear();
-      tagsController.clear();
+      final description = draft.description?.trim() ?? '';
+      descriptionController.text = description == 'AI expense'
+          ? ''
+          : description;
+      merchantController.text = draft.merchant?.trim() ?? '';
+      tagsController.text = draft.tags.join(', ');
 
       final category = preview.category;
       if (category != null) {
         expense.category = category;
         categoryController.text = category.name;
+        _pendingAiCategoryResolution = null;
+      } else if (draft.suggestedCategory != null ||
+          draft.categoryName?.trim().isNotEmpty == true) {
+        expense.category = Category.empty;
+        categoryController.text = draft.categoryName?.trim().isNotEmpty == true
+            ? draft.categoryName!.trim()
+            : draft.suggestedCategory!.name;
+        _pendingAiCategoryResolution = draft.categoryResolution;
+      } else {
+        expense.category = Category.empty;
+        categoryController.clear();
+        _pendingAiCategoryResolution = null;
       }
 
-      final currency = preview.currency.trim().toUpperCase();
-      if (currency.isNotEmpty) {
+      final currency = draft.currency?.trim().toUpperCase();
+      if (currency != null && currency.isNotEmpty) {
         if (!currencies.contains(currency)) {
           currencies = [...currencies, currency];
         }
         _selectedCurrency = currency;
+      } else {
+        _selectedCurrency = null;
       }
 
-      _selectedPaymentMethod = preview.paymentMethod;
-      expense.date = preview.date;
-      dateController.text = _formatDate(preview.date);
+      _selectedPaymentMethod = draft.paymentMethod;
+      if (draft.date != null) {
+        expense.date = draft.date!;
+        dateController.text = _formatDate(draft.date!);
+      } else {
+        dateController.clear();
+      }
       _showAdvancedFields = true;
       _syncDraft(
         sourceStatus: DraftSourceStatus.aiText,
-        statusMessage: preview.validationErrors.isEmpty
-            ? context.l10n.quickCaptureDraftReady
-            : preview.validationErrors.join(' '),
-        missingFields: preview.validationErrors,
+        statusMessage: draft.needsReview
+            ? [
+                if (draft.missingFields.isNotEmpty)
+                  context.l10n.quickCaptureMissingFields(
+                    draft.missingFields.join(', '),
+                  ),
+                if (draft.suggestedCategory != null)
+                  context.l10n.confirmingCreatesCategoryFirst,
+              ].where((message) => message.trim().isNotEmpty).join(' ')
+            : context.l10n.quickCaptureDraftReady,
+        missingFields: draft.missingFields,
       );
     });
   }
@@ -230,7 +265,8 @@ class _AddExpenseState extends State<AddExpense> {
         date: payload.date,
         paymentMethod: contextDefaults.defaultPaymentMethod,
         currency: payload.currency ?? contextDefaults.defaultCurrency,
-        description: payload.description ??
+        description:
+            payload.description ??
             (payload.merchant?.trim().isNotEmpty == true
                 ? payload.merchant!.trim()
                 : null),
@@ -360,6 +396,18 @@ class _AddExpenseState extends State<AddExpense> {
       return;
     }
 
+    if (dateController.text.trim().isEmpty) {
+      _showError(context.l10n.quickCaptureMissingFields(context.l10n.date));
+      return;
+    }
+
+    if (expense.category == Category.empty ||
+        expense.category.categoryId.isEmpty) {
+      final createdOrMatched = await _createPendingAiCategoryIfNeeded();
+      if (!mounted) return;
+      if (!createdOrMatched) return;
+    }
+
     if (expense.category == Category.empty ||
         expense.category.categoryId.isEmpty) {
       _showError(context.l10n.selectCategoryBeforeSaving);
@@ -387,6 +435,30 @@ class _AddExpenseState extends State<AddExpense> {
       };
     });
 
+    UserSettings settings;
+    try {
+      settings = await context.read<SettingsRepository>().getSettings();
+    } catch (_) {
+      if (!mounted) return;
+      _showError(context.l10n.settingsUnavailableMessage);
+      return;
+    }
+    if (!mounted) return;
+    final snapshotResult = const MoneySnapshotService().snapshotForExpense(
+      expense: expense,
+      settings: settings,
+    );
+    if (!snapshotResult.hasSnapshot) {
+      _showError(
+        context.l10n.unconvertedCurrenciesStatus(
+          1,
+          snapshotResult.missingCurrency ?? currency,
+        ),
+      );
+      return;
+    }
+    expense.moneySnapshot = snapshotResult.snapshot;
+
     final duplicate = const DuplicateExpenseDetector().bestCandidate(
       draft: expense,
       existingExpenses: widget.recentExpenses,
@@ -399,6 +471,74 @@ class _AddExpenseState extends State<AddExpense> {
     }
 
     context.read<CreateExpenseBloc>().add(CreateExpense(expense));
+  }
+
+  Future<bool> _createPendingAiCategoryIfNeeded() async {
+    final resolution = _pendingAiCategoryResolution;
+    final suggestion = resolution?.suggestedCategory;
+    final rawName = categoryController.text.trim().isNotEmpty
+        ? categoryController.text.trim()
+        : suggestion?.name.trim() ?? '';
+    if (resolution == null || suggestion == null || rawName.isEmpty) {
+      return false;
+    }
+
+    try {
+      final repository = context.read<CategoryRepository>();
+      final existingCategories = await repository.getCategories();
+      final existing = _findActiveCategoryByName(existingCategories, rawName);
+      if (existing != null) {
+        setState(() {
+          expense.category = existing;
+          categoryController.text = existing.name;
+          _pendingAiCategoryResolution = null;
+        });
+        return true;
+      }
+
+      final now = DateTime.now();
+      final userId = _tryRead<AuthRepository>()?.currentUser?.userId ?? '';
+      final category = Category(
+        categoryId: const Uuid().v1(),
+        userId: userId,
+        name: rawName,
+        totalExpenses: 0,
+        icon: suggestion.icon,
+        color: suggestion.color,
+        createdAt: now,
+        updatedAt: now,
+      );
+      await repository.createCategory(category);
+      if (!mounted) return false;
+      setState(() {
+        expense.category = category;
+        categoryController.text = category.name;
+        _pendingAiCategoryResolution = null;
+      });
+      context.read<GetCategoriesBloc>().add(GetCategories());
+      return true;
+    } catch (_) {
+      _showError(context.l10n.failedToCreateAiSuggestedCategory);
+      return false;
+    }
+  }
+
+  Category? _findActiveCategoryByName(
+    List<Category> categories,
+    String categoryName,
+  ) {
+    final normalizedName = _normalizeCategoryName(categoryName);
+    for (final category in categories) {
+      if (!category.isArchived &&
+          _normalizeCategoryName(category.name) == normalizedName) {
+        return category;
+      }
+    }
+    return null;
+  }
+
+  String _normalizeCategoryName(String value) {
+    return value.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
   }
 
   Future<bool> _showDuplicateWarning(
@@ -469,7 +609,32 @@ class _AddExpenseState extends State<AddExpense> {
   }
 
   Widget _buildModeSelector() {
+    final colorScheme = Theme.of(context).colorScheme;
     return SegmentedButton<CaptureMode>(
+      style: ButtonStyle(
+        side: const WidgetStatePropertyAll(BorderSide.none),
+        shape: const WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: AppRadii.pill),
+        ),
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return colorScheme.primary;
+          }
+          return colorScheme.surfaceContainerHighest;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return colorScheme.onPrimary;
+          }
+          return colorScheme.onSurface;
+        }),
+        overlayColor: WidgetStatePropertyAll(
+          colorScheme.primary.withValues(alpha: 0.08),
+        ),
+        padding: const WidgetStatePropertyAll(
+          EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+        ),
+      ),
       segments: [
         ButtonSegment(
           value: CaptureMode.quickManual,
@@ -513,25 +678,10 @@ class _AddExpenseState extends State<AddExpense> {
   Widget _buildDraftStatus() {
     final draft = _currentDraft;
     if (draft?.statusMessage == null) return const SizedBox.shrink();
-    final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: draft!.needsReview
-            ? colorScheme.errorContainer.withValues(alpha: 0.35)
-            : colorScheme.primaryContainer.withValues(alpha: 0.45),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        draft.statusMessage!,
-        style: TextStyle(
-          color: draft.needsReview
-              ? colorScheme.onErrorContainer
-              : colorScheme.onPrimaryContainer,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+    return AppStatusBanner(
+      message: draft!.statusMessage!,
+      tone: draft.needsReview ? AppStatusTone.warning : AppStatusTone.success,
+      icon: draft.needsReview ? Icons.rule : Icons.check_circle_outline,
     );
   }
 
@@ -546,8 +696,8 @@ class _AddExpenseState extends State<AddExpense> {
       }),
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.white,
-        prefixIcon: const Icon(
+        fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
+        prefixIcon: const FaIcon(
           FontAwesomeIcons.dollarSign,
           size: 16,
           color: Colors.grey,
@@ -571,14 +721,10 @@ class _AddExpenseState extends State<AddExpense> {
       decoration: InputDecoration(
         filled: true,
         fillColor: expense.category == Category.empty
-            ? Colors.white
+            ? Theme.of(context).colorScheme.surfaceContainerLow
             : Color(expense.category.color),
         prefixIcon: expense.category == Category.empty
-            ? const Icon(
-                FontAwesomeIcons.list,
-                size: 16,
-                color: Colors.grey,
-              )
+            ? const FaIcon(FontAwesomeIcons.list, size: 16, color: Colors.grey)
             : Padding(
                 padding: const EdgeInsets.all(8),
                 child: CategoryIconView(
@@ -591,7 +737,7 @@ class _AddExpenseState extends State<AddExpense> {
         suffixIcon: IconButton(
           onPressed: _createCategory,
           tooltip: context.l10n.addCategory,
-          icon: const Icon(
+          icon: const FaIcon(
             FontAwesomeIcons.plus,
             size: 16,
             color: Colors.grey,
@@ -624,6 +770,10 @@ class _AddExpenseState extends State<AddExpense> {
           final selected = expense.category.categoryId == category.categoryId;
           return ChoiceChip(
             selected: selected,
+            side: BorderSide.none,
+            showCheckmark: false,
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
+            selectedColor: Color(category.color),
             onSelected: (_) => _selectCategory(category),
             avatar: CategoryIconView(
               iconKey: category.icon,
@@ -631,7 +781,15 @@ class _AddExpenseState extends State<AddExpense> {
               size: 28,
               iconSize: 16,
             ),
-            label: Text(category.name),
+            label: Text(
+              category.name,
+              style: TextStyle(
+                color: selected
+                    ? Theme.of(context).colorScheme.onPrimaryContainer
+                    : Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           );
         },
       ),
@@ -653,8 +811,8 @@ class _AddExpenseState extends State<AddExpense> {
           }),
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
-            prefixIcon: const Icon(
+            fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
+            prefixIcon: const FaIcon(
               FontAwesomeIcons.store,
               size: 16,
               color: Colors.grey,
@@ -679,8 +837,8 @@ class _AddExpenseState extends State<AddExpense> {
           }),
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
-            prefixIcon: const Icon(
+            fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
+            prefixIcon: const FaIcon(
               FontAwesomeIcons.tags,
               size: 16,
               color: Colors.grey,
@@ -706,8 +864,8 @@ class _AddExpenseState extends State<AddExpense> {
           }),
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
-            prefixIcon: const Icon(
+            fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
+            prefixIcon: const FaIcon(
               FontAwesomeIcons.noteSticky,
               size: 16,
               color: Colors.grey,
@@ -732,8 +890,8 @@ class _AddExpenseState extends State<AddExpense> {
           initialValue: _selectedPaymentMethod,
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
-            prefixIcon: const Icon(
+            fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
+            prefixIcon: const FaIcon(
               FontAwesomeIcons.creditCard,
               size: 16,
               color: Colors.grey,
@@ -748,7 +906,9 @@ class _AddExpenseState extends State<AddExpense> {
               .map(
                 (paymentMethod) => DropdownMenuItem(
                   value: paymentMethod,
-                  child: Text(localizedPaymentMethod(context.l10n, paymentMethod)),
+                  child: Text(
+                    localizedPaymentMethod(context.l10n, paymentMethod),
+                  ),
                 ),
               )
               .toList(),
@@ -769,8 +929,8 @@ class _AddExpenseState extends State<AddExpense> {
           initialValue: _selectedCurrency,
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
-            prefixIcon: const Icon(
+            fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
+            prefixIcon: const FaIcon(
               FontAwesomeIcons.coins,
               size: 16,
               color: Colors.grey,
@@ -783,10 +943,8 @@ class _AddExpenseState extends State<AddExpense> {
           ),
           items: currencies
               .map(
-                (currency) => DropdownMenuItem(
-                  value: currency,
-                  child: Text(currency),
-                ),
+                (currency) =>
+                    DropdownMenuItem(value: currency, child: Text(currency)),
               )
               .toList(),
           onChanged: (currency) {
@@ -826,8 +984,8 @@ class _AddExpenseState extends State<AddExpense> {
           },
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
-            prefixIcon: const Icon(
+            fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
+            prefixIcon: const FaIcon(
               FontAwesomeIcons.clock,
               size: 16,
               color: Colors.grey,
@@ -844,29 +1002,113 @@ class _AddExpenseState extends State<AddExpense> {
   }
 
   Widget _buildSaveButton() {
-    return SizedBox(
+    final colorScheme = Theme.of(context).colorScheme;
+    return AnimatedContainer(
+      duration: AppDurations.fast,
+      curve: Curves.easeOutCubic,
       width: double.infinity,
-      height: kToolbarHeight,
+      height: 58,
+      decoration: BoxDecoration(
+        borderRadius: AppRadii.pill,
+        gradient: LinearGradient(
+          colors: isLoading
+              ? [
+                  colorScheme.surfaceContainerHighest,
+                  colorScheme.surfaceContainerHighest,
+                ]
+              : [colorScheme.primary, colorScheme.secondary],
+        ),
+        boxShadow: AppShadows.card(colorScheme.primary),
+      ),
       child: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator(color: colorScheme.primary))
           : TextButton(
-              onPressed: () {
-                _saveExpense();
-              },
+              onPressed: _saveExpense,
               style: TextButton.styleFrom(
-                backgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                foregroundColor: colorScheme.onPrimary,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: AppRadii.pill,
                 ),
               ),
               child: Text(
                 context.l10n.save,
                 style: const TextStyle(
                   fontSize: 22,
-                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),
+    );
+  }
+
+  Widget _buildCapturePanel(List<Category> activeCategories) {
+    Widget child = const SizedBox.shrink(key: ValueKey('capture-empty'));
+    if (_captureMode == CaptureMode.naturalLanguage) {
+      child = Column(
+        key: const ValueKey('capture-ai-text'),
+        children: [
+          AiExpenseCapturePanel(
+            categories: activeCategories,
+            currencies: currencies,
+            defaultCurrency: _selectedCurrency,
+            defaultPaymentMethod: _selectedPaymentMethod,
+            settingsReady:
+                !_settingsLoadFailed &&
+                _selectedCurrency != null &&
+                _selectedPaymentMethod != null,
+            onSettingsRetry: _loadSettingsDefaults,
+            onPreviewReady: _applyAiPreviewToForm,
+            onDraftPreviewReady: _applyAiDraftPreviewToForm,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+        ],
+      );
+    } else if (_captureMode == CaptureMode.receipt) {
+      child = Column(
+        key: const ValueKey('capture-receipt'),
+        children: [
+          _ReceiptCapturePanel(
+            settingsReady:
+                !_settingsLoadFailed &&
+                _selectedCurrency != null &&
+                _selectedPaymentMethod != null,
+            service: _receiptService(),
+            aiContext: _aiContext(activeCategories),
+            onSettingsRetry: _loadSettingsDefaults,
+            onExtracted: (result) =>
+                _applyReceiptResultToForm(result, activeCategories),
+            onUnavailable: (status) {
+              setState(() {
+                _syncDraft(
+                  sourceStatus: DraftSourceStatus.receipt,
+                  statusMessage:
+                      status.message ??
+                      context.l10n.providerAiUnavailableManualStillWorks,
+                  missingFields: [status.message ?? 'receipt'],
+                );
+              });
+            },
+          ),
+          const SizedBox(height: AppSpacing.lg),
+        ],
+      );
+    }
+
+    return AnimatedSwitcher(
+      duration: AppDurations.normal,
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      transitionBuilder: (child, animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: SizeTransition(
+            sizeFactor: animation,
+            alignment: Alignment.topCenter,
+            child: child,
+          ),
+        );
+      },
+      child: child,
     );
   }
 
@@ -923,7 +1165,8 @@ class _AddExpenseState extends State<AddExpense> {
                     .where((category) => !category.isArchived)
                     .toList();
                 final mediaQuery = MediaQuery.of(context);
-                final bottomPadding = 16.0 +
+                final bottomPadding =
+                    16.0 +
                     mediaQuery.viewPadding.bottom +
                     mediaQuery.viewInsets.bottom;
                 return SingleChildScrollView(
@@ -931,67 +1174,30 @@ class _AddExpenseState extends State<AddExpense> {
                       ScrollViewKeyboardDismissBehavior.onDrag,
                   padding: EdgeInsets.fromLTRB(16, 16, 16, bottomPadding),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
                         context.l10n.addExpense,
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(
-                        height: 16,
-                      ),
+                      const SizedBox(height: AppSpacing.lg),
                       _buildModeSelector(),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.md),
                       if (_currentDraft?.statusMessage != null) ...[
                         _buildDraftStatus(),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSpacing.md),
                       ],
-                      if (_captureMode == CaptureMode.naturalLanguage) ...[
-                        AiExpenseFormFillCard(
-                          categories: activeCategories,
-                          currencies: currencies,
-                          defaultCurrency: _selectedCurrency,
-                          defaultPaymentMethod: _selectedPaymentMethod,
-                          settingsReady: !_settingsLoadFailed &&
-                              _selectedCurrency != null &&
-                              _selectedPaymentMethod != null,
-                          onSettingsRetry: _loadSettingsDefaults,
-                          onPreviewReady: _applyAiPreviewToForm,
-                        ),
-                        const SizedBox(height: 16),
-                      ] else if (_captureMode == CaptureMode.receipt) ...[
-                        _ReceiptCapturePanel(
-                          settingsReady: !_settingsLoadFailed &&
-                              _selectedCurrency != null &&
-                              _selectedPaymentMethod != null,
-                          service: _receiptService(),
-                          aiContext: _aiContext(activeCategories),
-                          onSettingsRetry: _loadSettingsDefaults,
-                          onExtracted: (result) =>
-                              _applyReceiptResultToForm(result, activeCategories),
-                          onUnavailable: (status) {
-                            setState(() {
-                              _syncDraft(
-                                sourceStatus: DraftSourceStatus.receipt,
-                                statusMessage: status.message ??
-                                    context
-                                        .l10n.providerAiUnavailableManualStillWorks,
-                                missingFields: [status.message ?? 'receipt'],
-                              );
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                      ],
+                      _buildCapturePanel(activeCategories),
                       _buildAmountField(),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.lg),
                       _buildCategoryField(activeCategories),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       _buildCategoryScroller(activeCategories),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       Align(
                         alignment: AlignmentDirectional.centerStart,
                         child: TextButton.icon(
@@ -1011,10 +1217,10 @@ class _AddExpenseState extends State<AddExpense> {
                         ),
                       ),
                       if (_showAdvancedFields) ...[
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSpacing.sm),
                         _buildAdvancedFields(),
                       ],
-                      const SizedBox(height: 32),
+                      const SizedBox(height: AppSpacing.xxl),
                       _buildSaveButton(),
                     ],
                   ),
@@ -1036,13 +1242,20 @@ class _AddExpenseState extends State<AddExpense> {
                         const SizedBox(height: 16),
                         TextButton(
                           onPressed: () {
-                            context
-                                .read<GetCategoriesBloc>()
-                                .add(GetCategories());
+                            context.read<GetCategoriesBloc>().add(
+                              GetCategories(),
+                            );
                           },
                           style: TextButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            foregroundColor: Colors.white,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
+                            foregroundColor: Theme.of(
+                              context,
+                            ).colorScheme.onPrimary,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: AppRadii.pill,
+                            ),
                           ),
                           child: Text(context.l10n.retry),
                         ),
@@ -1051,9 +1264,7 @@ class _AddExpenseState extends State<AddExpense> {
                   ),
                 );
               } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(child: CircularProgressIndicator());
               }
             },
           ),
@@ -1084,66 +1295,54 @@ class _ReceiptCapturePanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final receiptService = service;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.secondaryContainer.withValues(alpha: 0.45),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.receipt_long, color: colorScheme.primary, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    context.l10n.quickCaptureReceiptTitle,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                    ),
+    return FinanceCard(
+      leadingAccent: colorScheme.primary,
+      backgroundColor: colorScheme.primaryContainer.withValues(alpha: 0.32),
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.receipt_long, color: colorScheme.primary, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  context.l10n.quickCaptureReceiptTitle,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              context.l10n.quickCaptureReceiptHelper,
-              style: TextStyle(
-                color: colorScheme.onSurfaceVariant,
-                fontSize: 12,
-              ),
-            ),
-            const SizedBox(height: 12),
-            if (!settingsReady) ...[
-              SettingsLoadGuardCard(
-                message: context.l10n.settingsLoadRequiredForAi,
-                onRetry: onSettingsRetry,
-              ),
-            ] else if (receiptService == null) ...[
-              Text(
-                context.l10n.providerAiUnavailableManualStillWorks,
-                style: TextStyle(
-                  color: colorScheme.error,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ] else ...[
-              ReceiptCaptureButton(
-                service: receiptService,
-                aiContext: aiContext,
-                onExtracted: onExtracted,
-                onUnavailable: onUnavailable,
               ),
             ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            context.l10n.quickCaptureReceiptHelper,
+            style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
+          ),
+          const SizedBox(height: 12),
+          if (!settingsReady) ...[
+            SettingsLoadGuardCard(
+              message: context.l10n.settingsLoadRequiredForAi,
+              onRetry: onSettingsRetry,
+            ),
+          ] else if (receiptService == null) ...[
+            AppStatusBanner(
+              message: context.l10n.providerAiUnavailableManualStillWorks,
+              tone: AppStatusTone.warning,
+              icon: Icons.wifi_off,
+            ),
+          ] else ...[
+            ReceiptCaptureButton(
+              service: receiptService,
+              aiContext: aiContext,
+              onExtracted: onExtracted,
+              onUnavailable: onUnavailable,
+            ),
           ],
-        ),
+        ],
       ),
     );
   }

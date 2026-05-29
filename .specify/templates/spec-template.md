@@ -5,6 +5,24 @@
 **Status**: Draft  
 **Input**: User description: "$ARGUMENTS"
 
+## Clarification Gate *(mandatory before planning)*
+
+<!--
+  Before creating or updating executable Spec Kit artifacts, ask the user one
+  consolidated set of questions for all unclear scope, defaults, UX behavior,
+  data rules, backend/deployment setup, verification expectations, and feature
+  boundaries. Do not proceed piecemeal unless the user explicitly says to use
+  assumptions.
+-->
+
+**Clarified Decisions**:
+
+- [Decision or "No clarification needed; assumptions below were stated before proceeding."]
+
+**Open Assumptions**:
+
+- [Assumption accepted by the user or explicitly chosen because the user asked to proceed.]
+
 ## User Scenarios & Testing *(mandatory)*
 
 <!--

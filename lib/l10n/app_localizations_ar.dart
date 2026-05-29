@@ -18,6 +18,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cancel => 'إلغاء';
 
   @override
+  String get send => 'إرسال';
+
+  @override
   String get delete => 'حذف';
 
   @override
@@ -28,6 +31,47 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get retry => 'إعادة المحاولة';
+
+  @override
+  String get syncQueued => 'بانتظار المزامنة';
+
+  @override
+  String get syncSyncing => 'تتم المزامنة';
+
+  @override
+  String get syncFailed => 'فشلت المزامنة';
+
+  @override
+  String get syncPendingOffline => 'ستتم المزامنة عند عودة الإنترنت.';
+
+  @override
+  String get syncPendingAuth => 'سجّل الدخول مرة أخرى لإكمال المزامنة.';
+
+  @override
+  String get syncPendingServer =>
+      'مزامنة الخادم غير متاحة. أعد المحاولة عند عودتها.';
+
+  @override
+  String get syncPendingValidation =>
+      'بعض التغييرات تحتاج مراجعة قبل المزامنة.';
+
+  @override
+  String get syncPendingQueued => 'تمت إضافته إلى قائمة المزامنة.';
+
+  @override
+  String get syncPendingUnknown =>
+      'المزامنة بانتظار المعالجة. أعد المحاولة بعد قليل.';
+
+  @override
+  String syncPendingCount(int count, String status) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count مصروفات $status',
+      one: 'مصروف واحد $status',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get reset => 'إعادة ضبط';
@@ -90,6 +134,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get editExpense => 'تعديل المصروف';
+
+  @override
+  String get quickAmountAdjustment => 'تعديل سريع للمبلغ';
+
+  @override
+  String get adjustmentAmount => 'مبلغ التعديل';
+
+  @override
+  String get addToAmount => 'إضافة';
+
+  @override
+  String get subtractFromAmount => 'خصم';
+
+  @override
+  String get invalidExpenseAdjustment =>
+      'أدخل تعديلًا يجعل المبلغ النهائي أكبر من صفر.';
 
   @override
   String get expenseUpdated => 'تم تحديث المصروف';
@@ -257,8 +317,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get possibleDuplicateExpense => 'مصروف مكرر محتمل';
 
   @override
-  String possibleDuplicateExpenseMessage(String amount, String currency,
-      String category, String date, String reasons) {
+  String possibleDuplicateExpenseMessage(
+    String amount,
+    String currency,
+    String category,
+    String date,
+    String reasons,
+  ) {
     return 'يوجد مصروف مشابه: $amount $currency، $category، $date. الأسباب: $reasons. هل تريد الحفظ على أي حال؟';
   }
 
@@ -430,6 +495,42 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get accountEmailInvalid => 'أدخل بريدا إلكترونيا صحيحا.';
+
+  @override
+  String get emailLabel => 'البريد الإلكتروني';
+
+  @override
+  String get passwordLabel => 'كلمة المرور';
+
+  @override
+  String get confirmPasswordLabel => 'تأكيد كلمة المرور';
+
+  @override
+  String get login => 'تسجيل الدخول';
+
+  @override
+  String get register => 'تسجيل';
+
+  @override
+  String get createAccount => 'إنشاء حساب';
+
+  @override
+  String get forgotPassword => 'نسيت كلمة المرور؟';
+
+  @override
+  String get continueWithGoogle => 'المتابعة باستخدام Google';
+
+  @override
+  String get enterEmailAddress => 'أدخل بريدك الإلكتروني.';
+
+  @override
+  String get enterPassword => 'أدخل كلمة المرور.';
+
+  @override
+  String get passwordMinLength => 'يجب ألا تقل كلمة المرور عن 6 أحرف.';
+
+  @override
+  String get passwordsDoNotMatch => 'كلمتا المرور غير متطابقتين.';
 
   @override
   String get accountEmailUpdated => 'تم تحديث البريد.';
@@ -831,6 +932,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get useBiometrics => 'استخدام البصمة';
 
   @override
+  String get failedToSavePin => 'تعذر حفظ PIN.';
+
+  @override
+  String get failedToChangePin => 'تعذر تغيير PIN.';
+
+  @override
+  String get failedToDisableAppLock => 'تعذر إيقاف قفل التطبيق.';
+
+  @override
+  String get biometricAuthenticationUnavailable =>
+      'المصادقة بالبصمة غير متاحة.';
+
+  @override
+  String get failedToUpdateBiometricSetting => 'تعذر تحديث إعداد البصمة.';
+
+  @override
+  String get incorrectPin => 'PIN غير صحيح.';
+
+  @override
+  String get failedToUnlock => 'تعذر فتح القفل.';
+
+  @override
+  String get usePinToUnlock => 'استخدم PIN لفتح القفل.';
+
+  @override
+  String get failedToLoadAppLockSettings => 'تعذر تحميل إعدادات قفل التطبيق.';
+
+  @override
   String get biometricUnlock => 'فتح بالبصمة';
 
   @override
@@ -840,6 +969,111 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get biometricUnlockUnavailableDescription =>
       'غير متاح على هذا الجهاز.';
+
+  @override
+  String get watchAdForExtraAiUse =>
+      'شاهد إعلانًا لاستخدام إضافي للذكاء الاصطناعي';
+
+  @override
+  String get rewardUnavailable => 'المكافأة غير متاحة الآن.';
+
+  @override
+  String get extraAiUseAdded => 'تمت إضافة استخدام إضافي للذكاء الاصطناعي.';
+
+  @override
+  String get retentionStartSetupTitle => 'ابدأ الإعداد';
+
+  @override
+  String get retentionStartSetupMessage =>
+      'أضف مصروفًا واحدًا، وأنشئ فئات، ثم حدد ميزانية.';
+
+  @override
+  String get retentionKeepStreakTitle => 'حافظ على السلسلة';
+
+  @override
+  String get retentionStartStreakMessage =>
+      'سجل اليوم مرة واحدة لبدء سلسلة تتبع.';
+
+  @override
+  String retentionKeepStreakMessage(int days) {
+    return 'سجل اليوم للحفاظ على سلسلة $days يوم.';
+  }
+
+  @override
+  String get retentionLogExpenseAction => 'تسجيل مصروف';
+
+  @override
+  String get weeklyCheckIn => 'مراجعة أسبوعية';
+
+  @override
+  String get viewDigest => 'عرض الملخص';
+
+  @override
+  String get retentionBudgetReviewTitle => 'مراجعة الميزانية';
+
+  @override
+  String get retentionBudgetExceededMessage =>
+      'ميزانيتك الشهرية تجاوزت الهدف. راجع المصروفات الأخيرة.';
+
+  @override
+  String get retentionReviewBudgetAction => 'مراجعة الميزانية';
+
+  @override
+  String get retentionBudgetNudgeTitle => 'تنبيه الميزانية';
+
+  @override
+  String get retentionBudgetNearLimitMessage =>
+      'أنت قريب من حد الميزانية. راجع أعلى فئة.';
+
+  @override
+  String get retentionOpenBudgetAction => 'فتح الميزانية';
+
+  @override
+  String get retentionSetTargetTitle => 'حدد هدفًا بسيطًا';
+
+  @override
+  String get retentionSetTargetMessage =>
+      'أضف ميزانية شهرية لتسهيل تتبع التقدم.';
+
+  @override
+  String get retentionSetBudgetAction => 'تحديد ميزانية';
+
+  @override
+  String get retentionThreeDayChallengeTitle => 'تحدي ثلاثة أيام';
+
+  @override
+  String get retentionThreeDayChallengeMessage =>
+      'استمر في التسجيل لبقية الأسبوع.';
+
+  @override
+  String get continueAction => 'متابعة';
+
+  @override
+  String get streak => 'الاستمرارية';
+
+  @override
+  String get health => 'الحالة';
+
+  @override
+  String get trackedToday => 'تم التسجيل اليوم';
+
+  @override
+  String get checkIn => 'سجل اليوم';
+
+  @override
+  String get needsData => 'تحتاج بيانات';
+
+  @override
+  String dayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count أيام',
+      two: 'يومان',
+      one: 'يوم واحد',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get aiUsageSettingsTitle => 'استخدام الذكاء الاصطناعي';
@@ -1784,7 +2018,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String aiAdviceEvidenceTopCategory(
-      String category, String amount, String currency) {
+    String category,
+    String amount,
+    String currency,
+  ) {
     return 'أعلى فئة: $category ($amount $currency)';
   }
 
@@ -2000,6 +2237,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get monthlyBudgetTitle => 'الميزانية الشهرية';
 
   @override
+  String get budgetAmount => 'مبلغ الميزانية';
+
+  @override
+  String get saveBudget => 'حفظ الميزانية';
+
+  @override
+  String get enterValidBudgetAmount => 'أدخل مبلغ ميزانية صحيحًا.';
+
+  @override
+  String get warningThresholdRange => 'يجب أن تكون نسبة التنبيه بين 1 و100.';
+
+  @override
+  String get failedToLoadBudget => 'تعذر تحميل الميزانية.';
+
+  @override
+  String get failedToSaveBudget => 'تعذر حفظ الميزانية.';
+
+  @override
   String get budgetSetAction => 'تحديد';
 
   @override
@@ -2112,7 +2367,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String categoryBudgetRecommendationSubtitle(
-      String amount, String confidence) {
+    String amount,
+    String confidence,
+  ) {
     return '$amount - ثقة $confidence';
   }
 
@@ -2178,9 +2435,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterValidBudgetLimit => 'أدخل حد ميزانية صحيح.';
 
   @override
-  String get warningThresholdRange => 'يجب أن تكون نسبة التنبيه بين 1 و100.';
-
-  @override
   String get manageRecurringExpenses => 'إدارة المصروفات المتكررة';
 
   @override
@@ -2225,7 +2479,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String subscriptionNextDue(
-      String frequency, String paymentMethod, String date) {
+    String frequency,
+    String paymentMethod,
+    String date,
+  ) {
     return '$frequency - $paymentMethod - التالي $date';
   }
 

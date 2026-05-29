@@ -1,9 +1,12 @@
 import 'package:expense_repository/expense_repository.dart';
 import 'package:expenses_tracker/categories/category_icon_view.dart';
 import 'package:expenses_tracker/l10n/l10n.dart';
+import 'package:expenses_tracker/screens/expenses/models/expense_edit_draft.dart';
 import 'package:expenses_tracker/screens/settings/utils/currency_formatter.dart';
+import 'package:expenses_tracker/services/finance/money_snapshot_service.dart';
 import 'package:expenses_tracker/utils/amount_parser.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -16,18 +19,12 @@ Future<Expense?> showExpenseEditSheet({
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    builder: (_) => _ExpenseEditSheet(
-      expense: expense,
-      categories: categories,
-    ),
+    builder: (_) => _ExpenseEditSheet(expense: expense, categories: categories),
   );
 }
 
 class _ExpenseEditSheet extends StatefulWidget {
-  const _ExpenseEditSheet({
-    required this.expense,
-    required this.categories,
-  });
+  const _ExpenseEditSheet({required this.expense, required this.categories});
 
   final Expense expense;
   final List<Category> categories;
@@ -42,6 +39,7 @@ class _ExpenseEditSheetState extends State<_ExpenseEditSheet> {
   late final TextEditingController _merchantController;
   late final TextEditingController _tagsController;
   late final TextEditingController _dateController;
+  late final TextEditingController _adjustmentController;
   late final List<Category> _categories;
   late final List<String> _currencies;
   late Category _selectedCategory;
@@ -76,6 +74,7 @@ class _ExpenseEditSheetState extends State<_ExpenseEditSheet> {
     _dateController = TextEditingController(
       text: DateFormat('dd/MM/yyyy').format(_selectedDate),
     );
+    _adjustmentController = TextEditingController();
   }
 
   @override
@@ -85,6 +84,7 @@ class _ExpenseEditSheetState extends State<_ExpenseEditSheet> {
     _merchantController.dispose();
     _tagsController.dispose();
     _dateController.dispose();
+    _adjustmentController.dispose();
     super.dispose();
   }
 
@@ -105,9 +105,9 @@ class _ExpenseEditSheetState extends State<_ExpenseEditSheet> {
             children: [
               Text(
                 context.l10n.editExpense,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 16),
               Flexible(
@@ -122,7 +122,7 @@ class _ExpenseEditSheetState extends State<_ExpenseEditSheet> {
                         ),
                         decoration: InputDecoration(
                           labelText: context.l10n.amount,
-                          prefixIcon: const Icon(
+                          prefixIcon: const FaIcon(
                             FontAwesomeIcons.dollarSign,
                             size: 16,
                           ),
@@ -130,11 +130,17 @@ class _ExpenseEditSheetState extends State<_ExpenseEditSheet> {
                         ),
                       ),
                       const SizedBox(height: 12),
+                      _QuickAdjustmentPanel(
+                        controller: _adjustmentController,
+                        onAdd: () => _applyAdjustment(isAddition: true),
+                        onSubtract: () => _applyAdjustment(isAddition: false),
+                      ),
+                      const SizedBox(height: 12),
                       TextFormField(
                         controller: _descriptionController,
                         decoration: InputDecoration(
                           labelText: context.l10n.description,
-                          prefixIcon: const Icon(
+                          prefixIcon: const FaIcon(
                             FontAwesomeIcons.noteSticky,
                             size: 16,
                           ),
@@ -146,7 +152,7 @@ class _ExpenseEditSheetState extends State<_ExpenseEditSheet> {
                         controller: _merchantController,
                         decoration: InputDecoration(
                           labelText: context.l10n.merchant,
-                          prefixIcon: const Icon(
+                          prefixIcon: const FaIcon(
                             FontAwesomeIcons.store,
                             size: 16,
                           ),
@@ -159,7 +165,7 @@ class _ExpenseEditSheetState extends State<_ExpenseEditSheet> {
                         decoration: InputDecoration(
                           labelText: context.l10n.tags,
                           helperText: context.l10n.tagsHelper,
-                          prefixIcon: const Icon(
+                          prefixIcon: const FaIcon(
                             FontAwesomeIcons.tags,
                             size: 16,
                           ),
@@ -262,7 +268,7 @@ class _ExpenseEditSheetState extends State<_ExpenseEditSheet> {
                         onTap: _pickDate,
                         decoration: InputDecoration(
                           labelText: context.l10n.date,
-                          prefixIcon: const Icon(
+                          prefixIcon: const FaIcon(
                             FontAwesomeIcons.clock,
                             size: 16,
                           ),
@@ -274,15 +280,35 @@ class _ExpenseEditSheetState extends State<_ExpenseEditSheet> {
                 ),
               ),
               const SizedBox(height: 16),
-              FilledButton(
-                onPressed: _save,
-                child: Text(context.l10n.save),
-              ),
+              FilledButton(onPressed: _save, child: Text(context.l10n.save)),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _applyAdjustment({required bool isAddition}) {
+    final adjustment = parseAmountInput(_adjustmentController.text);
+    final current = parseAmountInput(_amountController.text);
+    if (adjustment == null ||
+        adjustment <= 0 ||
+        current == null ||
+        current <= 0) {
+      _showError(context.l10n.invalidExpenseAdjustment);
+      return;
+    }
+
+    final next = isAddition ? current + adjustment : current - adjustment;
+    if (next <= 0) {
+      _showError(context.l10n.invalidExpenseAdjustment);
+      return;
+    }
+
+    setState(() {
+      _amountController.text = formatAmountInput(next);
+      _adjustmentController.clear();
+    });
   }
 
   Future<void> _pickDate() async {
@@ -299,42 +325,68 @@ class _ExpenseEditSheetState extends State<_ExpenseEditSheet> {
     });
   }
 
-  void _save() {
-    final amount = parseAmountInput(_amountController.text);
-    if (amount == null || amount <= 0) {
-      _showError(context.l10n.enterValidExpenseAmount);
-      return;
-    }
-    if (_selectedCategory.categoryId.isEmpty) {
-      _showError(context.l10n.selectCategoryBeforeSaving);
-      return;
-    }
-    if (_selectedCurrency.trim().isEmpty) {
-      _showError(context.l10n.chooseCurrencyAndPaymentBeforeSaving);
+  Future<void> _save() async {
+    final draft = _buildDraft();
+    final errors =
+        draft?.validate() ?? [ExpenseEditValidationError.invalidAmount];
+    if (errors.isNotEmpty) {
+      _showValidationError(errors.first);
       return;
     }
 
-    Navigator.pop(
-      context,
-      Expense(
-        expenseId: widget.expense.expenseId,
-        userId: widget.expense.userId,
-        category: _selectedCategory,
-        date: _selectedDate,
-        amount: amount,
-        description: _descriptionController.text.trim(),
-        merchant: _merchantController.text.trim(),
-        tags: _parseTags(_tagsController.text),
-        paymentMethod: _selectedPaymentMethod,
-        currency: _selectedCurrency,
-        createdAt: widget.expense.createdAt,
-        updatedAt: DateTime.now(),
-        source: widget.expense.source,
-        recurringExpenseId: widget.expense.recurringExpenseId,
-        aiActionId: widget.expense.aiActionId,
-        syncStatus: widget.expense.syncStatus,
-      ),
+    final updated = draft!.toExpense(widget.expense);
+
+    UserSettings settings;
+    try {
+      settings = await context.read<SettingsRepository>().getSettings();
+    } catch (_) {
+      if (!mounted) return;
+      _showError(context.l10n.settingsUnavailableMessage);
+      return;
+    }
+    final withSnapshot = const MoneySnapshotService().preserveOrRefreshForEdit(
+      previous: widget.expense,
+      next: updated,
+      settings: settings,
     );
+    if (draft.moneyInputsChanged(widget.expense) &&
+        withSnapshot.moneySnapshot == null) {
+      if (!mounted) return;
+      _showError(context.l10n.unconvertedCurrenciesStatus(1, updated.currency));
+      return;
+    }
+
+    if (!mounted) return;
+    Navigator.pop(context, withSnapshot);
+  }
+
+  ExpenseEditDraft? _buildDraft() {
+    final amount = parseAmountInput(_amountController.text);
+    if (amount == null) return null;
+    return ExpenseEditDraft(
+      amount: amount,
+      category: _selectedCategory,
+      date: _selectedDate,
+      description: _descriptionController.text,
+      merchant: _merchantController.text.trim(),
+      tags: _parseTags(_tagsController.text),
+      paymentMethod: _selectedPaymentMethod,
+      currency: _selectedCurrency,
+    );
+  }
+
+  void _showValidationError(ExpenseEditValidationError error) {
+    switch (error) {
+      case ExpenseEditValidationError.invalidAmount:
+        _showError(context.l10n.enterValidExpenseAmount);
+        break;
+      case ExpenseEditValidationError.missingCategory:
+        _showError(context.l10n.selectCategoryBeforeSaving);
+        break;
+      case ExpenseEditValidationError.missingCurrency:
+        _showError(context.l10n.chooseCurrencyAndPaymentBeforeSaving);
+        break;
+    }
   }
 
   void _showError(String message) {
@@ -397,6 +449,73 @@ List<String> _parseTags(String value) {
     if (seen.add(tag.toLowerCase())) tags.add(tag);
   }
   return tags;
+}
+
+class _QuickAdjustmentPanel extends StatelessWidget {
+  const _QuickAdjustmentPanel({
+    required this.controller,
+    required this.onAdd,
+    required this.onSubtract,
+  });
+
+  final TextEditingController controller;
+  final VoidCallback onAdd;
+  final VoidCallback onSubtract;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              context.l10n.quickAmountAdjustment,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: controller,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: InputDecoration(
+                labelText: context.l10n.adjustmentAmount,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: onSubtract,
+                    icon: const Icon(Icons.remove),
+                    label: Text(context.l10n.subtractFromAmount),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: onAdd,
+                    icon: const Icon(Icons.add),
+                    label: Text(context.l10n.addToAmount),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 String expenseDeleteContext(BuildContext context, Expense expense) {

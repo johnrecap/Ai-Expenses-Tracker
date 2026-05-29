@@ -195,6 +195,42 @@ service cloud.firestore {
         && validTagAt(value, 19);
     }
 
+    function validMoneySnapshot(value) {
+      return value == null || (
+        value is map
+        && hasOnly(value, [
+          'sourceAmount',
+          'sourceCurrency',
+          'targetCurrency',
+          'conversionRate',
+          'convertedAmount',
+          'capturedAt',
+          'rateUpdatedAt',
+          'rateSource',
+          'rateFreshness',
+        ])
+        && hasAll(value, [
+          'sourceAmount',
+          'sourceCurrency',
+          'targetCurrency',
+          'conversionRate',
+          'convertedAmount',
+          'capturedAt',
+          'rateSource',
+          'rateFreshness',
+        ])
+        && nonNegativeMoney(value.sourceAmount)
+        && validCurrency(value.sourceCurrency)
+        && validCurrency(value.targetCurrency)
+        && positiveMoney(value.conversionRate)
+        && nonNegativeMoney(value.convertedAmount)
+        && value.capturedAt is timestamp
+        && optionalTimestamp(value, 'rateUpdatedAt')
+        && nonEmptyString(value.rateSource)
+        && nonEmptyString(value.rateFreshness)
+      );
+    }
+
     function validFrequency(value) {
       return value == 'daily'
         || value == 'weekly'
@@ -260,6 +296,7 @@ service cloud.firestore {
           'walletAccountName',
           'recurringExpenseId',
           'aiActionId',
+          'moneySnapshot',
         ])
         && hasAll(data, [
           'expenseId',
@@ -292,7 +329,8 @@ service cloud.firestore {
         && optionalString(data, 'walletAccountId')
         && optionalBoundedString(data, 'walletAccountName', 120)
         && optionalString(data, 'recurringExpenseId')
-        && optionalString(data, 'aiActionId');
+        && optionalString(data, 'aiActionId')
+        && (!('moneySnapshot' in data) || validMoneySnapshot(data.moneySnapshot));
     }
 
     function validWallet(data, userId, walletId) {

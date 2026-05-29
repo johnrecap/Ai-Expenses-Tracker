@@ -39,9 +39,11 @@ class CategoryBreakdownChart extends StatelessWidget {
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
-                  color: Color(category.categoryColor == 0
-                      ? Colors.blue.toARGB32()
-                      : category.categoryColor),
+                  color: Color(
+                    category.categoryColor == 0
+                        ? Colors.blue.toARGB32()
+                        : category.categoryColor,
+                  ),
                 );
               }).toList(),
             ),
@@ -51,8 +53,9 @@ class CategoryBreakdownChart extends StatelessWidget {
         for (final category in visibleCategories)
           _CategoryBreakdownRow(
             category: category,
-            onTap:
-                onCategoryTap == null ? null : () => onCategoryTap!(category),
+            onTap: onCategoryTap == null
+                ? null
+                : () => onCategoryTap!(category),
           ),
       ],
     );
@@ -60,10 +63,7 @@ class CategoryBreakdownChart extends StatelessWidget {
 }
 
 class _CategoryBreakdownRow extends StatelessWidget {
-  const _CategoryBreakdownRow({
-    required this.category,
-    required this.onTap,
-  });
+  const _CategoryBreakdownRow({required this.category, required this.onTap});
 
   final CategoryReportTotal category;
   final VoidCallback? onTap;
@@ -88,10 +88,7 @@ class _CategoryBreakdownRow extends StatelessWidget {
               Container(
                 width: 10,
                 height: 10,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
               ),
               const SizedBox(width: 10),
               Expanded(

@@ -1,5 +1,6 @@
 import 'package:expense_repository/expense_repository.dart';
 import 'package:expenses_tracker/engagement/engagement.dart';
+import 'package:expenses_tracker/l10n/app_localizations_en.dart';
 import 'package:expenses_tracker/services/budget_calculator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -85,6 +86,7 @@ WeeklyDigest _digest({bool empty = false}) {
 
 void main() {
   const service = RetentionPromptService();
+  final l10n = AppLocalizationsEn();
 
   test('returns first-run setup prompt when no expenses exist', () {
     final prompts = service.buildPrompts(
@@ -96,6 +98,7 @@ void main() {
         referenceDate: DateTime(2026, 5, 17),
       ),
       digest: _digest(empty: true),
+      l10n: l10n,
     );
 
     expect(prompts, hasLength(1));
@@ -113,6 +116,7 @@ void main() {
         lastTrackedDate: DateTime(2026, 5, 16),
       ),
       digest: _digest(),
+      l10n: l10n,
     );
 
     expect(
@@ -140,6 +144,7 @@ void main() {
         referenceDate: DateTime(2026, 5, 17),
       ),
       digest: _digest(empty: true),
+      l10n: l10n,
     );
 
     expect(prompts.single.kind, RetentionPromptKind.budgetNudge);

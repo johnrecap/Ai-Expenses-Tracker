@@ -22,7 +22,9 @@ class Expense {
   String? walletAccountName;
   String? recurringExpenseId;
   String? aiActionId;
+  MoneySnapshot? moneySnapshot;
   SyncStatus syncStatus;
+  SyncStatusReason syncStatusReason;
 
   Expense({
     required this.expenseId,
@@ -46,7 +48,9 @@ class Expense {
     this.walletAccountName,
     this.recurringExpenseId,
     this.aiActionId,
+    this.moneySnapshot,
     SyncStatus? syncStatus,
+    SyncStatusReason? syncStatusReason,
   })  : userId = userId ?? '',
         _category = category,
         categoryId = categoryId ?? category.categoryId,
@@ -62,7 +66,8 @@ class Expense {
         createdAt = createdAt ?? date,
         updatedAt = updatedAt ?? date,
         source = source ?? ExpenseSource.manual,
-        syncStatus = syncStatus ?? SyncStatus.synced;
+        syncStatus = syncStatus ?? SyncStatus.synced,
+        syncStatusReason = syncStatusReason ?? SyncStatusReason.queued;
 
   Category get category => _category;
 
@@ -110,6 +115,7 @@ class Expense {
       walletAccountName: walletAccountName,
       recurringExpenseId: recurringExpenseId,
       aiActionId: aiActionId,
+      moneySnapshot: moneySnapshot,
     );
   }
 
@@ -136,10 +142,14 @@ class Expense {
       walletAccountName: entity.walletAccountName,
       recurringExpenseId: entity.recurringExpenseId,
       aiActionId: entity.aiActionId,
+      moneySnapshot: entity.moneySnapshot,
     );
   }
 
-  Expense withSyncStatus(SyncStatus status) {
+  Expense withSyncStatus(
+    SyncStatus status, {
+    SyncStatusReason? reason,
+  }) {
     return Expense(
       expenseId: expenseId,
       userId: userId,
@@ -162,7 +172,38 @@ class Expense {
       walletAccountName: walletAccountName,
       recurringExpenseId: recurringExpenseId,
       aiActionId: aiActionId,
+      moneySnapshot: moneySnapshot,
       syncStatus: status,
+      syncStatusReason: reason ?? syncStatusReason,
+    );
+  }
+
+  Expense withMoneySnapshot(MoneySnapshot? snapshot) {
+    return Expense(
+      expenseId: expenseId,
+      userId: userId,
+      category: category,
+      categoryId: categoryId,
+      categoryName: categoryName,
+      categoryIcon: categoryIcon,
+      categoryColor: categoryColor,
+      date: date,
+      amount: amount,
+      description: description,
+      merchant: merchant,
+      tags: tags,
+      paymentMethod: paymentMethod,
+      currency: currency,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      source: source,
+      walletAccountId: walletAccountId,
+      walletAccountName: walletAccountName,
+      recurringExpenseId: recurringExpenseId,
+      aiActionId: aiActionId,
+      moneySnapshot: snapshot,
+      syncStatus: syncStatus,
+      syncStatusReason: syncStatusReason,
     );
   }
 

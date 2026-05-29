@@ -8,11 +8,7 @@ class SpendingBarChart extends StatelessWidget {
   final List<ReportBucket> buckets;
   final ValueChanged<ReportBucket>? onBucketTap;
 
-  const SpendingBarChart({
-    super.key,
-    required this.buckets,
-    this.onBucketTap,
-  });
+  const SpendingBarChart({super.key, required this.buckets, this.onBucketTap});
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +33,12 @@ class SpendingBarChart extends StatelessWidget {
         gridData: const FlGridData(show: false),
         borderData: FlBorderData(show: false),
         titlesData: FlTitlesData(
-          rightTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          topTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
           leftTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),

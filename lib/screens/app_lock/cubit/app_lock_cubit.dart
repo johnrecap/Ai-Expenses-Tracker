@@ -7,10 +7,9 @@ part 'app_lock_state.dart';
 class AppLockCubit extends Cubit<AppLockState> {
   final AppLockService _appLockService;
 
-  AppLockCubit({
-    AppLockService? appLockService,
-  })  : _appLockService = appLockService ?? AppLockService(),
-        super(const AppLockState.initial());
+  AppLockCubit({AppLockService? appLockService})
+    : _appLockService = appLockService ?? AppLockService(),
+      super(const AppLockState.initial());
 
   Future<void> initialize() async {
     emit(state.copyWith(status: AppLockStatus.loading));
@@ -29,8 +28,8 @@ class AppLockCubit extends Cubit<AppLockState> {
     emit(state.copyWith(status: AppLockStatus.saving, clearMessage: true));
     try {
       await _appLockService.setupPin(pin);
-      final biometricAvailable =
-          await _appLockService.biometricService.isSupported();
+      final biometricAvailable = await _appLockService.biometricService
+          .isSupported();
       _appLockService.markUnlocked();
       emit(
         AppLockState(
@@ -42,11 +41,11 @@ class AppLockCubit extends Cubit<AppLockState> {
         ),
       );
       return true;
-    } on FormatException catch (error) {
+    } on FormatException {
       emit(
         state.copyWith(
           status: AppLockStatus.setupRequired,
-          message: error.message,
+          messageKey: AppLockMessageKey.invalidPin,
         ),
       );
       return false;
@@ -54,7 +53,7 @@ class AppLockCubit extends Cubit<AppLockState> {
       emit(
         state.copyWith(
           status: AppLockStatus.setupRequired,
-          message: 'Failed to save PIN.',
+          messageKey: AppLockMessageKey.failedToSavePin,
         ),
       );
       return false;
@@ -68,11 +67,11 @@ class AppLockCubit extends Cubit<AppLockState> {
       _appLockService.markUnlocked();
       await _loadLockState(lockIfRequired: false);
       return true;
-    } on FormatException catch (error) {
+    } on FormatException {
       emit(
         state.copyWith(
           status: AppLockStatus.unlocked,
-          message: error.message,
+          messageKey: AppLockMessageKey.invalidPin,
         ),
       );
       return false;
@@ -80,7 +79,7 @@ class AppLockCubit extends Cubit<AppLockState> {
       emit(
         state.copyWith(
           status: AppLockStatus.unlocked,
-          message: 'Failed to change PIN.',
+          messageKey: AppLockMessageKey.failedToChangePin,
         ),
       );
       return false;
@@ -96,7 +95,7 @@ class AppLockCubit extends Cubit<AppLockState> {
       emit(
         state.copyWith(
           status: AppLockStatus.unlocked,
-          message: 'Failed to disable app lock.',
+          messageKey: AppLockMessageKey.failedToDisableAppLock,
         ),
       );
     }
@@ -111,9 +110,9 @@ class AppLockCubit extends Cubit<AppLockState> {
       emit(
         state.copyWith(
           status: AppLockStatus.unlocked,
-          message: enabled
-              ? 'Biometric authentication is not available.'
-              : 'Failed to update biometric setting.',
+          messageKey: enabled
+              ? AppLockMessageKey.biometricUnavailable
+              : AppLockMessageKey.failedToUpdateBiometric,
         ),
       );
     }
@@ -127,7 +126,7 @@ class AppLockCubit extends Cubit<AppLockState> {
         emit(
           state.copyWith(
             status: AppLockStatus.locked,
-            message: 'Incorrect PIN.',
+            messageKey: AppLockMessageKey.incorrectPin,
           ),
         );
         return false;
@@ -138,7 +137,7 @@ class AppLockCubit extends Cubit<AppLockState> {
       emit(
         state.copyWith(
           status: AppLockStatus.locked,
-          message: 'Failed to unlock.',
+          messageKey: AppLockMessageKey.failedToUnlock,
         ),
       );
       return false;
@@ -153,7 +152,7 @@ class AppLockCubit extends Cubit<AppLockState> {
         emit(
           state.copyWith(
             status: AppLockStatus.locked,
-            message: 'Use PIN to unlock.',
+            messageKey: AppLockMessageKey.usePinToUnlock,
           ),
         );
         return false;
@@ -164,7 +163,7 @@ class AppLockCubit extends Cubit<AppLockState> {
       emit(
         state.copyWith(
           status: AppLockStatus.locked,
-          message: 'Use PIN to unlock.',
+          messageKey: AppLockMessageKey.usePinToUnlock,
         ),
       );
       return false;
@@ -175,8 +174,8 @@ class AppLockCubit extends Cubit<AppLockState> {
     try {
       final settings = await _appLockService.getSettings();
       final hasPin = await _appLockService.pinService.hasPin();
-      final biometricAvailable =
-          await _appLockService.biometricService.isSupported();
+      final biometricAvailable = await _appLockService.biometricService
+          .isSupported();
 
       if (settings.appLockEnabled && !hasPin) {
         emit(
@@ -206,7 +205,7 @@ class AppLockCubit extends Cubit<AppLockState> {
       emit(
         state.copyWith(
           status: AppLockStatus.unlocked,
-          message: 'Failed to load app lock settings.',
+          messageKey: AppLockMessageKey.failedToLoadSettings,
         ),
       );
     }

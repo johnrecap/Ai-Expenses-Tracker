@@ -54,8 +54,9 @@ class SupportSettingsSection extends StatelessWidget {
       ),
     );
 
-    final diagnostics =
-        includeDiagnostics == true ? '\n\n${l10n.appVersion}: 1.0.0+1' : '';
+    final diagnostics = includeDiagnostics == true
+        ? '\n\n${l10n.appVersion}: 1.0.0+1'
+        : '';
     await Share.share(
       '${l10n.feedbackShareTemplate}'
       '$diagnostics',

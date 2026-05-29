@@ -22,6 +22,7 @@ import 'package:expenses_tracker/screens/budget/blocs/budget_bloc/budget_bloc.da
 import 'package:expenses_tracker/screens/budget/views/budget_screen.dart';
 import 'package:expenses_tracker/screens/budget/widgets/budget_progress_card.dart';
 import 'package:expenses_tracker/screens/expenses/views/expenses_screen.dart';
+import 'package:expenses_tracker/screens/expenses/widgets/expense_edit_sheet.dart';
 import 'package:expenses_tracker/screens/home/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 import 'package:expenses_tracker/screens/home/models/home_summary.dart';
 import 'package:expenses_tracker/screens/home/services/home_summary_calculator.dart';
@@ -29,6 +30,8 @@ import 'package:expenses_tracker/screens/settings/views/settings_screen.dart';
 import 'package:expenses_tracker/screens/settings/utils/currency_formatter.dart';
 import 'package:expenses_tracker/services/budget_calculator.dart';
 import 'package:expenses_tracker/services/notifications/notifications.dart';
+import 'package:expenses_tracker/theme/app_design_tokens.dart';
+import 'package:expenses_tracker/widgets/design_system.dart';
 import 'package:expenses_tracker/widgets/sync_status_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -97,6 +100,7 @@ class MainScreen extends StatelessWidget {
           budgetProgress: budgetProgress,
           streak: streak,
           digest: digest,
+          l10n: context.l10n,
         );
         return _buildContent(
           context,
@@ -128,7 +132,10 @@ class MainScreen extends StatelessWidget {
   }) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width < 380 ? 20.0 : 25.0,
+          vertical: 10,
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -143,21 +150,17 @@ class MainScreen extends StatelessWidget {
                           alignment: Alignment.center,
                           children: [
                             Container(
-                              height: 50,
-                              width: 50,
+                              height: 46,
+                              width: 46,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Colors.yellow[700],
                               ),
                             ),
-                            const Icon(
-                              CupertinoIcons.person_alt,
-                            ),
+                            const Icon(CupertinoIcons.person_alt),
                           ],
                         ),
-                        const SizedBox(
-                          width: 8,
-                        ),
+                        const SizedBox(width: 6),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,8 +182,9 @@ class MainScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
                                 ),
                               ),
                             ],
@@ -201,11 +205,13 @@ class MainScreen extends StatelessWidget {
                             builder: (_) {
                               Widget screen =
                                   RepositoryProvider<SettingsRepository>.value(
-                                value: context.read<SettingsRepository>(),
-                                child: SettingsScreen(expenses: expenses),
+                                    value: context.read<SettingsRepository>(),
+                                    child: SettingsScreen(expenses: expenses),
+                                  );
+                              screen = _withSettingsRouteProviders(
+                                context,
+                                screen,
                               );
-                              screen =
-                                  _withSettingsRouteProviders(context, screen);
                               if (guidedTourCubit == null) return screen;
                               return BlocProvider<GuidedTourCubit>.value(
                                 value: guidedTourCubit,
@@ -224,9 +230,7 @@ class MainScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 20.0,
-              ),
+              const SizedBox(height: 20.0),
               // card
               Container(
                 width: double.infinity,
@@ -234,22 +238,23 @@ class MainScreen extends StatelessWidget {
                   minHeight: MediaQuery.of(context).size.width / 2,
                 ),
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Theme.of(context).colorScheme.primary,
-                        Theme.of(context).colorScheme.secondary,
-                        Theme.of(context).colorScheme.tertiary,
-                      ],
-                      transform: const GradientRotation(pi / 4),
+                  gradient: LinearGradient(
+                    colors: [
+                      Theme.of(context).colorScheme.primary,
+                      Theme.of(context).colorScheme.secondary,
+                      Theme.of(context).colorScheme.tertiary,
+                    ],
+                    transform: const GradientRotation(pi / 4),
+                  ),
+                  borderRadius: AppRadii.card,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 4,
+                      color: Colors.grey.shade300,
+                      offset: const Offset(5, 5),
                     ),
-                    borderRadius: BorderRadius.circular(25),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 4,
-                        color: Colors.grey.shade300,
-                        offset: const Offset(5, 5),
-                      )
-                    ]),
+                  ],
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -261,9 +266,7 @@ class MainScreen extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    const SizedBox(height: 12),
                     Text(
                       spendingLabel,
                       maxLines: 1,
@@ -292,13 +295,11 @@ class MainScreen extends StatelessWidget {
                         ),
                       ),
                     ],
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    const SizedBox(height: 12),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 12,
-                        horizontal: 20,
+                        horizontal: 16,
                       ),
                       child: Row(
                         children: [
@@ -306,8 +307,8 @@ class MainScreen extends StatelessWidget {
                             child: Row(
                               children: [
                                 Container(
-                                  width: 25,
-                                  height: 25,
+                                  width: 20,
+                                  height: 20,
                                   decoration: const BoxDecoration(
                                     color: Colors.white30,
                                     shape: BoxShape.circle,
@@ -320,9 +321,7 @@ class MainScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
+                                const SizedBox(width: 4),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -361,14 +360,14 @@ class MainScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 6),
                           //expense row
                           Expanded(
                             child: Row(
                               children: [
                                 Container(
-                                  width: 25,
-                                  height: 25,
+                                  width: 20,
+                                  height: 20,
                                   decoration: const BoxDecoration(
                                     color: Colors.white30,
                                     shape: BoxShape.circle,
@@ -381,9 +380,7 @@ class MainScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
+                                const SizedBox(width: 4),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -415,10 +412,10 @@ class MainScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -482,9 +479,7 @@ class MainScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               expenses.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.symmetric(vertical: 32),
@@ -497,130 +492,16 @@ class MainScreen extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ))
+                      ),
+                    )
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: expenses.length,
                       itemBuilder: (context, int i) {
-                        final expense = expenses[i];
-                        final categoryName = expense.categoryName.isNotEmpty
-                            ? expense.categoryName
-                            : expense.category.name;
-                        final categoryIcon = expense.categoryIcon.isNotEmpty
-                            ? expense.categoryIcon
-                            : expense.category.icon;
-                        final categoryColor = expense.categoryColor != 0
-                            ? expense.categoryColor
-                            : expense.category.color;
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Row(
-                                      children: [
-                                        CategoryIconView(
-                                          iconKey: categoryIcon,
-                                          backgroundColor: Color(categoryColor),
-                                          size: 50,
-                                        ),
-                                        const SizedBox(
-                                          width: 12,
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                categoryName,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onSurface,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              if (expense.description.isNotEmpty)
-                                                Text(
-                                                  expense.description,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .outline,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              const SizedBox(height: 6),
-                                              ExpenseSyncBadge(
-                                                expense: expense,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      ConstrainedBox(
-                                        constraints:
-                                            const BoxConstraints(maxWidth: 112),
-                                        child: Text(
-                                          formatAmountWithCurrency(
-                                            expense.amount,
-                                            expense.currency,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.end,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        DateFormat(
-                                          'dd/MM/yyyy',
-                                          Localizations.localeOf(context)
-                                              .toLanguageTag(),
-                                        ).format(expense.date),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .outline,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          child: _buildTransactionItem(context, expenses[i]),
                         );
                       },
                     ),
@@ -647,6 +528,125 @@ class MainScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _editExpense(BuildContext context, Expense expense) async {
+    final updated = await showExpenseEditSheet(
+      context: context,
+      expense: expense,
+      categories: _categoriesFromExpenses(expenses),
+    );
+    if (updated == null || !context.mounted) return;
+
+    try {
+      await context.read<ExpenseRepository>().updateExpense(updated);
+      if (!context.mounted) return;
+      _refreshExpensesIfAvailable(context);
+      _showSnackBar(context, context.l10n.expenseUpdated);
+    } catch (_) {
+      if (!context.mounted) return;
+      _showSnackBar(context, context.l10n.failedToUpdateExpense);
+    }
+  }
+
+  Widget _buildTransactionItem(BuildContext context, Expense expense) {
+    final categoryName = expense.categoryName.isNotEmpty
+        ? expense.categoryName
+        : expense.category.name;
+    final categoryIcon = expense.categoryIcon.isNotEmpty
+        ? expense.categoryIcon
+        : expense.category.icon;
+    final categoryColor = expense.categoryColor != 0
+        ? expense.categoryColor
+        : expense.category.color;
+
+    return TransactionRow(
+      title: categoryName,
+      subtitle: expense.description.isEmpty ? null : expense.description,
+      amount: '',
+      currencyCode: '',
+      leading: CategoryIconView(
+        iconKey: categoryIcon,
+        backgroundColor: Color(categoryColor),
+        size: 44,
+      ),
+      status: ExpenseSyncBadge(expense: expense),
+      trailing: MoneyAmountText(
+        formattedAmount: formatAmountWithCurrency(
+          expense.amount,
+          expense.currency,
+        ),
+        secondaryText: DateFormat(
+          'dd/MM/yyyy',
+          Localizations.localeOf(context).toLanguageTag(),
+        ).format(expense.date),
+        textAlign: TextAlign.end,
+      ),
+      action: PopupMenuButton<_HomeExpenseAction>(
+        tooltip: context.l10n.expenseActions,
+        padding: EdgeInsets.zero,
+        constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+        onSelected: (action) {
+          switch (action) {
+            case _HomeExpenseAction.edit:
+              _editExpense(context, expense);
+              break;
+          }
+        },
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: _HomeExpenseAction.edit,
+            child: ListTile(
+              leading: const Icon(Icons.edit),
+              title: Text(context.l10n.edit),
+              contentPadding: EdgeInsets.zero,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _refreshExpensesIfAvailable(BuildContext context) {
+    try {
+      context.read<GetExpensesBloc>().add(const GetExpenses());
+    } catch (_) {
+      // MainScreen can be rendered directly in widget tests without HomeScreen.
+    }
+  }
+
+  List<Category> _categoriesFromExpenses(List<Expense> expenses) {
+    final categoriesById = <String, Category>{};
+    for (final expense in expenses) {
+      final category = expense.category;
+      final id = expense.categoryId.isNotEmpty
+          ? expense.categoryId
+          : category.categoryId.isNotEmpty
+          ? category.categoryId
+          : expense.categoryName;
+      if (id.isEmpty || categoriesById.containsKey(id)) continue;
+      categoriesById[id] = Category(
+        categoryId: id,
+        name: expense.categoryName.isNotEmpty
+            ? expense.categoryName
+            : category.name,
+        totalExpenses: category.totalExpenses,
+        icon: expense.categoryIcon.isNotEmpty
+            ? expense.categoryIcon
+            : category.icon,
+        color: expense.categoryColor != 0
+            ? expense.categoryColor
+            : category.color,
+      );
+    }
+    return categoriesById.values.toList()
+      ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
   Widget _withSettingsRouteProviders(BuildContext context, Widget child) {
     var wrapped = _withMonetizationProviders(context, child);
 
@@ -660,10 +660,7 @@ class MainScreen extends StatelessWidget {
 
     final authBloc = _tryRead<AuthBloc>(context);
     if (authBloc != null) {
-      wrapped = BlocProvider<AuthBloc>.value(
-        value: authBloc,
-        child: wrapped,
-      );
+      wrapped = BlocProvider<AuthBloc>.value(value: authBloc, child: wrapped);
     }
 
     final accountProfileService = _tryRead<AccountProfileService>(context);
@@ -762,9 +759,7 @@ class MainScreen extends StatelessWidget {
             RepositoryProvider<SettingsRepository>.value(
               value: settingsRepository,
             ),
-            RepositoryProvider<BudgetRepository>.value(
-              value: budgetRepository,
-            ),
+            RepositoryProvider<BudgetRepository>.value(value: budgetRepository),
             if (authRepository != null)
               RepositoryProvider<AuthRepository>.value(value: authRepository),
             if (categoryAliasRepository != null)
@@ -838,10 +833,8 @@ class MainScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute<void>(
-            builder: (_) => WeeklyDigestScreen(
-              digest: digest,
-              healthScore: healthScore,
-            ),
+            builder: (_) =>
+                WeeklyDigestScreen(digest: digest, healthScore: healthScore),
           ),
         );
         break;
@@ -868,3 +861,5 @@ class MainScreen extends StatelessWidget {
     }
   }
 }
+
+enum _HomeExpenseAction { edit }

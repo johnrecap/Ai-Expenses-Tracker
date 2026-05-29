@@ -30,10 +30,7 @@ class NotificationSettingsSection extends StatelessWidget {
           children: [
             Text(
               l10n.notificationsSettingsTitle,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             SwitchListTile(
@@ -44,8 +41,8 @@ class NotificationSettingsSection extends StatelessWidget {
               onChanged: isSaving
                   ? null
                   : (value) => onChanged(
-                        settings.copyWith(budgetAlertsEnabled: value),
-                      ),
+                      settings.copyWith(budgetAlertsEnabled: value),
+                    ),
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
@@ -55,8 +52,8 @@ class NotificationSettingsSection extends StatelessWidget {
               onChanged: isSaving
                   ? null
                   : (value) => onChanged(
-                        settings.copyWith(dailyReminderEnabled: value),
-                      ),
+                      settings.copyWith(dailyReminderEnabled: value),
+                    ),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -76,8 +73,8 @@ class NotificationSettingsSection extends StatelessWidget {
               onChanged: isSaving
                   ? null
                   : (value) => onChanged(
-                        settings.copyWith(weeklyDigestEnabled: value),
-                      ),
+                      settings.copyWith(weeklyDigestEnabled: value),
+                    ),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -156,8 +153,6 @@ class NotificationSettingsSection extends StatelessWidget {
       settings.weeklyDigestHour,
       settings.weeklyDigestMinute,
     );
-    return '${context.l10n.monday}, ${DateFormat.jm(
-      Localizations.localeOf(context).toString(),
-    ).format(date)}';
+    return '${context.l10n.monday}, ${DateFormat.jm(Localizations.localeOf(context).toString()).format(date)}';
   }
 }

@@ -22,6 +22,7 @@ export type SyncOperation = "upsert" | "delete";
 export interface SyncEnvelope {
   entityType: SyncEntityType;
   entityId: string;
+  clientChangeId?: string;
   operation: SyncOperation;
   data: Record<string, unknown>;
   clientUpdatedAt: string;
@@ -38,11 +39,13 @@ export interface SyncPushResult {
   accepted: Array<{
     entityType: SyncEntityType;
     entityId: string;
+    clientChangeId?: string;
     serverRevision: number;
   }>;
   rejected: Array<{
     entityType: SyncEntityType;
     entityId: string;
+    clientChangeId?: string;
     code: string;
     message: string;
   }>;
@@ -67,6 +70,7 @@ export interface SyncService {
 interface StoredChange extends SyncEnvelope {
   userId: string;
   serverRevision: number;
+  changedByDeviceId?: string | null;
 }
 
 export interface SyncChangeRepository {
@@ -98,6 +102,7 @@ export class DurableSyncService implements SyncService {
         rejected.push({
           entityType: change.entityType,
           entityId: change.entityId,
+          clientChangeId: change.clientChangeId,
           code: "sync/invalid-change",
           message: "Sync change is missing entity identity.",
         });
@@ -115,6 +120,7 @@ export class DurableSyncService implements SyncService {
       accepted.push({
         entityType: stored.entityType,
         entityId: stored.entityId,
+        clientChangeId: stored.clientChangeId,
         serverRevision: stored.serverRevision,
       });
     }
@@ -150,7 +156,10 @@ export class DurableSyncService implements SyncService {
         : String(page[page.length - 1].serverRevision);
 
     return {
-      changes: page.map(({ userId: _userId, ...change }) => change),
+      changes: page.map(
+        ({ userId: _userId, changedByDeviceId: _deviceId, ...change }) =>
+          change,
+      ),
       nextCursor,
       hasMore: matching.length > safeLimit,
     };
@@ -163,16 +172,22 @@ export class InMemorySyncChangeRepository implements SyncChangeRepository {
 
   async append(
     userId: string,
-    _deviceId: string,
+    deviceId: string,
     changes: SyncEnvelope[],
   ): Promise<StoredChange[]> {
     const storedChanges: StoredChange[] = [];
     for (const change of changes) {
+      const existing = this.findExisting(userId, deviceId, change);
+      if (existing) {
+        storedChanges.push(existing);
+        continue;
+      }
       const serverRevision = ++this.revision;
       const stored = {
         ...change,
         userId,
         serverRevision,
+        changedByDeviceId: deviceId,
       };
       this.changes.push(stored);
       storedChanges.push(stored);
@@ -192,6 +207,20 @@ export class InMemorySyncChangeRepository implements SyncChangeRepository {
       )
       .sort((a, b) => a.serverRevision - b.serverRevision)
       .slice(0, limit);
+  }
+
+  private findExisting(
+    userId: string,
+    deviceId: string,
+    change: SyncEnvelope,
+  ): StoredChange | undefined {
+    if (!change.clientChangeId) return undefined;
+    return this.changes.find(
+      (stored) =>
+        stored.userId === userId &&
+        stored.changedByDeviceId === deviceId &&
+        stored.clientChangeId === change.clientChangeId,
+    );
   }
 }
 
@@ -214,12 +243,30 @@ export class PostgresSyncChangeRepository implements SyncChangeRepository {
     return this.database.transaction(async (tx) => {
       const stored: StoredChange[] = [];
       for (const change of changes) {
+        if (change.clientChangeId) {
+          const [existing] = await tx
+            .select()
+            .from(syncChanges)
+            .where(
+              and(
+                eq(syncChanges.userId, backendUser.id),
+                eq(syncChanges.changedByDeviceId, deviceId),
+                eq(syncChanges.clientChangeId, change.clientChangeId),
+              ),
+            )
+            .limit(1);
+          if (existing) {
+            stored.push(mapSyncChangeRow(firebaseUid, existing));
+            continue;
+          }
+        }
         const [row] = await tx
           .insert(syncChanges)
           .values({
             userId: backendUser.id,
             entityType: change.entityType,
             entityId: change.entityId,
+            clientChangeId: change.clientChangeId ?? null,
             operation: change.operation,
             data: change.data,
             clientUpdatedAt: new Date(change.clientUpdatedAt),
@@ -264,6 +311,7 @@ function mapSyncChangeRow(
     entityType: row.entityType as SyncEntityType,
     entityId: row.entityId,
     operation: row.operation as SyncOperation,
+    clientChangeId: row.clientChangeId ?? undefined,
     data: row.data,
     clientUpdatedAt: (
       row.clientUpdatedAt ??
@@ -272,6 +320,7 @@ function mapSyncChangeRow(
     ).toISOString(),
     baseRevision: row.baseRevision,
     serverRevision: row.serverRevision,
+    changedByDeviceId: row.changedByDeviceId,
   };
 }
 

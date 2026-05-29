@@ -26,16 +26,17 @@ void main() {
 
   test('active state exposes step progress and completion flags', () {
     final steps = [_step('ai'), _step('manual')];
-    final state = GuidedTourState.idle(
-      currentVersion: guidedTourVersion,
-      steps: steps,
-    ).copyWith(
-      status: GuidedTourStatus.active,
-      activeIndex: 1,
-      targetRect: const Rect.fromLTWH(10, 20, 30, 40),
-      targetAvailable: true,
-      targetShape: SpotlightShape.circle,
-    );
+    final state =
+        GuidedTourState.idle(
+          currentVersion: guidedTourVersion,
+          steps: steps,
+        ).copyWith(
+          status: GuidedTourStatus.active,
+          activeIndex: 1,
+          targetRect: const Rect.fromLTWH(10, 20, 30, 40),
+          targetAvailable: true,
+          targetShape: SpotlightShape.circle,
+        );
 
     expect(state.isActive, isTrue);
     expect(state.hasPrevious, isTrue);
@@ -47,16 +48,17 @@ void main() {
   });
 
   test('asIdle clears active presentation state', () {
-    final active = GuidedTourState.idle(
-      currentVersion: guidedTourVersion,
-      steps: [_step('ai')],
-    ).copyWith(
-      status: GuidedTourStatus.active,
-      activeIndex: 0,
-      targetRect: const Rect.fromLTWH(1, 2, 3, 4),
-      targetAvailable: true,
-      replayMode: true,
-    );
+    final active =
+        GuidedTourState.idle(
+          currentVersion: guidedTourVersion,
+          steps: [_step('ai')],
+        ).copyWith(
+          status: GuidedTourStatus.active,
+          activeIndex: 0,
+          targetRect: const Rect.fromLTWH(1, 2, 3, 4),
+          targetAvailable: true,
+          replayMode: true,
+        );
 
     final idle = active.asIdle();
 

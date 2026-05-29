@@ -8,10 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileIdentitySection extends StatelessWidget {
-  const ProfileIdentitySection({
-    required this.fallbackAccountId,
-    super.key,
-  });
+  const ProfileIdentitySection({required this.fallbackAccountId, super.key});
 
   final String fallbackAccountId;
 
@@ -24,10 +21,7 @@ class ProfileIdentitySection extends StatelessWidget {
       authBloc = null;
     }
     if (authBloc == null) {
-      return _buildContent(
-        context,
-        user: AppUser.empty,
-      );
+      return _buildContent(context, user: AppUser.empty);
     }
 
     return BlocBuilder<AuthBloc, AuthState>(
@@ -99,8 +93,9 @@ class ProfileIdentitySection extends StatelessWidget {
               ],
             ),
             trailing: const Icon(Icons.chevron_right),
-            onTap:
-                user.isEmpty ? null : () => _openAccountProfile(context, user),
+            onTap: user.isEmpty
+                ? null
+                : () => _openAccountProfile(context, user),
           ),
           const Divider(height: 24),
           ListTile(

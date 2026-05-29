@@ -25,6 +25,7 @@ class ExpenseEntity {
   String? walletAccountName;
   String? recurringExpenseId;
   String? aiActionId;
+  MoneySnapshot? moneySnapshot;
 
   ExpenseEntity({
     required this.expenseId,
@@ -48,6 +49,7 @@ class ExpenseEntity {
     this.walletAccountName,
     this.recurringExpenseId,
     this.aiActionId,
+    this.moneySnapshot,
   })  : amount = amount.toDouble(),
         merchant = _normalizeMerchant(merchant),
         tags = _normalizeTags(tags);
@@ -75,6 +77,9 @@ class ExpenseEntity {
       'walletAccountName': walletAccountName,
       'recurringExpenseId': recurringExpenseId,
       'aiActionId': aiActionId,
+      'moneySnapshot': moneySnapshot == null
+          ? null
+          : MoneySnapshotEntity.fromModel(moneySnapshot!).toDocument(),
     };
   }
 
@@ -122,6 +127,8 @@ class ExpenseEntity {
       walletAccountName: doc['walletAccountName'] as String?,
       recurringExpenseId: doc['recurringExpenseId'] as String?,
       aiActionId: doc['aiActionId'] as String?,
+      moneySnapshot:
+          MoneySnapshotEntity.fromDocument(doc['moneySnapshot'])?.toModel(),
     );
   }
 

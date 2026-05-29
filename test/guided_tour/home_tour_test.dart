@@ -14,8 +14,9 @@ import 'package:flutter_test/flutter_test.dart';
 import '../helpers/fake_repositories.dart';
 
 void main() {
-  testWidgets('auto-shows AI spotlight after onboarding completion',
-      (tester) async {
+  testWidgets('auto-shows AI spotlight after onboarding completion', (
+    tester,
+  ) async {
     final fixture = _HomeTourFixture();
     await fixture.pump(tester);
 
@@ -40,8 +41,9 @@ void main() {
     await fixture.dispose();
   });
 
-  testWidgets('advancing AI spotlight does not call ad services',
-      (tester) async {
+  testWidgets('advancing AI spotlight does not call ad services', (
+    tester,
+  ) async {
     final fixture = _HomeTourFixture();
     await fixture.pump(tester);
     final initialInterstitialShows = fixture.adService.interstitialShows;
@@ -57,17 +59,22 @@ void main() {
     await fixture.dispose();
   });
 
-  testWidgets('core Home targets register for the tour sequence',
-      (tester) async {
+  testWidgets('core Home targets register for the tour sequence', (
+    tester,
+  ) async {
     final fixture = _HomeTourFixture();
     await fixture.pump(tester);
 
-    expect(fixture.guidedTourCubit.state.activeStep?.targetId,
-        GuidedTourTargetIds.aiAssistant);
+    expect(
+      fixture.guidedTourCubit.state.activeStep?.targetId,
+      GuidedTourTargetIds.aiAssistant,
+    );
     await tester.tap(find.text('Next'));
     await tester.pump();
-    expect(fixture.guidedTourCubit.state.activeStep?.targetId,
-        GuidedTourTargetIds.manualExpense);
+    expect(
+      fixture.guidedTourCubit.state.activeStep?.targetId,
+      GuidedTourTargetIds.manualExpense,
+    );
     await tester.tap(find.text('Next'));
     await tester.pump();
     await tester.tap(find.text('Next'));
@@ -92,14 +99,14 @@ UserSettings _settings() {
 
 class _HomeTourFixture {
   _HomeTourFixture({UserSettings? settings})
-      : user = AppUser(
-          userId: 'user-1',
-          email: 'john@example.com',
-          displayName: 'John Doe',
-          photoUrl: null,
-          createdAt: DateTime(2026, 5, 1),
-        ),
-        settings = settings ?? _settings() {
+    : user = AppUser(
+        userId: 'user-1',
+        email: 'john@example.com',
+        displayName: 'John Doe',
+        photoUrl: null,
+        createdAt: DateTime(2026, 5, 1),
+      ),
+      settings = settings ?? _settings() {
     authRepository = FakeAuthRepository(user);
     expenseRepository = FakeExpenseRepository(expenses);
     categoryRepository = FakeCategoryRepository([category]);
@@ -109,8 +116,9 @@ class _HomeTourFixture {
     monetizationCubit = MonetizationCubit(
       entitlementRepository: LocalEntitlementRepository(),
       policyRepository: const LocalMonetizationPolicyRepository(),
-      consentService:
-          FakeAdConsentService(consentState: ConsentState.allowed()),
+      consentService: FakeAdConsentService(
+        consentState: ConsentState.allowed(),
+      ),
       adService: adService,
     );
     appLockCubit = AppLockCubit(appLockService: fakeAppLockService());
@@ -168,15 +176,19 @@ class _HomeTourFixture {
     await appLockCubit.initialize();
 
     final authBloc = AuthBloc(authRepository)..add(AuthUserChanged(user));
-    final expensesBloc =
-        GetExpensesBloc(expenseRepository)..add(const GetExpenses());
+    final expensesBloc = GetExpensesBloc(expenseRepository)
+      ..add(const GetExpenses());
 
     await tester.pumpWidget(
       MultiRepositoryProvider(
         providers: [
           RepositoryProvider<ExpenseRepository>.value(value: expenseRepository),
-          RepositoryProvider<CategoryRepository>.value(value: categoryRepository),
-          RepositoryProvider<SettingsRepository>.value(value: settingsRepository),
+          RepositoryProvider<CategoryRepository>.value(
+            value: categoryRepository,
+          ),
+          RepositoryProvider<SettingsRepository>.value(
+            value: settingsRepository,
+          ),
           RepositoryProvider<BudgetRepository>.value(value: budgetRepository),
           RepositoryProvider<CategoryBudgetRepository>(
             create: (_) => FakeCategoryBudgetRepository(),
@@ -210,9 +222,7 @@ class _HomeTourFixture {
             locale: Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: GuidedTourHost(
-              child: HomeScreen(),
-            ),
+            home: GuidedTourHost(child: HomeScreen()),
           ),
         ),
       ),

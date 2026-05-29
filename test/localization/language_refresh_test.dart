@@ -1,5 +1,7 @@
 import 'package:expense_repository/expense_repository.dart';
 import 'package:expenses_tracker/l10n/app_language_cubit.dart';
+import 'package:expenses_tracker/l10n/app_localizations_ar.dart';
+import 'package:expenses_tracker/l10n/app_localizations_en.dart';
 import 'package:expenses_tracker/l10n/l10n.dart';
 import 'package:expenses_tracker/screens/expenses/views/expenses_screen.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +9,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('language preference rebuilds visible and newly opened routes',
-      (tester) async {
+  testWidgets('language preference rebuilds visible and newly opened routes', (
+    tester,
+  ) async {
     final cubit = AppLanguageCubit();
+    final en = AppLocalizationsEn();
+    final ar = AppLocalizationsAr();
     addTearDown(cubit.close);
 
     await tester.pumpWidget(
@@ -29,8 +34,8 @@ void main() {
                       children: [
                         Text(context.l10n.appLanguage),
                         TextButton(
-                          onPressed: () => cubit
-                              .setPreference(LanguagePreference.arabic),
+                          onPressed: () =>
+                              cubit.setPreference(LanguagePreference.arabic),
                           child: const Text('Arabic'),
                         ),
                         TextButton(
@@ -55,14 +60,14 @@ void main() {
       ),
     );
 
-    expect(find.text('App language'), findsOneWidget);
+    expect(find.text(en.appLanguage), findsOneWidget);
     await tester.tap(find.text('Arabic'));
     await tester.pumpAndSettle();
 
-    expect(find.text('لغة التطبيق'), findsOneWidget);
+    expect(find.text(ar.appLanguage), findsOneWidget);
     await tester.tap(find.text('Open expenses'));
     await tester.pumpAndSettle();
 
-    expect(find.text('المصروفات'), findsOneWidget);
+    expect(find.text(ar.expenses), findsOneWidget);
   });
 }

@@ -213,12 +213,12 @@ class _CategoryTile extends StatelessWidget {
             IconButton(
               tooltip: context.l10n.edit,
               onPressed: onEdit,
-              icon: const Icon(FontAwesomeIcons.penToSquare, size: 18),
+              icon: const FaIcon(FontAwesomeIcons.penToSquare, size: 18),
             ),
             IconButton(
               tooltip: context.l10n.archive,
               onPressed: onArchive,
-              icon: const Icon(FontAwesomeIcons.boxArchive, size: 18),
+              icon: const FaIcon(FontAwesomeIcons.boxArchive, size: 18),
             ),
           ],
         ),

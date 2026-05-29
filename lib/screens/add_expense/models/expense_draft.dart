@@ -1,16 +1,8 @@
 import 'package:expense_repository/expense_repository.dart';
 
-enum CaptureMode {
-  quickManual,
-  naturalLanguage,
-  receipt,
-}
+enum CaptureMode { quickManual, naturalLanguage, receipt }
 
-enum DraftSourceStatus {
-  manual,
-  aiText,
-  receipt,
-}
+enum DraftSourceStatus { manual, aiText, receipt }
 
 class ExpenseDraft {
   const ExpenseDraft({

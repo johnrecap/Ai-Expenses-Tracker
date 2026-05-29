@@ -2,16 +2,9 @@ import 'package:expenses_tracker/l10n/l10n.dart';
 
 typedef GuidedTourTextBuilder = String Function(AppLocalizations l10n);
 
-enum GuidedTourPlacement {
-  automatic,
-  above,
-  below,
-}
+enum GuidedTourPlacement { automatic, above, below }
 
-enum SpotlightShape {
-  circle,
-  roundedRectangle,
-}
+enum SpotlightShape { circle, roundedRectangle }
 
 class GuidedTourStep {
   const GuidedTourStep({

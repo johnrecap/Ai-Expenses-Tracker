@@ -24,6 +24,7 @@ const entityTypeSchema = z.enum([
 const syncEnvelopeSchema = z.object({
   entityType: entityTypeSchema,
   entityId: z.string().min(1),
+  clientChangeId: z.string().min(1).optional(),
   operation: z.enum(["upsert", "delete"]),
   data: z.record(z.unknown()).default({}),
   clientUpdatedAt: z.string().datetime(),

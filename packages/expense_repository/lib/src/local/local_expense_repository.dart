@@ -12,9 +12,12 @@ class LocalExpenseRepository implements ExpenseRepository {
     final now = DateTime.now();
     expense.userId = store.userId;
     expense.updatedAt = now;
-    store.expenses[expense.expenseId] =
-        expense.withSyncStatus(SyncStatus.pending);
-    store.enqueue(_change(expense, SyncOperation.upsert));
+    final change = _change(expense, SyncOperation.upsert);
+    store.expenses[expense.expenseId] = expense.withSyncStatus(
+      SyncStatus.pending,
+      reason: change.reason,
+    );
+    store.enqueue(change);
     store.emitExpenses();
   }
 
@@ -76,9 +79,12 @@ class LocalExpenseRepository implements ExpenseRepository {
     final now = DateTime.now();
     expense.userId = store.userId;
     expense.updatedAt = now;
-    store.expenses[expense.expenseId] =
-        expense.withSyncStatus(SyncStatus.pending);
-    store.enqueue(_change(expense, SyncOperation.upsert));
+    final change = _change(expense, SyncOperation.upsert);
+    store.expenses[expense.expenseId] = expense.withSyncStatus(
+      SyncStatus.pending,
+      reason: change.reason,
+    );
+    store.enqueue(change);
     store.emitExpenses();
   }
 

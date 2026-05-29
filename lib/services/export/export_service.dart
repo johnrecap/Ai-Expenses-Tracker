@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:expense_repository/expense_repository.dart';
+import 'package:expenses_tracker/screens/home/services/money_conversion_service.dart';
 import 'package:expenses_tracker/services/expense_filter_service.dart';
 import 'package:expenses_tracker/services/finance/finance.dart';
 import 'package:expenses_tracker/utils/amount_parser.dart';
@@ -333,34 +334,36 @@ abstract class ExpenseExportRows {
     required UserSettings settings,
     required ExportLabels labels,
   }) {
-    final baseCurrency = settings.baseCurrency.trim().toUpperCase();
-    final sourceCurrency = expense.currency.trim().toUpperCase();
-    if (sourceCurrency == baseCurrency) {
-      return [
-        formatAmountInput(expense.amount),
-        baseCurrency,
-        formatAmountInput(1),
-        _nullableDateKey(settings.exchangeRatesUpdatedAt),
-        labels.conversionStatusOriginal,
-      ];
-    }
-
-    final rate = settings.conversionRates[sourceCurrency];
-    if (rate == null || rate <= 0 || !rate.isFinite) {
+    final conversion = const MoneyConversionService().convertExpense(
+      expense: expense,
+      settings: settings,
+    );
+    final baseCurrency = conversion.baseCurrency;
+    if (!conversion.isConvertible) {
       return [
         '',
         baseCurrency,
         '',
-        _nullableDateKey(settings.exchangeRatesUpdatedAt),
+        _nullableDateKey(conversion.rateUpdatedAt),
         labels.conversionStatusMissingRate,
       ];
     }
 
+    if (!conversion.wasConverted) {
+      return [
+        formatAmountInput(conversion.convertedAmount),
+        baseCurrency,
+        formatAmountInput(1),
+        _nullableDateKey(conversion.rateUpdatedAt),
+        labels.conversionStatusOriginal,
+      ];
+    }
+
     return [
-      formatAmountInput(expense.amount * rate),
+      formatAmountInput(conversion.convertedAmount),
       baseCurrency,
-      formatAmountInput(rate),
-      _nullableDateKey(settings.exchangeRatesUpdatedAt),
+      formatAmountInput(conversion.rate ?? 1),
+      _nullableDateKey(conversion.rateUpdatedAt),
       labels.conversionStatusConverted,
     ];
   }

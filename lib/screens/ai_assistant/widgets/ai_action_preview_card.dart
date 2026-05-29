@@ -32,6 +32,8 @@ class AiActionPreviewCard extends StatefulWidget {
 class _AiActionPreviewCardState extends State<AiActionPreviewCard> {
   late final TextEditingController _amountController;
   late final TextEditingController _descriptionController;
+  late final TextEditingController _merchantController;
+  late final TextEditingController _tagsController;
   late final TextEditingController _categoryController;
   late DateTime _date;
   late PaymentMethod _paymentMethod;
@@ -45,6 +47,10 @@ class _AiActionPreviewCardState extends State<AiActionPreviewCard> {
         TextEditingController(text: _amountText(widget.preview.amount));
     _descriptionController =
         TextEditingController(text: widget.preview.description);
+    _merchantController =
+        TextEditingController(text: widget.preview.merchant ?? '');
+    _tagsController =
+        TextEditingController(text: widget.preview.tags.join(', '));
     _categoryController =
         TextEditingController(text: widget.preview.categoryName);
     _date = widget.preview.date;
@@ -59,6 +65,8 @@ class _AiActionPreviewCardState extends State<AiActionPreviewCard> {
     if (oldWidget.preview != widget.preview) {
       _amountController.text = _amountText(widget.preview.amount);
       _descriptionController.text = widget.preview.description;
+      _merchantController.text = widget.preview.merchant ?? '';
+      _tagsController.text = widget.preview.tags.join(', ');
       _categoryController.text = widget.preview.categoryName;
       _date = widget.preview.date;
       _paymentMethod = widget.preview.paymentMethod;
@@ -71,6 +79,8 @@ class _AiActionPreviewCardState extends State<AiActionPreviewCard> {
   void dispose() {
     _amountController.dispose();
     _descriptionController.dispose();
+    _merchantController.dispose();
+    _tagsController.dispose();
     _categoryController.dispose();
     super.dispose();
   }
@@ -97,8 +107,22 @@ class _AiActionPreviewCardState extends State<AiActionPreviewCard> {
       paymentMethod: _paymentMethod,
       currency: _currency,
       description: _descriptionController.text.trim(),
+      merchant: _merchantController.text.trim(),
+      clearMerchant: _merchantController.text.trim().isEmpty,
+      tags: _parseTags(_tagsController.text),
     );
     widget.onChanged(preview.copyWith(validationErrors: preview.validate()));
+  }
+
+  List<String> _parseTags(String value) {
+    final seen = <String>{};
+    final tags = <String>[];
+    for (final part in value.split(',')) {
+      final tag = part.trim();
+      if (tag.isEmpty) continue;
+      if (seen.add(tag.toLowerCase())) tags.add(tag);
+    }
+    return tags;
   }
 
   String _amountText(num amount) {
@@ -251,6 +275,21 @@ class _AiActionPreviewCardState extends State<AiActionPreviewCard> {
             TextField(
               controller: _descriptionController,
               decoration: InputDecoration(labelText: context.l10n.description),
+              onChanged: (_) => _emitChange(),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _merchantController,
+              decoration: InputDecoration(labelText: context.l10n.merchant),
+              onChanged: (_) => _emitChange(),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _tagsController,
+              decoration: InputDecoration(
+                labelText: context.l10n.tags,
+                helperText: context.l10n.tagsHelper,
+              ),
               onChanged: (_) => _emitChange(),
             ),
             if (errors.isNotEmpty) ...[

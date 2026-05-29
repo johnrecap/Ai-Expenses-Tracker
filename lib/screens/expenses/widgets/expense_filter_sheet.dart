@@ -100,8 +100,9 @@ class _ExpenseFilterSheetState extends State<ExpenseFilterSheet> {
                           iconSize: 14,
                         ),
                         label: Text(category.name),
-                        selected:
-                            _filter.categoryIds.contains(category.categoryId),
+                        selected: _filter.categoryIds.contains(
+                          category.categoryId,
+                        ),
                         onSelected: (_) => _toggleCategory(category.categoryId),
                       ),
                     )
@@ -153,8 +154,9 @@ class _ExpenseFilterSheetState extends State<ExpenseFilterSheet> {
                         label: Text(
                           localizedPaymentMethod(context.l10n, paymentMethod),
                         ),
-                        selected:
-                            _filter.paymentMethods.contains(paymentMethod),
+                        selected: _filter.paymentMethods.contains(
+                          paymentMethod,
+                        ),
                         onSelected: (_) => _togglePayment(paymentMethod),
                       ),
                     )
@@ -210,10 +212,7 @@ class _ExpenseFilterSheetState extends State<ExpenseFilterSheet> {
     );
     if (range == null) return;
     setState(() {
-      _filter = _filter.copyWith(
-        startDate: range.start,
-        endDate: range.end,
-      );
+      _filter = _filter.copyWith(startDate: range.start, endDate: range.end);
     });
   }
 
@@ -246,10 +245,7 @@ class _ExpenseFilterSheetState extends State<ExpenseFilterSheet> {
     final maxAmount = parseAmountInput(_maxAmountController.text);
     Navigator.pop(
       context,
-      _filter.copyWith(
-        minAmount: minAmount,
-        maxAmount: maxAmount,
-      ),
+      _filter.copyWith(minAmount: minAmount, maxAmount: maxAmount),
     );
   }
 }
@@ -299,20 +295,14 @@ class _Section extends StatelessWidget {
   final String title;
   final Widget child;
 
-  const _Section({
-    required this.title,
-    required this.child,
-  });
+  const _Section({required this.title, required this.child});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
+        Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
         const SizedBox(height: 8),
         child,
       ],

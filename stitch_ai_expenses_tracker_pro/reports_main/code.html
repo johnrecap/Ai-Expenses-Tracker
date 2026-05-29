@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reports</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=IBM+Plex+Sans+Arabic:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#00daf3",
+                        "on-secondary-fixed": "#3f0018",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#004f58",
+                        "on-surface-variant": "#3b494c",
+                        "on-tertiary-fixed": "#20005f",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#9cf0ff",
+                        "on-primary-container": "#00626e",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed-dim": "#cdbdff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#00e5ff",
+                        "secondary-container": "#dd2269",
+                        "tertiary-container": "#d6c9ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline": "#6b7a7d",
+                        "on-primary-fixed": "#001f24",
+                        "tertiary": "#6833ea",
+                        "primary": "#006875",
+                        "on-tertiary-fixed-variant": "#4f00d0",
+                        "on-tertiary-container": "#622be5",
+                        "surface-tint": "#006875",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#bac9cc",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "background": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#8f003f",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#ffb1c1",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed": "#e8deff",
+                        "on-secondary-container": "#fffbff",
+                        "secondary": "#b70052",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffd9df",
+                        "inverse-primary": "#00daf3",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "card-gutter": "12px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "unit": "4px",
+                        "container-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "arabic-body": ["IBM Plex Sans Arabic"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "arabic-body": ["16px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.surface');
+            color: theme('colors.on-surface');
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-bar-gradient {
+            background: linear-gradient(180deg, theme('colors.primary-container') 0%, theme('colors.primary') 100%);
+        }
+        
+        .bg-gradient-blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+
+        /* Material Symbols Outlined specific settings */
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Chart animation */
+        @keyframes growUp {
+            from { height: 0; }
+            to { height: var(--target-height); }
+        }
+        .animate-bar {
+            animation: growUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+        
+        @keyframes slideInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .slide-in-stagger {
+            opacity: 0;
+            animation: slideInUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+        .slide-delay-1 { animation-delay: 100ms; }
+        .slide-delay-2 { animation-delay: 200ms; }
+        .slide-delay-3 { animation-delay: 300ms; }
+        .slide-delay-4 { animation-delay: 400ms; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="relative min-h-screen pb-[100px]">
+<!-- Background Blobs -->
+<div class="bg-gradient-blob w-96 h-96 bg-primary top-0 left-0"></div>
+<div class="bg-gradient-blob w-96 h-96 bg-secondary-container bottom-40 right-0"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-b border-white/40 dark:border-outline-variant/20 shadow-sm">
+<div class="flex items-center justify-between px-container-padding h-16 w-full">
+<button aria-label="Menu" class="text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md dark:text-on-surface">Reports</h1>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden cursor-pointer hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A small, circular avatar portrait of a modern user in a sleek digital environment. Soft, high-key lighting creates a professional yet approachable mood. The image utilizes a clean, light-mode aesthetic with bright whites and subtle neutral tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvfGRmK-Nx467VlXLyuuDfO62DXmXF7QAFzuHd1FYkjzx837eXasHrvm6ZpONnK90b_Kb0HjGuZ0IRLDpQg8Za_TyPQOAyw1PneA_Ekw002nU48zZcTEL6IEpoZjlXeY-zewvuqPN7-9VKwul2zk3u4ZIeLOG1TrS2bETwJx2vp7HYGORzfc0zAY0zDUTRzDVbagaKxWEvoNQcmUIT0Z_7qWPOcVYU-ZVRpdqU2DEdX2a5LI7WKZlDGZA6qOeseMYmoB1FLbUm7bEG"/>
+</div>
+</div>
+</header>
+<main class="pt-24 px-container-padding max-w-4xl mx-auto space-y-lg">
+<!-- Segmented Control -->
+<div class="flex p-1 bg-surface-container rounded-full w-full max-w-sm mx-auto slide-in-stagger">
+<button class="flex-1 py-2 font-body-sm text-body-sm text-on-surface-variant rounded-full text-center hover:bg-surface-variant/50 transition-colors">Week</button>
+<button class="flex-1 py-2 font-body-sm text-body-sm bg-surface shadow-sm rounded-full text-on-surface text-center font-bold">Month</button>
+</div>
+<!-- Summary Card -->
+<section class="glass-card rounded-xl p-lg slide-in-stagger slide-delay-1 relative overflow-hidden">
+<!-- AI Sparkle indicator -->
+<div class="absolute top-md right-md text-secondary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<h2 class="font-body-sm text-body-sm text-on-surface-variant mb-xs">Total Spending (November)</h2>
+<div class="font-display-lg-mobile text-display-lg-mobile text-on-surface mb-md">
+                $2,450.00
+            </div>
+<div class="flex items-center space-x-2 text-primary">
+<div class="flex items-center bg-primary/10 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_down</span>
+<span class="font-body-sm text-body-sm font-semibold">12%</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">less than last month</span>
+</div>
+<div class="mt-md pt-md border-t border-outline-variant/20 flex justify-between items-center">
+<div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Top Category</p>
+<p class="font-body-lg text-body-lg text-on-surface font-semibold">Dining Out</p>
+</div>
+<div class="text-right">
+<p class="font-body-sm text-body-sm text-on-surface-variant">Amount</p>
+<p class="font-body-lg text-body-lg text-on-surface font-semibold">$540.00</p>
+</div>
+</div>
+</section>
+<!-- Main Chart Card -->
+<section class="glass-card rounded-xl p-lg slide-in-stagger slide-delay-2">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface">Weekly Spending</h3>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<!-- Bar Chart Container -->
+<div class="h-48 flex items-end justify-between px-2 gap-2 mt-8 border-b border-outline-variant/20 pb-2 relative">
+<!-- Grid Lines (Background) -->
+<div class="absolute inset-0 flex flex-col justify-between z-0 pointer-events-none pb-2">
+<div class="border-t border-outline-variant/10 w-full"></div>
+<div class="border-t border-outline-variant/10 w-full"></div>
+<div class="border-t border-outline-variant/10 w-full"></div>
+<div class="border-t border-outline-variant/10 w-full"></div>
+</div>
+<!-- Bars -->
+<div class="w-full flex justify-center z-10">
+<div class="w-8 md:w-12 bg-surface-container-high rounded-t-sm relative h-full flex items-end justify-center group cursor-pointer hover:bg-surface-variant transition-colors">
+<div class="w-full rounded-t-sm chart-bar-gradient animate-bar opacity-80 group-hover:opacity-100 transition-opacity" style="--target-height: 40%;"></div>
+<div class="absolute -top-8 bg-inverse-surface text-inverse-on-surface font-label-caps text-label-caps px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">$120</div>
+</div>
+</div>
+<div class="w-full flex justify-center z-10">
+<div class="w-8 md:w-12 bg-surface-container-high rounded-t-sm relative h-full flex items-end justify-center group cursor-pointer hover:bg-surface-variant transition-colors">
+<div class="w-full rounded-t-sm chart-bar-gradient animate-bar opacity-80 group-hover:opacity-100 transition-opacity" style="--target-height: 60%;"></div>
+<div class="absolute -top-8 bg-inverse-surface text-inverse-on-surface font-label-caps text-label-caps px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">$180</div>
+</div>
+</div>
+<div class="w-full flex justify-center z-10">
+<div class="w-8 md:w-12 bg-surface-container-high rounded-t-sm relative h-full flex items-end justify-center group cursor-pointer hover:bg-surface-variant transition-colors">
+<div class="w-full rounded-t-sm chart-bar-gradient animate-bar opacity-80 group-hover:opacity-100 transition-opacity" style="--target-height: 30%;"></div>
+<div class="absolute -top-8 bg-inverse-surface text-inverse-on-surface font-label-caps text-label-caps px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">$90</div>
+</div>
+</div>
+<div class="w-full flex justify-center z-10">
+<div class="w-8 md:w-12 bg-surface-container-high rounded-t-sm relative h-full flex items-end justify-center group cursor-pointer hover:bg-surface-variant transition-colors">
+<div class="w-full rounded-t-sm chart-bar-gradient animate-bar opacity-80 group-hover:opacity-100 transition-opacity" style="--target-height: 90%;"></div>
+<div class="absolute -top-8 bg-inverse-surface text-inverse-on-surface font-label-caps text-label-caps px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">$270</div>
+</div>
+</div>
+<div class="w-full flex justify-center z-10">
+<div class="w-8 md:w-12 bg-surface-container-high rounded-t-sm relative h-full flex items-end justify-center group cursor-pointer hover:bg-surface-variant transition-colors">
+<div class="w-full rounded-t-sm chart-bar-gradient animate-bar opacity-80 group-hover:opacity-100 transition-opacity" style="--target-height: 50%;"></div>
+<div class="absolute -top-8 bg-inverse-surface text-inverse-on-surface font-label-caps text-label-caps px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">$150</div>
+</div>
+</div>
+</div>
+<!-- X-Axis Labels -->
+<div class="flex justify-between items-center px-2 mt-2 font-label-caps text-label-caps text-on-surface-variant">
+<span class="w-full text-center">W1</span>
+<span class="w-full text-center">W2</span>
+<span class="w-full text-center">W3</span>
+<span class="w-full text-center">W4</span>
+<span class="w-full text-center">W5</span>
+</div>
+</section>
+<!-- Category Breakdown -->
+<section class="slide-in-stagger slide-delay-3">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-md">Category Breakdown</h3>
+<div class="space-y-md glass-card rounded-xl p-md">
+<!-- Item 1 -->
+<div>
+<div class="flex justify-between items-center mb-xs">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-size: 18px;">restaurant</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface">Dining Out</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">$540</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<!-- Item 2 -->
+<div>
+<div class="flex justify-between items-center mb-xs">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary-container">
+<span class="material-symbols-outlined" style="font-size: 18px;">shopping_cart</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface">Groceries</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">$320</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="bg-secondary-container h-2 rounded-full" style="width: 28%"></div>
+</div>
+</div>
+<!-- Item 3 -->
+<div>
+<div class="flex justify-between items-center mb-xs">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" style="font-size: 18px;">directions_car</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface">Transport</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">$180</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="bg-tertiary h-2 rounded-full" style="width: 15%"></div>
+</div>
+</div>
+<!-- Item 4 -->
+<div>
+<div class="flex justify-between items-center mb-xs">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-outline/10 flex items-center justify-center text-outline">
+<span class="material-symbols-outlined" style="font-size: 18px;">movie</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface">Entertainment</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">$120</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="bg-outline h-2 rounded-full" style="width: 10%"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 w-full rounded-t-xl z-50 bg-surface/80 dark:bg-surface-container/80 backdrop-blur-2xl border-t border-white/40 dark:border-outline-variant/10 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<div class="flex justify-around items-center h-20 px-4 pb-safe w-full">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full active:scale-90 transition-all duration-300 ease-quintOut p-2">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full active:scale-90 transition-all duration-300 ease-quintOut p-2">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">query_stats</span>
+<span class="font-label-caps text-label-caps">Insights</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full active:scale-90 transition-all duration-300 ease-quintOut p-2 relative -top-4">
+<div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary-container to-primary flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined">add</span>
+</div>
+<span class="font-label-caps text-label-caps mt-1">Add</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full active:scale-90 transition-all duration-300 ease-quintOut p-2">
+<span class="material-symbols-outlined mb-1">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps">Budgets</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-primary/5 dark:hover:bg-primary-fixed/5 rounded-full active:scale-90 transition-all duration-300 ease-quintOut p-2">
+<span class="material-symbols-outlined mb-1">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</button>
+</div>
+</nav>
+<script>
+        // Simple animation trigger for numbers
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.animate-bar');
+            elements.forEach(el => {
+                // Just ensuring the animation triggers, though CSS handles it on load
+                el.style.animationPlayState = 'running';
+            });
+        });
+    </script>
+</body></html>

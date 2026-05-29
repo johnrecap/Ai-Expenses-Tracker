@@ -18,9 +18,11 @@ class MonetizationSettingsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isPremium = state.entitlement.isPremiumActive;
-    final isLoading = state.status == MonetizationLoadStatus.initial ||
+    final isLoading =
+        state.status == MonetizationLoadStatus.initial ||
         state.status == MonetizationLoadStatus.loading;
-    final hasLoadError = state.status == MonetizationLoadStatus.failure &&
+    final hasLoadError =
+        state.status == MonetizationLoadStatus.failure &&
         state.errorMessage?.trim().isNotEmpty == true;
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -38,8 +40,8 @@ class MonetizationSettingsSection extends StatelessWidget {
               isLoading
                   ? l10n.loadingLivePlanState
                   : isPremium
-                      ? l10n.adsDisabled
-                      : l10n.premiumBackendVerificationUnavailable,
+                  ? l10n.adsDisabled
+                  : l10n.premiumBackendVerificationUnavailable,
             ),
             trailing: isLoading
                 ? const SizedBox.square(
@@ -59,9 +61,9 @@ class MonetizationSettingsSection extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.block),
               title: Text(l10n.removeAds),
-              subtitle: Text(l10n.readinessBody(
-                FeatureReadiness.premiumPurchase,
-              )),
+              subtitle: Text(
+                l10n.readinessBody(FeatureReadiness.premiumPurchase),
+              ),
             ),
           if (hasLoadError)
             ListTile(

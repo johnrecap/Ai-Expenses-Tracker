@@ -18,25 +18,25 @@ class SettingsSuccess extends SettingsState {
 
   @override
   List<Object?> get props => [
-        settings.userId,
-        settings.languagePreference,
-        settings.baseCurrency,
-        settings.supportedCurrencies,
-        settings.conversionRates,
-        settings.defaultPaymentMethod,
-        settings.notificationSettings.budgetAlertsEnabled,
-        settings.notificationSettings.dailyReminderEnabled,
-        settings.notificationSettings.reminderTime,
-        settings.notificationSettings.weeklyDigestEnabled,
-        settings.notificationSettings.weeklyDigestTime,
-        settings.notificationSettings.lastExceededAlertMonth,
-        settings.onboardingCompleted,
-        settings.onboardingVersion,
-        settings.guidedTourCompletedVersion,
-        settings.guidedTourSkippedVersion,
-        settings.guidedTourLastStepId,
-        settings.updatedAt,
-      ];
+    settings.userId,
+    settings.languagePreference,
+    settings.baseCurrency,
+    settings.supportedCurrencies,
+    settings.conversionRates,
+    settings.defaultPaymentMethod,
+    settings.notificationSettings.budgetAlertsEnabled,
+    settings.notificationSettings.dailyReminderEnabled,
+    settings.notificationSettings.reminderTime,
+    settings.notificationSettings.weeklyDigestEnabled,
+    settings.notificationSettings.weeklyDigestTime,
+    settings.notificationSettings.lastExceededAlertMonth,
+    settings.onboardingCompleted,
+    settings.onboardingVersion,
+    settings.guidedTourCompletedVersion,
+    settings.guidedTourSkippedVersion,
+    settings.guidedTourLastStepId,
+    settings.updatedAt,
+  ];
 }
 
 class SettingsSaving extends SettingsSuccess {

@@ -4,10 +4,7 @@ import 'package:equatable/equatable.dart';
 
 import 'guided_tour_step.dart';
 
-enum GuidedTourStatus {
-  idle,
-  active,
-}
+enum GuidedTourStatus { idle, active }
 
 class GuidedTourState extends Equatable {
   static const noActiveStep = -1;
@@ -95,22 +92,19 @@ class GuidedTourState extends Equatable {
   }
 
   GuidedTourState asIdle() {
-    return GuidedTourState.idle(
-      currentVersion: currentVersion,
-      steps: steps,
-    );
+    return GuidedTourState.idle(currentVersion: currentVersion, steps: steps);
   }
 
   @override
   List<Object?> get props => [
-        status,
-        currentVersion,
-        activeIndex,
-        targetRect,
-        targetAvailable,
-        targetShape,
-        replayMode,
-        isPersisting,
-        skippedMissingStepIds,
-      ];
+    status,
+    currentVersion,
+    activeIndex,
+    targetRect,
+    targetAvailable,
+    targetShape,
+    replayMode,
+    isPersisting,
+    skippedMissingStepIds,
+  ];
 }

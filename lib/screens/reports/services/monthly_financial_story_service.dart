@@ -15,15 +15,17 @@ class MonthlyFinancialStoryService {
     required List<Expense> expenses,
     required UserSettings settings,
   }) {
-    final currentRows = _calculationService.calculateExpenses(
-      expenses: expenses,
-      settings: settings,
-      where: (expense) => _within(
-        expense.date,
-        report.range.startDate,
-        report.range.endDate,
-      ),
-    ).convertedRows;
+    final currentRows = _calculationService
+        .calculateExpenses(
+          expenses: expenses,
+          settings: settings,
+          where: (expense) => _within(
+            expense.date,
+            report.range.startDate,
+            report.range.endDate,
+          ),
+        )
+        .convertedRows;
 
     final drivers = report.categoryTotals
         .where((category) => category.total > 0)
@@ -37,14 +39,11 @@ class MonthlyFinancialStoryService {
         )
         .toList(growable: false);
 
-    final outliers = currentRows
-        .where((row) {
-          if (report.total <= 0) return false;
-          final share = row.convertedAmount / report.total;
-          return share >= 0.25 || row.convertedAmount >= report.total * 0.2;
-        })
-        .toList()
-      ..sort((a, b) => b.convertedAmount.compareTo(a.convertedAmount));
+    final outliers = currentRows.where((row) {
+      if (report.total <= 0) return false;
+      final share = row.convertedAmount / report.total;
+      return share >= 0.25 || row.convertedAmount >= report.total * 0.2;
+    }).toList()..sort((a, b) => b.convertedAmount.compareTo(a.convertedAmount));
 
     return MonthlyFinancialStory(
       trend: _trend(report),

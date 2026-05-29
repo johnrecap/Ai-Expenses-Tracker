@@ -1,29 +1,24 @@
 import 'package:expense_repository/expense_repository.dart';
 import 'package:expenses_tracker/l10n/l10n.dart';
 import 'package:expenses_tracker/screens/settings/utils/currency_formatter.dart';
+import 'package:expenses_tracker/widgets/finance_card.dart';
 import 'package:flutter/material.dart';
 
 class MonthComparisonCard extends StatelessWidget {
   final ExpenseReport report;
 
-  const MonthComparisonCard({
-    super.key,
-    required this.report,
-  });
+  const MonthComparisonCard({super.key, required this.report});
 
   @override
   Widget build(BuildContext context) {
     final isIncrease = report.deltaPercent > 0;
-    final deltaColor =
-        isIncrease ? Theme.of(context).colorScheme.error : Colors.green;
+    final deltaColor = isIncrease
+        ? Theme.of(context).colorScheme.error
+        : Colors.green;
 
-    return Container(
+    return FinanceCard(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -45,10 +40,7 @@ class MonthComparisonCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             '${isIncrease ? '+' : ''}${report.deltaPercent.toStringAsFixed(0)}%',
-            style: TextStyle(
-              color: deltaColor,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: deltaColor, fontWeight: FontWeight.bold),
           ),
         ],
       ),

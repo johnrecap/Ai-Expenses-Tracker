@@ -100,6 +100,7 @@ class AuthenticatedRepositoryFactory {
             queue: LocalSyncQueue(
               pending: store.pendingChanges,
               onUploaded: store.markUploadedChanges,
+              onChanged: store.markSyncChangesUpdated,
             ),
           );
     return AuthenticatedRepositoryBundle(

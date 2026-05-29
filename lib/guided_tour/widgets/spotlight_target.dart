@@ -50,10 +50,7 @@ class _SpotlightTargetState extends State<SpotlightTarget> {
 
   @override
   Widget build(BuildContext context) {
-    return KeyedSubtree(
-      key: _targetKey,
-      child: widget.child,
-    );
+    return KeyedSubtree(key: _targetKey, child: widget.child);
   }
 
   GuidedTourCubit? _readCubit() {

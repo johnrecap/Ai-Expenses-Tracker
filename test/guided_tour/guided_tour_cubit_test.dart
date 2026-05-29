@@ -119,10 +119,7 @@ void main() {
     final repository = FakeSettingsRepository(_settings());
     final cubit = GuidedTourCubit(
       settingsRepository: repository,
-      steps: [
-        _step('missing', canSkipIfMissing: true),
-        _step('fallback'),
-      ],
+      steps: [_step('missing', canSkipIfMissing: true), _step('fallback')],
     );
 
     cubit.replay();
@@ -166,29 +163,31 @@ void main() {
     await completedCubit.close();
   });
 
-  test('back button moves backward before skipping on the first step',
-      () async {
-    final repository = FakeSettingsRepository(_settings());
-    final cubit = GuidedTourCubit(
-      settingsRepository: repository,
-      steps: [_step('ai'), _step('manual')],
-    );
-    cubit.replay();
-    await cubit.next();
+  test(
+    'back button moves backward before skipping on the first step',
+    () async {
+      final repository = FakeSettingsRepository(_settings());
+      final cubit = GuidedTourCubit(
+        settingsRepository: repository,
+        steps: [_step('ai'), _step('manual')],
+      );
+      cubit.replay();
+      await cubit.next();
 
-    await cubit.handleBackButton();
+      await cubit.handleBackButton();
 
-    expect(cubit.state.isActive, isTrue);
-    expect(cubit.state.activeStep?.stepId, 'ai');
-    expect(repository.settings.guidedTourSkippedVersion, 0);
+      expect(cubit.state.isActive, isTrue);
+      expect(cubit.state.activeStep?.stepId, 'ai');
+      expect(repository.settings.guidedTourSkippedVersion, 0);
 
-    await cubit.handleBackButton();
+      await cubit.handleBackButton();
 
-    expect(cubit.state.isActive, isFalse);
-    expect(repository.settings.guidedTourSkippedVersion, guidedTourVersion);
-    expect(repository.settings.guidedTourLastStepId, 'ai');
-    await cubit.close();
-  });
+      expect(cubit.state.isActive, isFalse);
+      expect(repository.settings.guidedTourSkippedVersion, guidedTourVersion);
+      expect(repository.settings.guidedTourLastStepId, 'ai');
+      await cubit.close();
+    },
+  );
 
   test('remaining step metadata has runtime consumers', () {
     final step = _step('ai', canSkipIfMissing: true);

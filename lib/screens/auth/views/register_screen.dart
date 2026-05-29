@@ -1,3 +1,4 @@
+import 'package:expenses_tracker/l10n/l10n.dart';
 import 'package:expenses_tracker/screens/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,25 +38,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final displayName = _displayNameController.text.trim();
 
     if (email.isEmpty) {
-      _showMessage('Enter your email address.');
+      _showMessage(context.l10n.enterEmailAddress);
       return;
     }
     if (password.length < 6) {
-      _showMessage('Password must be at least 6 characters.');
+      _showMessage(context.l10n.passwordMinLength);
       return;
     }
     if (password != confirmPassword) {
-      _showMessage('Passwords do not match.');
+      _showMessage(context.l10n.passwordsDoNotMatch);
       return;
     }
 
     context.read<AuthBloc>().add(
-          AuthSignUpRequested(
-            email: email,
-            password: password,
-            displayName: displayName.isEmpty ? null : displayName,
-          ),
-        );
+      AuthSignUpRequested(
+        email: email,
+        password: password,
+        displayName: displayName.isEmpty ? null : displayName,
+      ),
+    );
   }
 
   @override
@@ -69,9 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Create account'),
-        ),
+        appBar: AppBar(title: Text(context.l10n.createAccount)),
         backgroundColor: Colors.grey[100],
         body: SafeArea(
           child: Center(
@@ -85,9 +84,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextField(
                       controller: _displayNameController,
                       textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: 'Display name',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.displayNameLabel,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -95,9 +94,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.emailLabel,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -105,18 +104,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: _passwordController,
                       obscureText: true,
                       textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.passwordLabel,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _confirmPasswordController,
                       obscureText: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Confirm password',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.confirmPasswordLabel,
+                        border: const OutlineInputBorder(),
                       ),
                       onSubmitted: (_) => _submit(),
                     ),
@@ -140,7 +139,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Text('Register'),
+                              : Text(context.l10n.register),
                         );
                       },
                     ),

@@ -121,4 +121,32 @@ describe("sync conflict baseline", () => {
       data: { deletedAt: "2026-05-26T10:02:00.000Z" },
     });
   });
+
+  it("treats repeated client change ids from the same device as idempotent", async () => {
+    const service = new DurableSyncService(new InMemorySyncChangeRepository());
+    const change = {
+      entityType: "expense" as const,
+      entityId: "expense-1",
+      clientChangeId: "change-1",
+      operation: "upsert" as const,
+      data: { amount: 100, currency: "EGP" },
+      clientUpdatedAt: "2026-05-26T10:00:00.000Z",
+    };
+
+    const first = await service.push("user-a", {
+      deviceId: "device-a",
+      changes: [change],
+    });
+    const retry = await service.push("user-a", {
+      deviceId: "device-a",
+      changes: [change],
+    });
+    const pull = await service.pull("user-a", "0");
+
+    expect(retry.accepted[0].serverRevision).toBe(
+      first.accepted[0].serverRevision,
+    );
+    expect(retry.accepted[0].clientChangeId).toBe("change-1");
+    expect(pull.changes).toHaveLength(1);
+  });
 });

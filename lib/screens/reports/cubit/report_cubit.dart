@@ -9,12 +9,10 @@ class ReportCubit extends Cubit<ReportState> {
   final List<Expense> _expenses;
   final UserSettings _settings;
 
-  ReportCubit({
-    required List<Expense> expenses,
-    required UserSettings settings,
-  })  : _expenses = List.unmodifiable(expenses),
-        _settings = settings,
-        super(ReportInitial());
+  ReportCubit({required List<Expense> expenses, required UserSettings settings})
+    : _expenses = List.unmodifiable(expenses),
+      _settings = settings,
+      super(ReportInitial());
 
   void loadWeekly() {
     _load(ReportRange.weekly(), ReportRangeType.weekly);
